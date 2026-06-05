@@ -1,16 +1,15 @@
 '''-------------------------------------------------------------'''
-'''  Digitization Steering File for the Muon Collider Detector  '''
+''' Reconstruction Steering File for the Muon Collider Detector '''
 '''-------------------------------------------------------------'''
 import os, sys
-# Make this directory importable so the domain-folder modules (CaloDigi/,
-# Tracking/, Overlay/, ...) and the top-level helpers resolve regardless of
-# PYTHONPATH.
+# Make this directory importable so the domain-folder modules (Tracking/,
+# ParticleFlow/, ...) and the top-level helpers resolve regardless of PYTHONPATH.
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from GaudiKernel.Constants import INFO, WARNING
+from GaudiKernel.Constants import INFO, WARNING, DEBUG
 # Collect Arguements
-from digi_args import get_digi_args
-args = get_digi_args()
+from reco_args import get_reco_args
+args = get_reco_args()
 
 services = []
 
@@ -25,21 +24,21 @@ if mt_args.useMT:
 
 # Set Up Services
 from muc_services import set_services
-services += list(set_services(args, mt_args, "digi_histograms.root"))
+services += list(set_services(args, mt_args, "reco_histograms.root"))
 
 # Import the Algorithm List
-from digiAlgList import makeDigiAlgList
-algList = makeDigiAlgList(args)
+from recoAlgList import makeRecoAlgList
+algList = makeRecoAlgList(args)
 
 '''-------------------------------------------------------------'''
-'''    Run the Digitization Algorithms in the ApplicationMgr    '''
+'''   Run the Reconstruction Algorithms in the ApplicationMgr   '''
 '''-------------------------------------------------------------'''
 # Declare Input and Output for the IOSvc
 from k4FWCore import IOSvc, ApplicationMgr
 svc = IOSvc(
     "IOSvc",
-    Input = ["sim_output.edm4hep.root"],  # Input file from simulation
-    Output = "digi_output.edm4hep.root" # Output file for digitization
+    Input = ["digi_output.edm4hep.root"], # Input file from digitization
+    Output = "reco_output.edm4hep.root" # Output file for reconstruction
 )
 
 # Run the Application Manager
