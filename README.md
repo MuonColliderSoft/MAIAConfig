@@ -33,33 +33,28 @@ domain (following the CLDConfig convention):
 ## Usage
 
 The detector geometry is taken from an environment variable (with a
-command-line override available). It is typically set from the installed
-`k4geo` data:
+command-line override available: `--DD4hepXMLFile`). 
 
-| Variable            | Meaning                                   |
-| ------------------- | ----------------------------------------- |
-| `MUCOLL_GEO`        | Compact detector description (XML)        |
-
-Run the chain from inside the `MAIAConfig/` directory:
+To run the chain from inside the `MAIAConfig/` directory:
 
 ```bash
 # 1. Simulation (DD4hep) -> sim_output.edm4hep.root
-ddsim --compactFile $MUCOLL_GEO -G -N 10 \
+ddsim --compactFile $k4geo_DIR/MuColl/MAIA/compact/MAIA_v0/MAIA_v0.xml  -G -N 10 \
       --gun.particle mu- --gun.distribution uniform \
       --outputFile sim_output.edm4hep.root
 
 # 2. Digitisation -> digi_output.edm4hep.root
-k4run digi_steer.py --DD4hepXMLFile $MUCOLL_GEO
+k4run digi_steer.py 
 
 # 3. Reconstruction -> reco_output.edm4hep.root
-k4run reco_steer.py --DD4hepXMLFile $MUCOLL_GEO
+k4run reco_steer.py 
 ```
 
 Alternatively, run digitisation and reconstruction together in one job
 (reads `sim_output.edm4hep.root`, writes `digireco_output.edm4hep.root`):
 
 ```bash
-k4run digi_reco_steer.py --DD4hepXMLFile $MUCOLL_GEO
+k4run digi_reco_steer.py 
 ```
 
 Use `k4run --help digi_steer.py` (or `reco_steer.py`) to list all available

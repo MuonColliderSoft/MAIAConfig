@@ -9,7 +9,7 @@ def get_digi_args():
         "--DD4hepXMLFile",
         help="Compact detector description file",
         type=str,
-        default=os.environ.get("MUCOLL_GEO", ""),
+        default=os.environ.get("k4geo_DIR", "")+"/MuColl/MAIA/compact/MAIA_v0/MAIA_v0.xml",
     )
 
     parser.add_argument(
