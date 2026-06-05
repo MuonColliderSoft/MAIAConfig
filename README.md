@@ -2,10 +2,9 @@
 
 Package for key4hep configuration files related to the MAIA detector concept.
 
-The configuration scripts are imported from
-[mucoll-benchmarks](https://github.com/MuonColliderSoft/mucoll-benchmarks) and
-organised, as closely as possible, to mirror the layout of
-[CLDConfig](https://github.com/key4hep/CLDConfig/tree/main/CLDConfig).
+The configuration scripts are meant to be used together with
+[mucoll-benchmarks](https://github.com/MuonColliderSoft/mucoll-benchmarks)
+to evaluate the detector performance.
 
 ## Layout
 
