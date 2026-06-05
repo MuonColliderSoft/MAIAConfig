@@ -5,7 +5,7 @@ def MuonBarrelDigi_cfg(args):
     """
     Create a new Muon Barrel digitiser instance with the given parameters.
     """
-    # Yoke is not overlaid (see Overlay/overlay_ip.py); always read the base hits.
+    # Yoke is not overlaid (see Overlay/overlay_IP.py); always read the base hits.
     inputHitCollections = ["YokeBarrelCollection"]
     return DDSimpleMuonDigi(
         "MuonBarrelDigitiser",
@@ -23,7 +23,7 @@ def MuonEndcapDigi_cfg(args):
     """
     Create a new Muon Endcap digitiser instance with the given parameters.
     """
-    # Yoke is not overlaid (see Overlay/overlay_ip.py); always read the base hits.
+    # Yoke is not overlaid (see Overlay/overlay_IP.py); always read the base hits.
     inputHitCollections = ["YokeEndcapCollection"]
     return DDSimpleMuonDigi(
         "MuonEndcapDigitiser",

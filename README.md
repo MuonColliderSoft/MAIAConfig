@@ -24,7 +24,7 @@ domain (following the CLDConfig convention):
 - `TrackerDigi/` — tracker digitisation (vertex/inner/outer).
 - `Tracking/` — hit merging, CKF track reconstruction, and double-layer filtering.
 - `Overlay/` — beam-induced-background (`overlay_BIB.py`) and incoherent-pair
-  (`overlay_ip.py`) overlay.
+  (`overlay_IP.py`) overlay.
 - `ParticleFlow/` — Pandora PFA and jet clustering.
 - `Diagnostics/` — tracking performance monitoring.
 - `PandoraSettings/` — Pandora steering and likelihood data XMLs (must be

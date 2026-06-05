@@ -16,7 +16,7 @@ def makeDigiAlgList(the_args):
 
     # Incoherent Pair (IP) Overlay (chained after BIB if both are enabled)
     if the_args.doOverlayIP:
-        from Overlay.overlay_ip import overlay_ip_cfg
+        from Overlay.overlay_IP import overlay_ip_cfg
         algList.append(overlay_ip_cfg(the_args))
 
     # Tracker Digitization
