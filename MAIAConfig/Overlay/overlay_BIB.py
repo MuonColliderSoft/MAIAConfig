@@ -5,6 +5,12 @@ def overlay_full_cfg(args):
     """
     Create a new overlay instance with the given parameters.
     """
+    # TODO: the Yoke (muon) calorimeter collections are intentionally omitted for
+    # now. DDSimpleMuonDigi resolves its input cellID encoding at initialize(),
+    # which is not available for overlay-produced collections, so the muon
+    # digitisers read the base Yoke* hits instead. Add YokeBarrelCollection /
+    # YokeEndcapCollection back to TimeWindows, SimCalorimeterHits,
+    # OutputSimCalorimeterHits and OutputCaloHitContributions once that is resolved.
     return OverlayTimingRandomMix(
         "OverlayFull",
         BackgroundFileNames = [[args.OverlayFullPathToMuPlus], [args.OverlayFullPathToMuMinus]],
@@ -18,9 +24,7 @@ def overlay_full_cfg(args):
             "ECalBarrelCollection": [-0.5, 15.],
             "ECalEndcapCollection": [-0.5, 15.],
             "HCalBarrelCollection": [-0.5, 15.],
-            "HCalEndcapCollection": [-0.5, 15.],
-            "YokeBarrelCollection": [-0.5, 15.],
-            "YokeEndcapCollection": [-0.5, 15.] },
+            "HCalEndcapCollection": [-0.5, 15.] },
         BackgroundMCParticleCollectionName = "MCParticles",
         MergeMCParticles = False,
         NumberBackground = [args.OverlayFullNumberBackground, args.OverlayFullNumberBackground],
@@ -30,8 +34,7 @@ def overlay_full_cfg(args):
             "OuterTrackerBarrelCollection", "OuterTrackerEndcapCollection"],
         SimCalorimeterHits = [
             "ECalBarrelCollection", "ECalEndcapCollection",
-            "HCalBarrelCollection", "HCalEndcapCollection",
-            "YokeBarrelCollection", "YokeEndcapCollection"],
+            "HCalBarrelCollection", "HCalEndcapCollection"],
         MCParticles = ["MCParticles"],
         OutputSimTrackerHits = [
             "OverlayVertexBarrelCollection", "OverlayVertexEndcapCollection",
@@ -39,11 +42,9 @@ def overlay_full_cfg(args):
             "OverlayOuterTrackerBarrelCollection", "OverlayOuterTrackerEndcapCollection"],
         OutputSimCalorimeterHits = [
             "OverlayECalBarrelCollection", "OverlayECalEndcapCollection",
-            "OverlayHCalBarrelCollection", "OverlayHCalEndcapCollection",
-            "OverlayYokeBarrelCollection", "OverlayYokeEndcapCollection"],
+            "OverlayHCalBarrelCollection", "OverlayHCalEndcapCollection"],
         OutputCaloHitContributions = [
             "OverlayECalBarrelContributionCollection", "OverlayECalEndcapContributionCollection",
-            "OverlayHCalBarrelContributionCollection", "OverlayHCalEndcapContributionCollection",
-            "OverlayYokeBarrelContributionCollection", "OverlayYokeEndcapContributionCollection"],
+            "OverlayHCalBarrelContributionCollection", "OverlayHCalEndcapContributionCollection"],
         OutputLevel = INFO
     )

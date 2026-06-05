@@ -21,9 +21,10 @@ domain (following the CLDConfig convention):
   (service + ApplicationMgr wiring), `muc_mt.py` (multi-threading),
   `muc_services.py` (services), `event_counter.py`.
 - `CaloDigi/` — ECal, HCal and Muon calorimeter digitisation/reconstruction.
-- `TrackerDigi/` — tracker digitisation (vertex/inner/outer) and double-layer filtering.
-- `Tracking/` — hit merging and CKF track reconstruction.
-- `Overlay/` — beam-induced-background (BIB) overlay.
+- `TrackerDigi/` — tracker digitisation (vertex/inner/outer).
+- `Tracking/` — hit merging, CKF track reconstruction, and double-layer filtering.
+- `Overlay/` — beam-induced-background (`overlay_BIB.py`) and incoherent-pair
+  (`overlay_ip.py`) overlay.
 - `ParticleFlow/` — Pandora PFA and jet clustering.
 - `Diagnostics/` — tracking performance monitoring.
 - `PandoraSettings/` — Pandora steering and likelihood data XMLs (must be
@@ -32,7 +33,7 @@ domain (following the CLDConfig convention):
 ## Usage
 
 The detector geometry is taken from an environment variable (with a
-command-line override available: `--DD4hepXMLFile`). 
+command-line override available: `--DD4hepXMLFile`).
 
 To run the chain from inside the `MAIAConfig/` directory:
 
@@ -43,18 +44,20 @@ ddsim --compactFile $k4geo_DIR/MuColl/MAIA/compact/MAIA_v0/MAIA_v0.xml  -G -N 10
       --outputFile sim_output.edm4hep.root
 
 # 2. Digitisation -> digi_output.edm4hep.root
-k4run digi_steer.py 
+k4run digi_steer.py
 
 # 3. Reconstruction -> reco_output.edm4hep.root
-k4run reco_steer.py 
+k4run reco_steer.py
 ```
 
 Alternatively, run digitisation and reconstruction together in one job
 (reads `sim_output.edm4hep.root`, writes `digireco_output.edm4hep.root`):
 
 ```bash
-k4run digi_reco_steer.py 
+k4run digi_reco_steer.py
 ```
 
 Use `k4run --help digi_steer.py` (or `reco_steer.py`) to list all available
-options, e.g. `--doOverlayFull`, `--doFilterDL`, `--doTrackPerf`, `--useMT`.
+options, e.g. `--doOverlayFull` (BIB overlay), `--doOverlayIP` (incoherent-pair
+overlay), `--doFilterDL`, `--doTrackPerf`, `--useMT`. When both overlays are
+enabled they are chained (BIB then IP) before digitisation.

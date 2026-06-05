@@ -35,9 +35,10 @@ def get_digi_args():
 
     parser.add_argument(
         "--OverlayIPBackgroundFileNames",
-        help="Path to files used for incoherent pairs overlay",
+        help="Path(s) to file(s) used for incoherent pairs overlay",
         type=str,
-        default="/path/to/pairs.slcio",
+        nargs="+",
+        default=["/path/to/pairs.slcio"],
     )
 
     parser.add_argument(

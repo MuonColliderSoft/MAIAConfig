@@ -1,14 +1,12 @@
 from GaudiKernel.Constants import INFO, WARNING
 from Configurables import DDPlanarDigi
+from Common.overlay_utils import overlay_input
 
 def VXDBarrel_cfg(args):
     """
     Create a new vertex barrel instance with the given parameters.
     """
-    if args.doOverlayFull:
-        inputHitCollections = ["OverlayVertexBarrelCollection"]
-    else:
-        inputHitCollections = ["VertexBarrelCollection"]
+    inputHitCollections = overlay_input("VertexBarrelCollection", args)
     return DDPlanarDigi(
         "VXDBarrelDigitiser",
         CorrectTimesForPropagation = True,
@@ -30,10 +28,7 @@ def VXDEndcap_cfg(args):
     """
     Create a new vertex endcap instance with the given parameters.
     """
-    if args.doOverlayFull:
-        inputHitCollections = ["OverlayVertexEndcapCollection"]
-    else:
-        inputHitCollections = ["VertexEndcapCollection"]
+    inputHitCollections = overlay_input("VertexEndcapCollection", args)
     return DDPlanarDigi(
         "VXDEndcapDigitiser",
         CorrectTimesForPropagation = True,

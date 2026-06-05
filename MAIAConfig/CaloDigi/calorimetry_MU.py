@@ -5,10 +5,8 @@ def MuonBarrelDigi_cfg(args):
     """
     Create a new Muon Barrel digitiser instance with the given parameters.
     """
-    if args.doOverlayFull:
-        inputHitCollections = ["OverlayYokeBarrelCollection"]
-    else:
-        inputHitCollections = ["YokeBarrelCollection"]
+    # Yoke is not overlaid (see Overlay/overlay_ip.py); always read the base hits.
+    inputHitCollections = ["YokeBarrelCollection"]
     return DDSimpleMuonDigi(
         "MuonBarrelDigitiser",
         CalibrMUON = 70.1,
@@ -25,10 +23,8 @@ def MuonEndcapDigi_cfg(args):
     """
     Create a new Muon Endcap digitiser instance with the given parameters.
     """
-    if args.doOverlayFull:
-        inputHitCollections = ["OverlayYokeEndcapCollection"]
-    else:
-        inputHitCollections = ["YokeEndcapCollection"]
+    # Yoke is not overlaid (see Overlay/overlay_ip.py); always read the base hits.
+    inputHitCollections = ["YokeEndcapCollection"]
     return DDSimpleMuonDigi(
         "MuonEndcapDigitiser",
         CalibrMUON = 70.1,

@@ -11,8 +11,13 @@ def makeDigiAlgList(the_args):
 
     # BIB Overlay
     if the_args.doOverlayFull:
-        from Overlay.overlay_full import overlay_full_cfg
+        from Overlay.overlay_BIB import overlay_full_cfg
         algList.append(overlay_full_cfg(the_args))
+
+    # Incoherent Pair (IP) Overlay (chained after BIB if both are enabled)
+    if the_args.doOverlayIP:
+        from Overlay.overlay_ip import overlay_ip_cfg
+        algList.append(overlay_ip_cfg(the_args))
 
     # Tracker Digitization
     from TrackerDigi.tracking_vertex import VXDBarrel_cfg, VXDEndcap_cfg
@@ -44,7 +49,7 @@ def makeDigiAlgList(the_args):
 
     # Vertex Filtering
     if the_args.doFilterDL:
-        from TrackerDigi.filterDL_vertex import filterDL_vertexBarrel_cfg, filterDL_vertexEndcap_cfg
+        from Tracking.filterDL_vertex import filterDL_vertexBarrel_cfg, filterDL_vertexEndcap_cfg
         algList.append(filterDL_vertexBarrel_cfg())
         algList.append(filterDL_vertexEndcap_cfg())
 

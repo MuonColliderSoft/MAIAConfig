@@ -1,14 +1,12 @@
 from GaudiKernel.Constants import INFO, WARNING
 from Configurables import DDPlanarDigi
+from Common.overlay_utils import overlay_input
 
 def ITBarrel_cfg(args):
     """
     Create a new inner barrel digitiser instance with the given parameters.
     """
-    if args.doOverlayFull:
-        inputHitCollections = ["OverlayInnerTrackerBarrelCollection"]
-    else:
-        inputHitCollections = ["InnerTrackerBarrelCollection"]
+    inputHitCollections = overlay_input("InnerTrackerBarrelCollection", args)
     return DDPlanarDigi(
         "InnerBarrelDigitiser",
         CorrectTimesForPropagation = True,
@@ -30,10 +28,7 @@ def ITEndcap_cfg(args):
     """
     Create a new inner endcap digitiser instance with the given parameters.
     """
-    if args.doOverlayFull:
-        inputHitCollections = ["OverlayInnerTrackerEndcapCollection"]
-    else:
-        inputHitCollections = ["InnerTrackerEndcapCollection"]
+    inputHitCollections = overlay_input("InnerTrackerEndcapCollection", args)
     return DDPlanarDigi(
         "InnerEndcapDigitiser",
         CorrectTimesForPropagation = True,

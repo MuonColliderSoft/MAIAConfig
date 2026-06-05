@@ -1,14 +1,12 @@
 from GaudiKernel.Constants import INFO, WARNING
 from Configurables import RealisticCaloDigiScinPpd, RealisticCaloRecoScinPpd
+from Common.overlay_utils import overlay_input
 
 def HCalBarrelDigi_cfg(args):
     """
     Create a new HCal barrel digitiser instance with the given parameters.
     """
-    if args.doOverlayFull:
-        inputHitCollections = ["OverlayHCalBarrelCollection"]
-    else:
-        inputHitCollections = ["HCalBarrelCollection"]
+    inputHitCollections = overlay_input("HCalBarrelCollection", args)
     return RealisticCaloDigiScinPpd(
         "HCalBarrelDigi",
         calibration_mip = 0.0004925,
@@ -50,10 +48,7 @@ def HCalEndcapDigi_cfg(args):
     """
     Create a new HCal endcap digitiser instance with the given parameters.
     """
-    if args.doOverlayFull:
-        inputHitCollections = ["OverlayHCalEndcapCollection"]
-    else:
-        inputHitCollections = ["HCalEndcapCollection"]
+    inputHitCollections = overlay_input("HCalEndcapCollection", args)
     return RealisticCaloDigiScinPpd(
         "HCalEndcapDigi",
         calibration_mip = 0.0004725,
