@@ -14,31 +14,31 @@ domain (following the CLDConfig convention):
 
 - `digi_steer.py` / `reco_steer.py` — the digitisation and reconstruction entry
   points (run with `k4run`).
+- `digi_reco_steer.py` — combined entry point that runs digitisation and
+  reconstruction in a single `k4run` job (no intermediate digi file).
 - `digiAlgList.py` / `recoAlgList.py` — assemble the per-step algorithm lists.
 - `digi_args.py` / `reco_args.py` — command-line argument parsers.
-- `muc_mt.py`, `muc_services.py`, `event_counter.py` — shared services and
-  multi-threading helpers.
+- `Common/` — shared helpers used by every steering macro: `steering.py`
+  (service + ApplicationMgr wiring), `muc_mt.py` (multi-threading),
+  `muc_services.py` (services), `event_counter.py`.
 - `CaloDigi/` — ECal, HCal and Muon calorimeter digitisation/reconstruction.
-- `Tracking/` — tracker digitisation, hit merging, CKF tracking and filtering.
+- `TrackerDigi/` — tracker digitisation (vertex/inner/outer) and double-layer filtering.
+- `Tracking/` — hit merging and CKF track reconstruction.
 - `Overlay/` — beam-induced-background (BIB) overlay.
 - `ParticleFlow/` — Pandora PFA and jet clustering.
 - `Diagnostics/` — tracking performance monitoring.
-- `PandoraSettingsMAIA/` — Pandora steering and likelihood data XMLs (must be
+- `PandoraSettings/` — Pandora steering and likelihood data XMLs (must be
   present in the directory where reconstruction is run).
 
 ## Usage
 
-The geometry and tracking inputs are taken from environment variables (with
-command-line overrides available). Typically these are set from the installed
-`k4geo` / `k4ActsTracking` data:
+The detector geometry is taken from an environment variable (with a
+command-line override available). It is typically set from the installed
+`k4geo` data:
 
 | Variable            | Meaning                                   |
 | ------------------- | ----------------------------------------- |
 | `MUCOLL_GEO`        | Compact detector description (XML)        |
-| `MUCOLL_GEOM_NAME`  | Detector schema name (e.g. `MAIA_v0`)     |
-| `MUCOLL_MATMAP`     | Material maps file for tracking           |
-| `MUCOLL_TGEO`       | TGeometry file for tracking               |
-| `MUCOLL_TGEO_DESC`  | TGeometry subdetector JSON for tracking   |
 
 Run the chain from inside the `MAIAConfig/` directory:
 
@@ -52,7 +52,14 @@ ddsim --compactFile $MUCOLL_GEO -G -N 10 \
 k4run digi_steer.py --DD4hepXMLFile $MUCOLL_GEO
 
 # 3. Reconstruction -> reco_output.edm4hep.root
-k4run reco_steer.py --DD4hepXMLFile $MUCOLL_GEO --DetectorSchema MAIA_v0
+k4run reco_steer.py --DD4hepXMLFile $MUCOLL_GEO
+```
+
+Alternatively, run digitisation and reconstruction together in one job
+(reads `sim_output.edm4hep.root`, writes `digireco_output.edm4hep.root`):
+
+```bash
+k4run digi_reco_steer.py --DD4hepXMLFile $MUCOLL_GEO
 ```
 
 Use `k4run --help digi_steer.py` (or `reco_steer.py`) to list all available

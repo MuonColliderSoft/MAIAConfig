@@ -1,8 +1,11 @@
 import os
 from k4FWCore.parseArgs import parser
+from Common.argutils import add_argument_once
 
 def get_digi_args():
-    parser.add_argument(
+    # Shared with reco_args; added once so the two can be combined in one job.
+    add_argument_once(
+        parser,
         "--DD4hepXMLFile",
         help="Compact detector description file",
         type=str,

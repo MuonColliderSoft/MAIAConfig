@@ -6,7 +6,7 @@ def makeRecoAlgList(the_args):
     '''-------------------------------------------------------------'''
     algList = []
     # Event Counter
-    from event_counter import event_counter_cfg
+    from Common.event_counter import event_counter_cfg
     algList.append(event_counter_cfg())
 
     # Merging

@@ -22,7 +22,7 @@ set_property(TEST digi APPEND PROPERTY DEPENDS ddsim)
 # Reconstruction: reads digi_output.edm4hep.root, writes reco_output.edm4hep.root
 add_test(NAME reco
          WORKING_DIRECTORY ${MAIAConfig_DIR}
-         COMMAND k4run reco_steer.py --DD4hepXMLFile=${DETECTOR} --DetectorSchema=MAIA_v0
+         COMMAND k4run reco_steer.py --DD4hepXMLFile=${DETECTOR}
 )
 set_property(TEST reco APPEND PROPERTY DEPENDS digi)
 

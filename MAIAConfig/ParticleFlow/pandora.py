@@ -60,7 +60,7 @@ def pandoraPFA_cfg():
         MuonToMipCalibration = 19607.8,
         NOuterSamplingLayers = 3,
         OutputEnergyCorrectionPoints = [],
-        PandoraSettingsXmlFile = "PandoraSettingsMAIA/PandoraSettingsDefault.xml",
+        PandoraSettingsXmlFile = "PandoraSettings/PandoraSettingsDefault.xml",
         ReachesECalBarrelTrackerOuterDistance = -100,
         ReachesECalBarrelTrackerZMaxDistance = -50,
         ReachesECalFtdZMaxDistance = 1,

@@ -1,59 +1,29 @@
-from re import VERBOSE
-
 from GaudiKernel.Constants import INFO, WARNING, DEBUG
-from Configurables import CKFTrackingAlg, ACTSSeededCKFTrackingAlg, ACTSDuplicateRemoval, FilterTracksAlg, TrackTruthAlg, RefitFinal
+from Configurables import CKFTrackingAlg, ACTSDuplicateRemoval, FilterTracksAlg, TrackTruthAlg, RefitFinal
 
 def CKFTracker_cfg(args):
     """
-    Create a new ACTSSeededCKFTrackingAlg instance for CKF tracking.
+    Create a new CKFTrackingAlg instance for CKF tracking.
     """
-    if args.DetectorSchema == "MAIA_v0":
-         return CKFTrackingAlg(
-             "Reconstructor",
-            RunCKF = True,
-            CKF_Chi2CutOff = 10,
-            SeedFinding_RMax = 150,
-            SeedFinding_MinPt = 500,
-            SeedFinding_ImpactMax = 3,
-            CKF_NumMeasurementsCutOff = 1,
-            SeedFinding_SigmaScattering = 50,
-            SeedFinding_CollisionRegion = 6,
-            SeedFinding_RadLengthPerSeed = 0.1,
-            SeedingSensorsCellIDs = ["system:1", "system:2,layer:1|2|3"],
-            OutputTrackCollection = "AllTracks",
-            OutputSeedCollection = "SeedTracks",
-            InputTrackerHitCollection = "MergedTrackerHits",
-            InputTrackerHitRelationCollection = "MergedTrackerHitsRelations",
-            NumThreads = args.TrackingThreads,
-            OutputLevel = INFO,
-        )
-    else:
-        return ACTSSeededCKFTrackingAlg(
-            "Reconstructor",
-            MatFile = args.MatFile,
-            TGeoFile = args.TGeoFile,
-            TGeoDescFile = args.TGeoDescFile,
-            NumThreads = args.TrackingThreads,
-            DetectorSchema = args.DetectorSchema,
-            RunCKF = "True",
-            CKF_Chi2CutOff = 10,
-            SeedFinding_RMax = 150,
-            SeedFinding_MinPt = 500,
-            SeedFinding_DeltaRMin = 2,
-            SeedFinding_DeltaRMax = 60,
-            CKF_NumMeasurementsCutOff = 1,
-            SeedFinding_SigmaScattering = 3,
-            SeedFinding_CollisionRegion = 3.5,
-            SeedFinding_RadLengthPerSeed = 0.1,
-            SeedingLayers = [
-                "13", "2", "13", "6", "13", "10", "13", "14",
-                "14", "2", "14", "6", "14", "10", "14", "14",
-                "15", "2", "15", "6", "15", "10", "15", "14"],
-            OutputTrackCollectionName = ["AllTracks"],
-            OutputSeedCollectionName = ["SeedTracks"],
-            InputTrackerHitCollectionName = ["MergedTrackerHits"],
-            OutputLevel = INFO,
-        )
+    return CKFTrackingAlg(
+        "Reconstructor",
+        RunCKF = True,
+        CKF_Chi2CutOff = 10,
+        SeedFinding_RMax = 150,
+        SeedFinding_MinPt = 500,
+        SeedFinding_ImpactMax = 3,
+        CKF_NumMeasurementsCutOff = 1,
+        SeedFinding_SigmaScattering = 50,
+        SeedFinding_CollisionRegion = 6,
+        SeedFinding_RadLengthPerSeed = 0.1,
+        SeedingSensorsCellIDs = ["system:1", "system:2,layer:1|2|3"],
+        OutputTrackCollection = "AllTracks",
+        OutputSeedCollection = "SeedTracks",
+        InputTrackerHitCollection = "MergedTrackerHits",
+        InputTrackerHitRelationCollection = "MergedTrackerHitsRelations",
+        NumThreads = args.TrackingThreads,
+        OutputLevel = INFO,
+    )
 
 def deduper_cfg():
     """

@@ -9,3 +9,10 @@ __pycache__/
 
 # OS junk
 .DS_Store
+
+# Build / install output
+build/
+install/
+
+# Generated data products from local/CI test runs
+*.root

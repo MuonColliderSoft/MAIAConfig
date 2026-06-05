@@ -3,52 +3,22 @@
 '''-------------------------------------------------------------'''
 import os, sys
 # Make this directory importable so the domain-folder modules (CaloDigi/,
-# Tracking/, Overlay/, ...) and the top-level helpers resolve regardless of
+# TrackerDigi/, Overlay/, ...) and the Common/ helpers resolve regardless of
 # PYTHONPATH.
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from GaudiKernel.Constants import INFO, WARNING
-# Collect Arguements
 from digi_args import get_digi_args
-args = get_digi_args()
-
-services = []
-
-# Set up Multi-Threading if enabled
-from muc_mt import get_mt_args, get_k4run_mt
-mt_args = get_mt_args()
-if mt_args.useMT:
-    whiteboard, selm, sch = get_k4run_mt(
-        mt_args.numThreads, mt_args.numThreads
-    )
-    services += [whiteboard]
-
-# Set Up Services
-from muc_services import set_services
-services += list(set_services(args, mt_args, "digi_histograms.root"))
-
-# Import the Algorithm List
 from digiAlgList import makeDigiAlgList
+from Common.steering import build_application
+
+# Collect arguments and build the digitisation algorithm list
+args = get_digi_args()
 algList = makeDigiAlgList(args)
 
-'''-------------------------------------------------------------'''
-'''    Run the Digitization Algorithms in the ApplicationMgr    '''
-'''-------------------------------------------------------------'''
-# Declare Input and Output for the IOSvc
-from k4FWCore import IOSvc, ApplicationMgr
-svc = IOSvc(
-    "IOSvc",
-    Input = ["sim_output.edm4hep.root"],  # Input file from simulation
-    Output = "digi_output.edm4hep.root" # Output file for digitization
+# Read the simulation output, write the digitisation output
+build_application(
+    args, algList,
+    input_files = ["sim_output.edm4hep.root"],
+    output_file = "digi_output.edm4hep.root",
+    histo_file = "digi_histograms.root",
 )
-
-# Run the Application Manager
-ApplicationMgr(
-    TopAlg = algList,
-    EvtSel = 'NONE',
-    EvtMax = 10,
-    ExtSvc = services,
-    OutputLevel = WARNING,
-)
-if mt_args.useMT:
-    ApplicationMgr().EventLoop = selm

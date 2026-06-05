@@ -1,44 +1,19 @@
 import os
 from Gaudi.Configuration import *
 from k4FWCore.parseArgs import parser
+from Common.argutils import add_argument_once
 
 def get_reco_args():
     """
     Parse command line arguments for the reconstruction steering.
     """
-    parser.add_argument(
+    # Shared with digi_args; added once so the two can be combined in one job.
+    add_argument_once(
+        parser,
         "--DD4hepXMLFile",
         help="Compact detector description file",
         type=str,
         default=os.environ.get("MUCOLL_GEO", ""),
-    )
-
-    parser.add_argument(
-        "--DetectorSchema",
-        help="Name of the detector schema",
-        type=str,
-        default=os.environ.get("MUCOLL_GEOM_NAME", ""),
-    )
-
-    parser.add_argument(
-        "--MatFile",
-        help="Material maps file for tracking",
-        type=str,
-        default=os.environ.get("MUCOLL_MATMAP", ""),
-    )
-
-    parser.add_argument(
-        "--TGeoFile",
-        help="TGeometry file for tracking",
-        type=str,
-        default=os.environ.get("MUCOLL_TGEO", ""),
-    )
-
-    parser.add_argument(
-        "--TGeoDescFile",
-        help="TGeometry Subdetector JSON file for tracking",
-        type=str,
-        default=os.environ.get("MUCOLL_TGEO_DESC", ""),
     )
 
     parser.add_argument(

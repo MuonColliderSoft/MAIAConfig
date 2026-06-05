@@ -1,0 +1,57 @@
+name: MuColl build and test
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-mucoll-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Free Disk Space (Ubuntu)
+        uses: endersonmenezes/free-disk-space@v3
+        with:
+          remove_android: true
+          remove_dotnet: true
+          remove_haskell: true
+          remove_tool_cache: true
+          remove_swap: true
+          remove_packages: "azure-cli google-cloud-cli microsoft-edge-stable google-chrome-stable firefox postgresql* temurin-* *llvm* mysql* dotnet-sdk-*"
+          remove_packages_one_command: true
+          remove_folders: "/usr/share/swift /usr/share/miniconda /usr/share/az* /usr/local/lib/node_modules /usr/local/share/chromium /usr/local/share/powershell /usr/local/julia /usr/local/aws-cli /usr/local/aws-sam-cli /usr/share/gradle"
+          rm_cmd: "rmz"  # Use 'rmz' for faster deletion (default: 'rm')
+          rmz_version: "3.1.1"  # Required when rm_cmd is 'rmz'
+          testing: false
+      - uses: actions/checkout@v6
+      - name: Launch Container
+        run: |
+          docker run -it --name ci_container --privileged -v ${GITHUB_WORKSPACE}:/packages -d ghcr.io/muoncollidersoft/mucoll-sim-ubuntu24:main tail -f /dev/null
+      - name: Get Setup Script
+        run: |
+          SETUP_SCRIPT=$(docker exec ci_container /bin/bash -c "grep setup_mucoll /etc/profile.d/aliases.sh | awk -F '=' '{print \$2}' | sed 's/\"//g'")
+          echo "SETUP_SCRIPT=$SETUP_SCRIPT" >> $GITHUB_ENV
+      - name: Build and test
+        run: |
+          echo $SETUP_SCRIPT > ${GITHUB_WORKSPACE}/build.sh
+          cat << 'EOF' >> ${GITHUB_WORKSPACE}/build.sh
+          set -e
+          cd /packages
+          cmake -B build -S . -GNinja \
+            -DCMAKE_CXX_STANDARD=20 \
+            -DCMAKE_INSTALL_PREFIX=$(pwd)/install \
+            -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always -Werror -Wno-error=deprecated-declarations"
+          cmake --build build
+          ctest --test-dir build -j$(nproc) --output-on-failure
+          cmake --build build --target install
+          EOF
+
+          chmod +x ${GITHUB_WORKSPACE}/build.sh
+
+          docker exec ci_container /bin/bash -c "/packages/build.sh"
