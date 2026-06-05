@@ -41,46 +41,6 @@ def ECalBarrelReco_cfg():
         OutputLevel = INFO
     )
 
-def ECalPlugDigi_cfg(args):
-    """
-    Create a new ECal plug digitiser instance with the given parameters.
-    """
-    if args.doOverlayFull:
-        inputHitCollections = ["OverlayECalPlugCollection"]
-    else:
-        inputHitCollections = ["ECalPlugCollection"]
-    return RealisticCaloDigiSilicon(
-        "ECalPlugDigi",
-        calibration_mip = 0.0001575,
-        threshold = 5e-05,
-        thresholdUnit = "GeV",
-        timingCorrectForPropagation = 1,
-        timingCut = 1,
-        timingResolution = 0.0,
-        timingWindowMax = 10.0,
-        timingWindowMin = -0.5,
-        elec_range_mip = 15000.0,
-        CaloType = "em", CaloID = "ecal", CaloLayout = "plug",
-        inputHitCollections = inputHitCollections,
-        outputHitCollections = ["ECalPlugCollectionDigi"],
-        outputRelationCollections = ["ECalPlugRelationsSimDigi"],
-        OutputLevel = INFO
-    )
-
-def ECalPlugReco_cfg():
-    """
-    Create a new ECal plug reco instance with the given parameters.
-    """
-    return RealisticCaloRecoSilicon(
-        "ECalPlugReco",
-        calibration_factorsMipGev = [0.00641222630095],
-        calibration_layergroups = [50],
-        inputLinkCollections = ["ECalPlugRelationsSimDigi"],
-        outputHitCollections = ["ECalPlugCollectionRec"],
-        outputRelationCollections = ["ECalPlugRelationsSimRec"],
-        OutputLevel = INFO
-    )
-
 def ECalEndcapDigi_cfg(args):
     """
     Create a new ECal endcap digitiser instance with the given parameters.

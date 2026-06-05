@@ -27,23 +27,17 @@ def makeDigiAlgList(the_args):
 
     # EM, Hadronic, Muon Calorimeter Digitization
     from CaloDigi.calorimetry_EM import ECalBarrelDigi_cfg, ECalBarrelReco_cfg
-    from CaloDigi.calorimetry_EM import ECalPlugDigi_cfg, ECalPlugReco_cfg
     from CaloDigi.calorimetry_EM import ECalEndcapDigi_cfg, ECalEndcapReco_cfg
     algList.append(ECalBarrelDigi_cfg(the_args))
     algList.append(ECalBarrelReco_cfg())
-    #algList.append(ECalPlugDigi_cfg(the_args))
-    #algList.append(ECalPlugReco_cfg())
     algList.append(ECalEndcapDigi_cfg(the_args))
     algList.append(ECalEndcapReco_cfg())
     from CaloDigi.calorimetry_HAD import HCalBarrelDigi_cfg, HCalBarrelReco_cfg
     from CaloDigi.calorimetry_HAD import HCalEndcapDigi_cfg, HCalEndcapReco_cfg
-    from CaloDigi.calorimetry_HAD import HCalRingDigi_cfg, HCalRingReco_cfg
     algList.append(HCalBarrelDigi_cfg(the_args))
     algList.append(HCalBarrelReco_cfg())
     algList.append(HCalEndcapDigi_cfg(the_args))
     algList.append(HCalEndcapReco_cfg())
-    #algList.append(HCalRingDigi_cfg(the_args))
-    #algList.append(HCalRingReco_cfg())
     from CaloDigi.calorimetry_MU import MuonBarrelDigi_cfg, MuonEndcapDigi_cfg
     algList.append(MuonBarrelDigi_cfg(the_args))
     algList.append(MuonEndcapDigi_cfg(the_args))
