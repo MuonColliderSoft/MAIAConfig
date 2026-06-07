@@ -1,5 +1,9 @@
 # MAIAConfig
 
+[![MuColl build and test](https://github.com/MuonColliderSoft/MAIAConfig/actions/workflows/mucoll-ci.yml/badge.svg)](https://github.com/MuonColliderSoft/MAIAConfig/actions/workflows/mucoll-ci.yml)
+[![pre-commit](https://github.com/MuonColliderSoft/MAIAConfig/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/MuonColliderSoft/MAIAConfig/actions/workflows/pre-commit.yaml)
+[![downstream-build](https://github.com/MuonColliderSoft/MAIAConfig/actions/workflows/downstream-build.yaml/badge.svg)](https://github.com/MuonColliderSoft/MAIAConfig/actions/workflows/downstream-build.yaml)
+
 Package for key4hep configuration files related to the MAIA detector concept.
 
 The configuration scripts are meant to be used together with
