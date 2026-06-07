@@ -5,29 +5,37 @@ def choose_parallelism():
     cpu_count = os.cpu_count()
     if cpu_count is None:
         return 1
-    elif cpu_count <= 4:
-        return cpu_count
     else:
-        return cpu_count - 2
+        return cpu_count
 
 def get_mt_args():
-    """Parse command line arguments for multi-threading configuration."""
+    """Parse command line arguments for multi-threading configuration.
+
+    A single knob, --numThreads, controls everything: 1 (the default) runs the
+    serial event loop, any value > 1 enables the multi-threaded Gaudi Hive event
+    loop with that many threads, and 0 auto-detects a sensible thread count from
+    the CPU count. The convenience flag ``useMT`` is derived from it. Registered
+    with add_argument_once so this can be called from several places (e.g. the
+    tracking config also reads --numThreads) without argparse complaining about
+    duplicate options.
+    """
     from k4FWCore.parseArgs import parser
+    from Common.argutils import add_argument_once
 
-    parser.add_argument(
-        "--useMT",
-        help="Enable multi-threading",
-        action="store_true",
-        default=False
-    )
-    parser.add_argument(
+    add_argument_once(
+        parser,
         "--numThreads",
-        help="Number of threads to use",
+        help="Number of threads to use; 1 runs serially, > 1 enables multi-threading, "
+             "0 auto-detects from the CPU count",
         type=int,
-        default=choose_parallelism(),
+        default=1,
     )
 
-    return parser.parse_known_args()[0]
+    mt_args = parser.parse_known_args()[0]
+    if mt_args.numThreads == 0:
+        mt_args.numThreads = choose_parallelism()
+    mt_args.useMT = mt_args.numThreads > 1
+    return mt_args
 
 def get_k4run_mt(threads, event_slots):
     """Create a k4run instance configured for multi-threading."""

@@ -1,5 +1,6 @@
 from GaudiKernel.Constants import INFO, WARNING, DEBUG
 from Configurables import CKFTrackingAlg, ACTSDuplicateRemoval, FilterTracksAlg, TrackTruthAlg, RefitFinal
+from Common.muc_mt import get_mt_args
 
 def CKFTracker_cfg(args):
     """
@@ -21,7 +22,7 @@ def CKFTracker_cfg(args):
         OutputSeedCollection = "SeedTracks",
         InputTrackerHitCollection = "MergedTrackerHits",
         InputTrackerHitRelationCollection = "MergedTrackerHitsRelations",
-        NumThreads = args.TrackingThreads,
+        NumThreads = get_mt_args().numThreads,
         OutputLevel = INFO,
     )
 
@@ -61,7 +62,7 @@ def track_truth_cfg(args):
     """
     return TrackTruthAlg(
         "TruthMatcher",
-        NumThreads = args.TrackingThreads,
+        NumThreads = get_mt_args().numThreads,
         InputTrackCollectionName = ["SiTracks"],
         InputTrackerHit2SimTrackerHitRelationName = ["MergedTrackerHitsRelations"],
         OutputParticle2TrackRelationName = ["SiTrackRelations"],
