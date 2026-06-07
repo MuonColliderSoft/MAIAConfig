@@ -95,11 +95,13 @@ def pandoraPFA_cfg():
         RelTrackCollections = [],#"MergedTrackerHitsRelations"],
         MCParticleCollections = ["MCParticles"],
         MuonCaloHitCollections = ["MuonBarrelHits", "MuonEndcapHits"],
-        ECalCaloHitCollections = ["EcalBarrelCollectionRec", "EcalEndcapCollectionRec"],
-        HCalCaloHitCollections = ["HcalBarrelCollectionRec", "HcalEndcapCollectionRec"],
+        # ECAL/HCAL hits are coned and BIB-selected upstream (see
+        # CaloDigi/calo_coning.py), so Pandora reads the "...Sel" collections.
+        ECalCaloHitCollections = ["EcalBarrelCollectionSel", "EcalEndcapCollectionSel"],
+        HCalCaloHitCollections = ["HcalBarrelCollectionSel", "HcalEndcapCollectionSel"],
         RelCaloHitCollections = [
-            "EcalBarrelRelationsSimRec", "EcalEndcapRelationsSimRec",
-            "HcalBarrelRelationsSimRec", "HcalEndcapRelationsSimRec",
+            "EcalBarrelRelationsSimSel", "EcalEndcapRelationsSimSel",
+            "HcalBarrelRelationsSimSel", "HcalEndcapRelationsSimSel",
             "MuonBarrelHitsRelations", "MuonEndcapHitsRelations"],
         PFOCollectionName = ["PandoraPFOs"],
         StartVertexCollectionName = ["PandoraStartVertices"],

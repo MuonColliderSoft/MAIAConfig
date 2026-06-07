@@ -11,8 +11,8 @@ def makeRecoAlgList(the_args):
 
     # Merging
     from Tracking.mergers import mergehits_cfg, mergehitsrelations_cfg
-    algList.append(mergehits_cfg())
-    algList.append(mergehitsrelations_cfg())
+    algList.append(mergehits_cfg(the_args))
+    algList.append(mergehitsrelations_cfg(the_args))
 
     # CKF Tracking
     from Tracking.CKF_tracking import CKFTracker_cfg, deduper_cfg, track_filter_cfg, track_truth_cfg, track_refitter_cfg

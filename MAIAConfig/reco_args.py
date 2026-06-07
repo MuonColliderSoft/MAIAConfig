@@ -23,6 +23,17 @@ def get_reco_args():
         default=False
     )
 
+    # Shared with digi_args: the digi step produces the "...Coned" collections
+    # and the merger here must read them. add_argument_once allows the two
+    # parsers to coexist in the combined digi_reco job.
+    add_argument_once(
+        parser,
+        "--doTrackerConing",
+        help="Filter tracker hits into cones around the signal MC particles (BIB cleaning)",
+        action="store_true",
+        default=False,
+    )
+
     parser.add_argument(
         "--TrackingThreads",
         help="Number of threads for tracking",

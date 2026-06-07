@@ -62,6 +62,16 @@ def get_digi_args():
         default=False,
     )
 
+    # Shared with reco_args (the merger reads the coned hits when enabled), so
+    # added once to allow combining the two parsers in a single job.
+    add_argument_once(
+        parser,
+        "--doTrackerConing",
+        help="Filter tracker hits into cones around the signal MC particles (BIB cleaning)",
+        action="store_true",
+        default=False,
+    )
+
     parser.add_argument(
         "--RandSeed",
         help="Random seed for digitization",
