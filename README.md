@@ -64,12 +64,38 @@ Alternatively, run digitisation and reconstruction together in one job
 k4run digi_reco_steer.py
 ```
 
+### Choosing the input and output files
+
+Each macro reads and writes EDM4hep files with the defaults below, which can be
+overridden on the command line with `--inputFiles` (one or more files),
+`--outputFile`, and `--histoFile` (ROOT histogram output):
+
+| Macro | Default input | Default output |
+|-------|---------------|----------------|
+| `digi_steer.py` | `sim_output.edm4hep.root` | `digi_output.edm4hep.root` |
+| `reco_steer.py` | `digi_output.edm4hep.root` | `reco_output.edm4hep.root` |
+| `digi_reco_steer.py` | `sim_output.edm4hep.root` | `digireco_output.edm4hep.root` |
+
+```bash
+# pick the input and output explicitly
+k4run reco_steer.py --inputFiles my_digi.edm4hep.root --outputFile my_reco.edm4hep.root
+
+# multiple input files are merged
+k4run digi_steer.py --inputFiles sim_0.edm4hep.root sim_1.edm4hep.root
+```
+
+Use the k4run built-in `-n N` (`--num-events`) to limit the number of events
+(the macros otherwise default to 10).
+
 `k4run --help digi_steer.py` (or `reco_steer.py`) lists the available options.
 The full set is:
 
 | Option | Step | Default | Description |
 |--------|------|---------|-------------|
 | `--DD4hepXMLFile` | both | `$k4geo_DIR/MuColl/MAIA/compact/MAIA_v0/MAIA_v0.xml` | Compact detector description to use (overrides the geometry default). |
+| `--inputFiles` | both | per macro (see above) | Input EDM4hep file(s) to read; accepts several files. |
+| `--outputFile` | both | per macro (see above) | Output EDM4hep file to write. |
+| `--histoFile` | both | per macro | Output ROOT file for the histograms. |
 | `--doOverlayFull` | digi | `False` | Overlay beam-induced background (BIB). |
 | `--OverlayFullPathToMuPlus` | digi | `/path/to/muplus/` | Directory of the μ⁺ BIB overlay files (used with `--doOverlayFull`). |
 | `--OverlayFullPathToMuMinus` | digi | `/path/to/muminus/` | Directory of the μ⁻ BIB overlay files (used with `--doOverlayFull`). |

@@ -19,6 +19,9 @@ reorganised to follow, as closely as possible, the layout of
 - Factored the service / `ApplicationMgr` boilerplate shared by all three
   steering macros into `Common/steering.py` (`build_application`,
   `merge_alg_lists`), reducing the steering files to thin wrappers.
+- The input/output files can be selected on the command line with
+  `--inputFiles` (one or more files), `--outputFile` and `--histoFile`,
+  defaulting to the per-macro file names.
 - Grouped the shared helpers under `Common/` (`steering.py`, `muc_mt.py`,
   `muc_services.py`, `event_counter.py`, `argutils.py`, `overlay_utils.py`).
 - Organised the algorithms into CLD-style domain folders:

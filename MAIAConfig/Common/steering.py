@@ -41,6 +41,21 @@ def build_application(args, alg_list, input_files, output_file, histo_file, evt_
     from Common.muc_mt import get_mt_args, get_k4run_mt
     from Common.muc_services import set_services
     from k4FWCore import IOSvc, ApplicationMgr
+    from k4FWCore.parseArgs import parser
+    from Common.argutils import add_argument_once
+
+    # Allow the input/output files to be chosen on the command line, falling back
+    # to the per-steering defaults passed in by each macro.
+    add_argument_once(parser, "--inputFiles", nargs="+", default=input_files,
+                      help="Input EDM4hep file(s) to read")
+    add_argument_once(parser, "--outputFile", default=output_file,
+                      help="Output EDM4hep file to write")
+    add_argument_once(parser, "--histoFile", default=histo_file,
+                      help="Output ROOT file for the histograms")
+    io_args = parser.parse_known_args()[0]
+    input_files = io_args.inputFiles
+    output_file = io_args.outputFile
+    histo_file = io_args.histoFile
 
     services = []
 
