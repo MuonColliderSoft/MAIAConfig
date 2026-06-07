@@ -49,6 +49,31 @@ reorganised to follow, as closely as possible, the layout of
   `Overlay/overlay_BIB.py` for re-enabling it.
 - Renamed `overlay_full.py` to `overlay_BIB.py` for clarity.
 
+### Beam-induced-background hit cleaning
+
+- Scheduled the Gaudi-native BIB-cleaning algorithms (from k4Reco) to mimic the
+  Marlin `steer_reco.py` workflow:
+  - `TrackerDigi/coning.py` — one `FilterConeHits` per tracker subdetector,
+    keeping the digitised hits inside a cone around the signal MC particles.
+    Gated by `--doTrackerConing`; when enabled the digitisation step writes the
+    `…Coned` collections and the hit merger reads them before tracking.
+  - `CaloDigi/calo_coning.py` — `CaloConer` (cone filtering) followed by
+    `CaloHitSelector` (energy + time thresholding) for each ECal/HCal region.
+    These run unconditionally after calorimeter reconstruction and produce the
+    `…Sel` collections that Pandora now consumes.
+  - `Common/calo_thresholds.py` — locates the `MyBIBUtils` per-`(theta, layer)`
+    threshold ROOT files in the software stack (override with
+    `MUCOLL_CALO_THRESHOLDS_DIR`). The ECal selector uses these maps; the HCal
+    selector uses a flat threshold.
+
+### Multi-threading and arguments
+
+- Replaced the separate `--useMT` flag and the per-algorithm `--TrackingThreads`
+  option with a single `--numThreads` knob: `1` (default) runs serially, any
+  value `> 1` enables the multi-threaded Gaudi Hive event loop with that many
+  threads, and `0` auto-detects from the CPU count. The CKF tracking and
+  truth-matching algorithms take their internal thread count from the same value.
+
 ### MAIA-specific cleanups
 
 - Removed the `DetectorSchema` branching: the CKF tracking now always uses the
@@ -66,3 +91,5 @@ reorganised to follow, as closely as possible, the layout of
   provide the MuonCollider components or the MAIA geometry.
 - Extended `test/CMakeLists.txt` to chain `ddsim -> digi -> reco` plus `--help`
   smoke tests for the steering macros.
+- Added CI status badges (MuColl build and test, pre-commit, downstream-build)
+  to the README.
