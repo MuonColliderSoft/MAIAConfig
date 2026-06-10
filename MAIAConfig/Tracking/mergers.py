@@ -14,7 +14,7 @@ def mergehits_cfg(args):
     return CollectionMerger(
         "MergeHits",
         InputCollections = [_coned(b, args) for b in bases],
-        OutputCollection = ["MergedTrackerHits"],
+        OutputCollection = "MergedTrackerHits",
         OutputLevel = INFO
     )
 
@@ -27,6 +27,6 @@ def mergehitsrelations_cfg(args):
     return CollectionMerger(
         "MergeHitsRelations",
         InputCollections = [_coned(b, args) for b in bases],
-        OutputCollection = ["MergedTrackerHitsRelations"],
+        OutputCollection = "MergedTrackerHitsRelations",
         OutputLevel = INFO
     )
