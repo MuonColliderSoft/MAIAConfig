@@ -1,5 +1,5 @@
 from Configurables import ExaTrkGNNTrackFinder
-from Gaudi.Configuration import VERBOSE
+from Gaudi.Configuration import VERBOSE, INFO, DEBUG
 
 def GNNTracker_cfg(args):
     """
@@ -19,7 +19,7 @@ def GNNTracker_cfg(args):
         # "cpu" or "cuda" (optionally "cuda:<index>"). The default image ships a
         # CPU-only onnxruntime, so "cuda" requires a CUDA-enabled build.
         Device=getattr(args, "device", "cpu"),
-        OutputLevel=VERBOSE,
+        OutputLevel=DEBUG,
         InputHitCollections=[
             "MergedTrackerHits",
         ],
