@@ -16,6 +16,9 @@ def GNNTracker_cfg(args):
         EdgeBuildingKnn=100.0,
         EmbeddingDim=4,
         MinHitsPerTrack=3,
+        # "cpu" or "cuda" (optionally "cuda:<index>"). The default image ships a
+        # CPU-only onnxruntime, so "cuda" requires a CUDA-enabled build.
+        Device=getattr(args, "device", "cpu"),
         OutputLevel=VERBOSE,
         InputHitCollections=[
             "IBTrackerHits",
