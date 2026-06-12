@@ -21,11 +21,6 @@ def GNNTracker_cfg(args):
         Device=getattr(args, "device", "cpu"),
         OutputLevel=VERBOSE,
         InputHitCollections=[
-            "IBTrackerHits",
-            "IETrackerHits",
-            "OBTrackerHits",
-            "OETrackerHits",
-            "VBTrackerHits",
-            "VETrackerHits",
+            "MergedTrackerHits",
         ],
     )
