@@ -11,7 +11,7 @@ def filterDL_vertexBarrel_cfg():
         FillHistograms = False,
         SubDetectorName = "Vertex",
         InputCollection = ["VXDBarrelHits"],
-        OutputCollection = ["VXDBarrelHits_DLFiltered"],
+        OutputCollection = "VXDBarrelHits_DLFiltered",
         OutputLevel = INFO
     )
 
@@ -25,6 +25,6 @@ def filterDL_vertexEndcap_cfg():
         FillHistograms = False,
         SubDetectorName = "Vertex",
         InputCollection = ["VXDEndcapHits"],
-        OutputCollection = ["VXDEndcapHits_DLFiltered"],
+        OutputCollection = "VXDEndcapHits_DLFiltered",
         OutputLevel = INFO
     )
