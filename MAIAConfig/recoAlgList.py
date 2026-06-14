@@ -20,7 +20,7 @@ def makeRecoAlgList(the_args):
     algList.append(deduper_cfg())
     algList.append(track_filter_cfg())
     algList.append(track_truth_cfg(the_args))
-    # algList.append(track_refitter_cfg())
+    #algList.append(track_refitter_cfg())
 
     # Track Performance Monitoring
     if the_args.doTrackPerf:
