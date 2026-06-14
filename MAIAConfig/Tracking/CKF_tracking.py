@@ -46,7 +46,7 @@ def CKFFromSeeds_cfg(args):
         InputTrackerHitCollection = "MergedTrackerHits",
         InputSeedTrackCollection = "GNNTrackCandidates",
         OutputTrackCollection = "AllTracks",
-        OutputSeedCollection = "SeedTracks",
+        OutputSeedCollection = "GNNSeededTracks",
         NumThreads = get_mt_args().numThreads,
         OutputLevel = INFO,
     )
