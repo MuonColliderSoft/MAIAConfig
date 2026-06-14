@@ -23,4 +23,5 @@ def GNNTracker_cfg(args):
         InputHitCollections=[
             "MergedTrackerHits",
         ],
+        OutputTrackCandidates=["GNNTrackCandidates"],
     )
