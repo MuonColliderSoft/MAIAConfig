@@ -18,7 +18,7 @@ def makeRecoAlgList(the_args):
     from Tracking.CKF_tracking import CKFTracker_cfg, CKFFromSeeds_cfg, deduper_cfg, track_filter_cfg, track_truth_cfg, track_refitter_cfg
     from Tracking.GNN_tracking import GNNTracker_cfg
     # GNN track finding produces seed candidates that are fed into the CKF.
-    algList.append(GNNTracker_cfg(the_args))
+    #algList.append(GNNTracker_cfg(the_args))
     algList.append(CKFFromSeeds_cfg(the_args))
     #algList.append(CKFTracker_cfg(the_args))
     #algList.append(deduper_cfg())

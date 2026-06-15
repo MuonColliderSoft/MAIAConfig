@@ -44,9 +44,9 @@ def CKFFromSeeds_cfg(args):
         CKF_NumMeasurementsCutOff = 1,
         MinSeedHits = 3,
         InputTrackerHitCollection = "MergedTrackerHits",
-        InputSeedTrackCollection = "GNNTrackCandidates",
-        OutputTrackCollection = "AllTracks",
-        OutputSeedCollection = "GNNSeededTracks",
+        InputSeedTrackCollection = "MultipletTracks_gurobi",
+        OutputTrackCollection = "GurobiTracks",
+        OutputSeedCollection = "QUBOSeededTracks",
         NumThreads = get_mt_args().numThreads,
         OutputLevel = INFO,
     )

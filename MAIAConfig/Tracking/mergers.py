@@ -9,8 +9,8 @@ def mergehits_cfg(args):
     """
     Create a new CollectionMerger instance for merging hits.
     """
-    bases = ["VXDBarrelHits", "ITBarrelHits", "OTBarrelHits",
-             "VXDEndcapHits", "ITEndcapHits", "OTEndcapHits"]
+    bases = ["VBTrackerHitsConed", "IBTrackerHitsConed", "OBTrackerHitsConed",
+             "VETrackerHitsConed", "IETrackerHitsConed", "OETrackerHitsConed"]
     return CollectionMerger(
         "MergeHits",
         InputCollections = [_coned(b, args) for b in bases],
@@ -22,8 +22,8 @@ def mergehitsrelations_cfg(args):
     """
     Create a new CollectionMerger instance for merging hits relations.
     """
-    bases = ["VXDBarrelHitsRelations", "ITBarrelHitsRelations", "OTBarrelHitsRelations",
-             "VXDEndcapHitsRelations", "ITEndcapHitsRelations", "OTEndcapHitsRelations"]
+    bases = ["VBTrackerHitsRelationsConed", "IBTrackerHitsRelationsConed", "OBTrackerHitsRelationsConed",
+             "VETrackerHitsRelationsConed", "IETrackerHitsRelationsConed", "OETrackerHitsRelationsConed"]
     return CollectionMerger(
         "MergeHitsRelations",
         InputCollections = [_coned(b, args) for b in bases],
