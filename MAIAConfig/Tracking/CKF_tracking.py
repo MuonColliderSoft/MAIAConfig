@@ -47,7 +47,7 @@ def CKFFromSeeds_cfg(args):
         InputSeedTrackCollection = "MultipletTracks_gurobi",
         OutputTrackCollection = "QUBOTracks",
         OutputSeedCollection = "QUBOSeededTracks",
-        NumThreads = get_mt_args().numThreads,
+        NumThreads = args.TrackingThreads,
         OutputLevel = INFO,
     )
 
@@ -87,7 +87,7 @@ def track_truth_QUBO_cfg(args):
     """
     return TrackTruthAlg(
         "TruthMatcher_QUBO",
-        NumThreads = get_mt_args().numThreads,
+        NumThreads = args.TrackingThreads,
         InputTrackCollectionName = ["GurobiSelectedTracks"],
         InputTrackerHit2SimTrackerHitRelationName = ["MergedTrackerHitsRelations"],
         OutputParticle2TrackRelationName = ["GurobiTrackRelations"],
@@ -118,7 +118,7 @@ def track_truth_cfg(args):
     """
     return TrackTruthAlg(
         "TruthMatcher",
-        NumThreads = get_mt_args().numThreads,
+        NumThreads = args.TrackingThreads,
         InputTrackCollectionName = ["QUBOSelectedTracks"],
         InputTrackerHit2SimTrackerHitRelationName = ["MergedTrackerHitsRelations"],
         OutputParticle2TrackRelationName = ["QUBOTrackRelations"],
@@ -161,7 +161,7 @@ def track_truth_ckf_cfg(args):
     """
     return TrackTruthAlg(
         "TruthMatcherCKF",
-        NumThreads = get_mt_args().numThreads,
+        NumThreads = args.TrackingThreads,
         InputTrackCollectionName = ["SelectedTracks"],
         InputTrackerHit2SimTrackerHitRelationName = ["MergedTrackerHitsRelations"],
         OutputParticle2TrackRelationName = ["CKFTrackRelations"],
