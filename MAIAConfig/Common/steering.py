@@ -24,18 +24,25 @@ def merge_alg_lists(*alg_lists):
     return merged
 
 
-def build_application(args, alg_list, input_files, output_file, histo_file, evt_max=10):
+def build_application(args, alg_list, input_files, output_file, histo_file, evt_max=10,
+                      output_commands=None):
     """
     Configure the services, IO and ApplicationMgr common to every steering
     macro and return the ApplicationMgr instance.
 
     Parameters:
-    args         : parsed arguments namespace (must carry DD4hepXMLFile / RandSeed).
-    alg_list     : ordered list of algorithm Configurables to run.
-    input_files  : list of input EDM4hep files for the IOSvc.
-    output_file  : output EDM4hep file for the IOSvc.
-    histo_file   : ROOT file for the THistSvc histogram output.
-    evt_max      : number of events to process (default 10).
+    args            : parsed arguments namespace (must carry DD4hepXMLFile / RandSeed).
+    alg_list        : ordered list of algorithm Configurables to run.
+    input_files     : list of input EDM4hep files for the IOSvc.
+    output_file     : output EDM4hep file for the IOSvc.
+    histo_file      : ROOT file for the THistSvc histogram output.
+    evt_max         : number of events to process (default 10).
+    output_commands : optional ordered list of IOSvc keep/drop commands. Each
+                      entry is "keep|drop <namePattern>" (name match, supports
+                      '*'/'?' wildcards) or "keep|drop type <CollectionType>"
+                      (exact podio getTypeName() match, e.g.
+                      "drop type edm4hep::CalorimeterHitCollection"). Later
+                      commands override earlier ones. Defaults to keeping all.
     """
     from GaudiKernel.Constants import WARNING
     from Common.muc_mt import get_mt_args, get_k4run_mt
@@ -72,11 +79,14 @@ def build_application(args, alg_list, input_files, output_file, histo_file, evt_
     services += list(set_services(args, mt_args, histo_file))
 
     # Declare input and output for the IOSvc
-    IOSvc(
+    io_svc = IOSvc(
         "IOSvc",
         Input = input_files,
         Output = output_file,
     )
+    # Optionally restrict the written collections (keep/drop by name or type).
+    if output_commands is not None:
+        io_svc.outputCommands = output_commands
 
     # Run the Application Manager
     app = ApplicationMgr(

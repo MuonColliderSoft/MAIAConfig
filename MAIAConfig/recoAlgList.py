@@ -15,15 +15,25 @@ def makeRecoAlgList(the_args):
     algList.append(mergehitsrelations_cfg(the_args))
 
     # CKF Tracking
-    from Tracking.CKF_tracking import CKFTracker_cfg, CKFFromSeeds_cfg, deduper_cfg, track_filter_cfg, track_truth_cfg, track_refitter_cfg
+    from Tracking.CKF_tracking import CKFTracker_cfg, CKFFromSeeds_cfg, deduper_cfg, track_filter_cfg, track_truth_cfg, track_filter_QUBO_cfg, track_truth_QUBO_cfg, deduper_ckf_cfg, track_filter_ckf_cfg, track_truth_ckf_cfg
     from Tracking.GNN_tracking import GNNTracker_cfg
     # GNN track finding produces seed candidates that are fed into the CKF.
     #algList.append(GNNTracker_cfg(the_args))
     algList.append(CKFFromSeeds_cfg(the_args))
-    #algList.append(CKFTracker_cfg(the_args))
-    #algList.append(deduper_cfg())
-    #algList.append(track_filter_cfg())
-    #algList.append(track_truth_cfg(the_args))
+    algList.append(deduper_cfg())
+    algList.append(track_filter_cfg())
+    algList.append(track_truth_cfg(the_args))
+
+    #algList.append(track_filter_QUBO_cfg())
+    #algList.append(track_truth_QUBO_cfg(the_args))
+
+    '''
+    algList.append(CKFTracker_cfg(the_args))
+    algList.append(deduper_ckf_cfg())
+    algList.append(track_filter_ckf_cfg())
+    algList.append(track_truth_ckf_cfg(the_args))
+    '''
+
     # algList.append(track_refitter_cfg())
 
     # Track Performance Monitoring
