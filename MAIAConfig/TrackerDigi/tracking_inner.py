@@ -10,7 +10,7 @@ def ITBarrel_cfg(args):
     return DDPlanarDigi(
         "InnerBarrelDigitiser",
         CorrectTimesForPropagation = True,
-        IsStrip = True,
+        IsStrip = False,
         ResolutionT = [0.06],
         ResolutionU = [0.007],
         ResolutionV = [0.09],
