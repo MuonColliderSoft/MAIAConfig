@@ -15,26 +15,25 @@ def makeRecoAlgList(the_args):
     algList.append(mergehitsrelations_cfg(the_args))
 
     # CKF Tracking
-    from Tracking.CKF_tracking import CKFTracker_cfg, CKFFromSeeds_cfg, deduper_cfg, track_filter_cfg, track_truth_cfg, track_filter_QUBO_cfg, track_truth_QUBO_cfg, deduper_ckf_cfg, track_filter_ckf_cfg, track_truth_ckf_cfg
-    from Tracking.GNN_tracking import GNNTracker_cfg
-    # GNN track finding produces seed candidates that are fed into the CKF.
-    #algList.append(GNNTracker_cfg(the_args))
-    algList.append(CKFFromSeeds_cfg(the_args))
-    algList.append(deduper_cfg())
-    algList.append(track_filter_cfg())
-    algList.append(track_truth_cfg(the_args))
+    from Tracking.CKF_tracking import CKFTracker_cfg, deduper_cfg, track_filter_cfg, track_truth_cfg
+    from Tracking.QUBO_tracking import CKFFromSeeds_QUBO_cfg, deduper_QUBO_cfg, track_filter_QUBO_cfg, track_truth_QUBO_cfg 
+    from Tracking.QUBO_tracking import CKFFromSeeds_DWAVE_cfg, deduper_DWAVE_cfg, track_filter_DWAVE_cfg, track_truth_DWAVE_cfg 
+    from Tracking.QUBO_tracking import CKFFromSeeds_BRUTE_cfg, deduper_BRUTE_cfg, track_filter_BRUTE_cfg, track_truth_BRUTE_cfg 
 
-    #algList.append(track_filter_QUBO_cfg())
-    #algList.append(track_truth_QUBO_cfg(the_args))
+    algList.append(CKFFromSeeds_QUBO_cfg(the_args))
+    algList.append(deduper_QUBO_cfg())
+    algList.append(track_filter_QUBO_cfg())
+    algList.append(track_truth_QUBO_cfg(the_args))
 
-    '''
-    algList.append(CKFTracker_cfg(the_args))
-    algList.append(deduper_ckf_cfg())
-    algList.append(track_filter_ckf_cfg())
-    algList.append(track_truth_ckf_cfg(the_args))
-    '''
+    algList.append(CKFFromSeeds_DWAVE_cfg(the_args))
+    algList.append(deduper_DWAVE_cfg())
+    algList.append(track_filter_DWAVE_cfg())
+    algList.append(track_truth_DWAVE_cfg(the_args))
 
-    # algList.append(track_refitter_cfg())
+    algList.append(CKFFromSeeds_BRUTE_cfg(the_args))
+    algList.append(deduper_BRUTE_cfg())
+    algList.append(track_filter_BRUTE_cfg())
+    algList.append(track_truth_BRUTE_cfg(the_args))
 
     # Track Performance Monitoring
     if the_args.doTrackPerf:

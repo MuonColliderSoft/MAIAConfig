@@ -1,13 +1,5 @@
 from GaudiKernel.Constants import INFO, WARNING, DEBUG
-from Configurables import (
-    CKFTrackingAlg,
-    CKFTrackingFromSeedsAlg,
-    ACTSDuplicateRemoval,
-    FilterTracksAlg,
-    TrackTruthAlg,
-    RefitFinal,
-)
-from Common.muc_mt import get_mt_args
+from Configurables import CKFTrackingAlg, ACTSDuplicateRemoval, FilterTracksAlg, TrackTruthAlg, RefitFinal
 
 def CKFTracker_cfg(args):
     """
@@ -33,66 +25,17 @@ def CKFTracker_cfg(args):
         OutputLevel = INFO,
     )
 
-def CKFFromSeeds_cfg(args):
-    """
-    Create a CKFTrackingFromSeedsAlg instance that runs the CKF using the track
-    candidates from ExaTrkGNNTrackFinder as seeds (instead of internal seeding).
-    """
-    return CKFTrackingFromSeedsAlg(
-        "SeededCKFReconstructor",
-        CKF_Chi2CutOff = 10,
-        CKF_NumMeasurementsCutOff = 1,
-        MinSeedHits = 3,
-        InputTrackerHitCollection = "MergedTrackerHits",
-        InputSeedTrackCollection = "MultipletTracks_gurobi",
-        OutputTrackCollection = "QUBOTracks",
-        OutputSeedCollection = "QUBOSeededTracks",
-        NumThreads = args.TrackingThreads,
-        OutputLevel = INFO,
-    )
-
-
 def deduper_cfg():
     """
     Create a new ACTSDuplicateRemoval instance for removing duplicate tracks.
     """
     return ACTSDuplicateRemoval(
         "Deduper",
-        InputTrackCollectionName = ["QUBOTracks"],
-        OutputTrackCollectionName = ["QUBODedupedTracks"],
+        InputTrackCollectionName = ["AllTracks"],
+        OutputTrackCollectionName = ["DedupedTracks"],
         OutputLevel = INFO
     )
 
-def track_filter_QUBO_cfg():
-    """
-    Create a new FilterTracksAlg instance for filtering tracks.
-    """
-    return FilterTracksAlg(
-        "Filterer_QUBO",
-        InputTrackCollectionName = ["MultipletTracks_gurobi"],
-        MinPt = "0.5",
-        MaxD0 = 10,
-        MaxZ0 = 10,
-        NHitsInner = "0",
-        NHitsOuter = "0",
-        NHitsTotal = "0",
-        NHitsVertex = "0",
-        OutputTrackCollectionName = ["GurobiSelectedTracks"],
-        OutputLevel = INFO
-    )
-
-def track_truth_QUBO_cfg(args):
-    """
-    Create a new TrackTruth instance for track truth matching.
-    """
-    return TrackTruthAlg(
-        "TruthMatcher_QUBO",
-        NumThreads = args.TrackingThreads,
-        InputTrackCollectionName = ["GurobiSelectedTracks"],
-        InputTrackerHit2SimTrackerHitRelationName = ["MergedTrackerHitsRelations"],
-        OutputParticle2TrackRelationName = ["GurobiTrackRelations"],
-        OutputLevel = INFO
-    )
 
 def track_filter_cfg():
     """
@@ -100,7 +43,7 @@ def track_filter_cfg():
     """
     return FilterTracksAlg(
         "Filterer",
-        InputTrackCollectionName = ["QUBODedupedTracks"],
+        InputTrackCollectionName = ["DedupedTracks"],
         MinPt = "0.5",
         MaxD0 = 10,
         MaxZ0 = 10,
@@ -108,7 +51,7 @@ def track_filter_cfg():
         NHitsOuter = "0",
         NHitsTotal = "0",
         NHitsVertex = "0",
-        OutputTrackCollectionName = ["QUBOSelectedTracks"],
+        OutputTrackCollectionName = ["SiTracks"],
         OutputLevel = INFO
     )
 
@@ -119,55 +62,11 @@ def track_truth_cfg(args):
     return TrackTruthAlg(
         "TruthMatcher",
         NumThreads = args.TrackingThreads,
-        InputTrackCollectionName = ["QUBOSelectedTracks"],
+        InputTrackCollectionName = ["SiTracks"],
         InputTrackerHit2SimTrackerHitRelationName = ["MergedTrackerHitsRelations"],
-        OutputParticle2TrackRelationName = ["QUBOTrackRelations"],
+        OutputParticle2TrackRelationName = ["SiTrackRelations"],
         OutputLevel = INFO
     )
-
-def deduper_ckf_cfg():
-    """
-    Create a new ACTSDuplicateRemoval instance for removing duplicate tracks.
-    """
-    return ACTSDuplicateRemoval(
-        "DeduperCKF",
-        InputTrackCollectionName = ["AllTracks"],
-        OutputTrackCollectionName = ["DedupedTracks"],
-        OutputLevel = INFO
-    )
-
-
-def track_filter_ckf_cfg():
-    """
-    Create a new FilterTracksAlg instance for filtering tracks.
-    """
-    return FilterTracksAlg(
-        "FiltererCKF",
-        InputTrackCollectionName = ["DedupedTracks"],
-        MinPt = "0.5",
-        MaxD0 = 10,
-        MaxZ0 = 10,
-        NHitsInner = "0",
-        NHitsOuter = "0",
-        NHitsTotal = "0",
-        NHitsVertex = "0",
-        OutputTrackCollectionName = ["SelectedTracks"],
-        OutputLevel = INFO
-    )
-
-def track_truth_ckf_cfg(args):
-    """
-    Create a new TrackTruth instance for track truth matching.
-    """
-    return TrackTruthAlg(
-        "TruthMatcherCKF",
-        NumThreads = args.TrackingThreads,
-        InputTrackCollectionName = ["SelectedTracks"],
-        InputTrackerHit2SimTrackerHitRelationName = ["MergedTrackerHitsRelations"],
-        OutputParticle2TrackRelationName = ["CKFTrackRelations"],
-        OutputLevel = INFO
-    )
-
 
 def track_refitter_cfg():
     """
