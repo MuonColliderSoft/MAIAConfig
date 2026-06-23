@@ -30,7 +30,7 @@ def deduper_QUBO_cfg():
     Create a new ACTSDuplicateRemoval instance for removing duplicate tracks.
     """
     return ACTSDuplicateRemoval(
-        "Deduper",
+        "Deduper_QUBO",
         InputTrackCollectionName = ["QUBOTracks"],
         OutputTrackCollectionName = ["QUBODedupedTracks"],
         OutputLevel = INFO
@@ -90,7 +90,7 @@ def deduper_DWAVE_cfg():
     Create a new ACTSDuplicateRemoval instance for removing duplicate tracks.
     """
     return ACTSDuplicateRemoval(
-        "Deduper",
+        "Deduper_DWAVE",
         InputTrackCollectionName = ["DWAVETracks"],
         OutputTrackCollectionName = ["DWAVEDedupedTracks"],
         OutputLevel = INFO
@@ -151,7 +151,7 @@ def deduper_BRUTE_cfg():
     Create a new ACTSDuplicateRemoval instance for removing duplicate tracks.
     """
     return ACTSDuplicateRemoval(
-        "Deduper",
+        "Deduper_BRUTE",
         InputTrackCollectionName = ["BRUTETracks"],
         OutputTrackCollectionName = ["BRUTEDedupedTracks"],
         OutputLevel = INFO
