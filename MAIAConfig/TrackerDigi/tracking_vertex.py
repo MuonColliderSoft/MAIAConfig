@@ -21,6 +21,7 @@ def VXDBarrel_cfg(args):
         SimTrackHitCollectionName = inputHitCollections,
         SimTrkHitRelCollection = ["VXDBarrelHitsRelations"],
         TrackerHitCollectionName = ["VXDBarrelHits"],
+        ForceHitsOntoSurface = True,
         OutputLevel = INFO
     )
 
@@ -43,5 +44,6 @@ def VXDEndcap_cfg(args):
         SimTrackHitCollectionName = inputHitCollections,
         SimTrkHitRelCollection = ["VXDEndcapHitsRelations"],
         TrackerHitCollectionName = ["VXDEndcapHits"],
+        ForceHitsOntoSurface = True,
         OutputLevel = INFO
     )

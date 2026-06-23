@@ -71,11 +71,13 @@ reorganised to follow, as closely as possible, the layout of
 
 ### Multi-threading and arguments
 
-- Replaced the separate `--useMT` flag and the per-algorithm `--TrackingThreads`
-  option with a single `--numThreads` knob: `1` (default) runs serially, any
-  value `> 1` enables the multi-threaded Gaudi Hive event loop with that many
-  threads, and `0` auto-detects from the CPU count. The CKF tracking and
-  truth-matching algorithms take their internal thread count from the same value.
+- Replaced the `--useMT` flag with a `--numThreads` knob controlling the Gaudi
+  event loop: `1` (default) runs serially, any value `> 1` enables the
+  multi-threaded Gaudi Hive event loop with that many threads, and `0`
+  auto-detects from the CPU count.
+- The tracking algorithms (CKF tracking and truth matching) take their internal
+  thread count from a separate `--TrackingThreads` option (default `1`),
+  independent of the Gaudi event-loop `--numThreads` setting.
 
 ### MAIA-specific cleanups
 

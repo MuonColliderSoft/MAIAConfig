@@ -23,6 +23,14 @@ def get_reco_args():
         default=False
     )
 
+    parser.add_argument(
+        "--TrackingThreads",
+        help="Number of threads used internally by the tracking algorithms "
+             "(independent of the --numThreads Gaudi event-loop setting)",
+        type=int,
+        default=1,
+    )
+
     # Shared with digi_args: the digi step produces the "...Coned" collections
     # and the merger here must read them. add_argument_once allows the two
     # parsers to coexist in the combined digi_reco job.

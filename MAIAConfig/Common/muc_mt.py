@@ -11,13 +11,15 @@ def choose_parallelism():
 def get_mt_args():
     """Parse command line arguments for multi-threading configuration.
 
-    A single knob, --numThreads, controls everything: 1 (the default) runs the
+    The --numThreads knob controls the Gaudi event loop: 1 (the default) runs the
     serial event loop, any value > 1 enables the multi-threaded Gaudi Hive event
     loop with that many threads, and 0 auto-detects a sensible thread count from
     the CPU count. The convenience flag ``useMT`` is derived from it. Registered
-    with add_argument_once so this can be called from several places (e.g. the
-    tracking config also reads --numThreads) without argparse complaining about
-    duplicate options.
+    with add_argument_once so this can be called from several places without
+    argparse complaining about duplicate options.
+
+    This controls only the Gaudi event loop; the tracking algorithms take their
+    internal thread count from the separate --TrackingThreads option.
     """
     from k4FWCore.parseArgs import parser
     from Common.argutils import add_argument_once

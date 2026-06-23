@@ -21,6 +21,7 @@ def OTBarrel_cfg(args):
         SimTrackHitCollectionName = inputHitCollections,
         SimTrkHitRelCollection = ["OTBarrelHitsRelations"],
         TrackerHitCollectionName = ["OTBarrelHits"],
+        ForceHitsOntoSurface = True,
         OutputLevel = INFO
     )
 
@@ -32,7 +33,7 @@ def OTEndcap_cfg(args):
     return DDPlanarDigi(
         "OTEndcapDigitiser",
         CorrectTimesForPropagation = True,
-        IsStrip = True,
+        IsStrip = False,
         ResolutionT = [0.06],
         ResolutionU = [0.007],
         ResolutionV = [0.09],
@@ -43,5 +44,6 @@ def OTEndcap_cfg(args):
         SimTrackHitCollectionName = inputHitCollections,
         SimTrkHitRelCollection = ["OTEndcapHitsRelations"],
         TrackerHitCollectionName = ["OTEndcapHits"],
+        ForceHitsOntoSurface = True,
         OutputLevel = INFO
     )

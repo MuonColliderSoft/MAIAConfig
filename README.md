@@ -106,7 +106,8 @@ The full set is:
 | `--doTrackerConing` | digi + reco | `False` | Cone-filter the tracker hits around the signal MC particles (BIB cleaning). When enabled, the digi step writes the `…Coned` hit collections and the merger reads them before tracking. |
 | `--RandSeed` | digi | `42` | Random seed for the digitisation smearing. |
 | `--doTrackPerf` | reco | `False` | Run the tracking performance monitoring. |
-| `--numThreads` | both | `1` | Number of threads. `1` runs serially; any value `> 1` enables the multi-threaded Gaudi Hive event loop with that many threads (scheduler + event slots) and sets the internal thread count of the CKF tracking and truth-matching algorithms; `0` auto-detects a sensible count from the CPU count. |
+| `--TrackingThreads` | reco | `1` | Internal thread count of the CKF tracking and truth-matching algorithms (independent of `--numThreads`). |
+| `--numThreads` | both | `1` | Number of threads for the Gaudi event loop. `1` runs serially; any value `> 1` enables the multi-threaded Gaudi Hive event loop with that many threads (scheduler + event slots); `0` auto-detects a sensible count from the CPU count. |
 
 ### BIB hit cleaning
 

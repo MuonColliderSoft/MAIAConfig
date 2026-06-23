@@ -10,7 +10,7 @@ def ITBarrel_cfg(args):
     return DDPlanarDigi(
         "InnerBarrelDigitiser",
         CorrectTimesForPropagation = True,
-        IsStrip = True,
+        IsStrip = False,
         ResolutionT = [0.06],
         ResolutionU = [0.007],
         ResolutionV = [0.09],
@@ -21,6 +21,7 @@ def ITBarrel_cfg(args):
         SimTrackHitCollectionName = inputHitCollections,
         SimTrkHitRelCollection = ["ITBarrelHitsRelations"],
         TrackerHitCollectionName = ["ITBarrelHits"],
+        ForceHitsOntoSurface = True,
         OutputLevel = INFO
     )
 
@@ -43,5 +44,6 @@ def ITEndcap_cfg(args):
         SimTrackHitCollectionName = inputHitCollections,
         SimTrkHitRelCollection = ["ITEndcapHitsRelations"],
         TrackerHitCollectionName = ["ITEndcapHits"],
+        ForceHitsOntoSurface = True,
         OutputLevel = INFO
     )
