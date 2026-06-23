@@ -30,7 +30,7 @@ def get_digi_args():
         "--OverlayFullNumberBackground",
         help="Number of background files used for BIB overlay",
         type=int,
-        default=812, #Magic number assumes 45 phi clones of each MC particle
+        default=1666, #Magic number for EU24 BIB
     )
 
     parser.add_argument(
@@ -38,7 +38,7 @@ def get_digi_args():
         help="Path(s) to file(s) used for incoherent pairs overlay",
         type=str,
         nargs="+",
-        default=["/path/to/pairs.slcio"],
+        default=["/path/to/pairs.edm4hep.root"],
     )
 
     parser.add_argument(
