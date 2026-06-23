@@ -21,6 +21,7 @@ def ITBarrel_cfg(args):
         SimTrackHitCollectionName = inputHitCollections,
         SimTrkHitRelCollection = ["ITBarrelHitsRelations"],
         TrackerHitCollectionName = ["ITBarrelHits"],
+        ForceHitsOntoSurface = True,
         OutputLevel = INFO
     )
 
@@ -43,5 +44,6 @@ def ITEndcap_cfg(args):
         SimTrackHitCollectionName = inputHitCollections,
         SimTrkHitRelCollection = ["ITEndcapHitsRelations"],
         TrackerHitCollectionName = ["ITEndcapHits"],
+        ForceHitsOntoSurface = True,
         OutputLevel = INFO
     )

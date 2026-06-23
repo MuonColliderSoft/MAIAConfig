@@ -21,6 +21,7 @@ def OTBarrel_cfg(args):
         SimTrackHitCollectionName = inputHitCollections,
         SimTrkHitRelCollection = ["OTBarrelHitsRelations"],
         TrackerHitCollectionName = ["OTBarrelHits"],
+        ForceHitsOntoSurface = True,
         OutputLevel = INFO
     )
 
@@ -43,5 +44,6 @@ def OTEndcap_cfg(args):
         SimTrackHitCollectionName = inputHitCollections,
         SimTrkHitRelCollection = ["OTEndcapHitsRelations"],
         TrackerHitCollectionName = ["OTEndcapHits"],
+        ForceHitsOntoSurface = True,
         OutputLevel = INFO
     )
