@@ -27,17 +27,17 @@ def find_calo_thresholds(detector, energy=DEFAULT_ENERGY):
     if override:
         candidates.append(os.path.join(override, fname))
 
-    # 2) MyBIBUtils ships the maps under <prefix>/share/MyBIBUtils/data/. Locate
+    # 2) k4Reco ships the maps under <prefix>/share/k4Reco/data/. Locate
     #    the package prefix from the entry it adds to ROOT_INCLUDE_PATH.
     for inc in os.environ.get("ROOT_INCLUDE_PATH", "").split(os.pathsep):
-        if "mybibutils" in inc.lower():
-            candidates.append(os.path.join(os.path.dirname(inc), "share", "MyBIBUtils", "data", fname))
+        if "k4reco" in inc.lower():
+            candidates.append(os.path.join(os.path.dirname(inc), "share", "k4Reco", "data", fname))
 
     # 3) Fall back to globbing the spack architecture directory of the stack.
     stack = os.environ.get("MUCOLL_STACK", "")
     if stack:
         arch_dir = os.path.dirname(os.path.dirname(stack))
-        candidates += glob.glob(os.path.join(arch_dir, "mybibutils-*", "share", "MyBIBUtils", "data", fname))
+        candidates += glob.glob(os.path.join(arch_dir, "k4reco-*", "share", "k4Reco", "data", fname))
 
     for path in candidates:
         if path and os.path.isfile(path):
@@ -45,5 +45,5 @@ def find_calo_thresholds(detector, energy=DEFAULT_ENERGY):
 
     raise FileNotFoundError(
         f"Could not locate {fname}; set MUCOLL_CALO_THRESHOLDS_DIR to the "
-        "directory containing the MyBIBUtils threshold maps."
+        "directory containing the k4Reco threshold maps."
     )
