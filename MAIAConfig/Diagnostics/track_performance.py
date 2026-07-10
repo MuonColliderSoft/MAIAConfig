@@ -1,5 +1,5 @@
 from GaudiKernel.Constants import INFO, WARNING, DEBUG
-from Configurables import TrackTruthAlg, TrackPerfHistAlg
+from Configurables import TrackTruthAlg
 
 def trackTruth_cfg():
     """
@@ -10,17 +10,5 @@ def trackTruth_cfg():
         OutputParticle2TrackRelationName = ["MCParticle_SiTracks"],
         InputTrackCollectionName = ["SiTracks"],
         InputTrackerHit2SimTrackerHitRelationName = ["MergedTrackerHitsRelations"],
-        OutputLevel = INFO
-    )
-
-def trackPerf_cfg():
-    """
-    Create a new TrackPerfHistAlg instance for analyzing track performance.
-    """
-    return TrackPerfHistAlg(
-        "TrackPerformance",
-        InputMCParticleCollectionName = ["MCParticles"],
-        InputMCTrackRelationCollectionName = ["MCParticle_SiTracks"],
-        InputTrackCollectionName = ["SiTracks"],
         OutputLevel = INFO
     )

@@ -24,9 +24,8 @@ def makeRecoAlgList(the_args):
 
     # Track Performance Monitoring
     if the_args.doTrackPerf:
-        from Diagnostics.track_performance import trackPerf_cfg, trackTruth_cfg
+        from Diagnostics.track_performance import trackTruth_cfg
         algList.append(trackTruth_cfg())
-        algList.append(trackPerf_cfg())
 
     # Pandora PFOs
     from ParticleFlow.pandora import pandoraPFA_cfg, fastJet_cfg
