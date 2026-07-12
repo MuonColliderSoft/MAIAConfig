@@ -7,7 +7,8 @@ def ActsGeoSvc_cfg(args):
     DD4hep field.
     """
     return ActsGeoSvc(
-        "ActsGeoSvc"
+        "ActsGeoSvc",
+        #UseDD4hepBField=args.use_dd4hep_field
     )
 
 def CKFTracker_cfg(args):
