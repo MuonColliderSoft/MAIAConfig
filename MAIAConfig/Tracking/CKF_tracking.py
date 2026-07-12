@@ -1,5 +1,15 @@
 from GaudiKernel.Constants import INFO, WARNING, DEBUG
-from Configurables import CKFTrackingAlg, ACTSDuplicateRemoval, FilterTracksAlg, TrackTruthAlg, RefitFinal
+from Configurables import ActsGeoSvc, CKFTrackingAlg, ACTSDuplicateRemoval, FilterTracksAlg, TrackTruthAlg, RefitFinal
+
+def ActsGeoSvc_cfg(args):
+    """Configure the ACTS GeoSvc.
+    Set use_dd4hep_field=True to make ACTS use the real, position-dependent
+    DD4hep field.
+    """
+    return ActsGeoSvc(
+        "ActsGeoSvc", 
+        UseDD4hepBField=args.use_dd4hep_field
+    )
 
 def CKFTracker_cfg(args):
     """

@@ -15,7 +15,8 @@ def makeRecoAlgList(the_args):
     algList.append(mergehitsrelations_cfg(the_args))
 
     # CKF Tracking
-    from Tracking.CKF_tracking import CKFTracker_cfg, deduper_cfg, track_filter_cfg, track_truth_cfg, track_refitter_cfg
+    from Tracking.CKF_tracking import CKFTracker_cfg, deduper_cfg, track_filter_cfg, track_truth_cfg, ActsGeoSvc_cfg
+    algList.append(ActsGeoSvc_cfg(the_args))
     algList.append(CKFTracker_cfg(the_args))
     algList.append(deduper_cfg())
     algList.append(track_filter_cfg())
