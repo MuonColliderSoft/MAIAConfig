@@ -19,6 +19,17 @@ def CKFTracker_cfg(args):
         "Reconstructor",
         RunCKF = True,
         CKF_Chi2CutOff = 10,
+        # Hits with chi2CutOff <= local chi2 < chi2CutOffOutlier are kept as outliers; above -> hole.
+        CKF_Chi2CutOffOutlier = 25,
+        # CKF branch stopper: terminate fake branches early instead of extending
+        # them through the whole detector, aligned with the downstream selection
+        # (>= 8 hits, <= 2 holes).
+        UseBranchStopper = True,
+        BranchStopper_MaxHoles = 2,
+        BranchStopper_MaxOutliers = 3,
+        BranchStopper_MinMeasurements = 8,
+        BranchStopper_PtMin = 0.5,
+        BranchStopper_PtMinMeasurements = 4,
         SeedFinding_RMax = 150,
         SeedFinding_MinPt = 500,
         SeedFinding_ImpactMax = 3,
@@ -59,8 +70,9 @@ def track_filter_cfg():
         MaxZ0 = 10,
         NHitsInner = "0",
         NHitsOuter = "0",
-        NHitsTotal = "0",
+        NHitsTotal = "7",
         NHitsVertex = "0",
+        MaxHoles = 2,
         OutputTrackCollectionName = ["SiTracks"],
         OutputLevel = INFO
     )
