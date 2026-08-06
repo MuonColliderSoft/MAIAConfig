@@ -14,17 +14,14 @@ def makeRecoAlgList(the_args):
     algList.append(mergehits_cfg(the_args))
     algList.append(mergehitsrelations_cfg(the_args))
 
-    # CKF Tracking    
-    from Tracking.CKF_tracking import CKFTracker_cfg, CKFFromSeeds_cfg, deduper_cfg, track_filter_cfg, track_truth_cfg, ActsGeoSvc_cfg, track_refitter_cfg
-    from Tracking.GNN_tracking import GNNTracker_cfg
-    # GNN track finding produces seed candidates that are fed into the CKF.
-    algList.append(GNNTracker_cfg(the_args))
-    algList.append(CKFFromSeeds_cfg(the_args))
-    #algList.append(CKFTracker_cfg(the_args))
-    #algList.append(deduper_cfg())
-    #algList.append(track_filter_cfg())
-    #algList.append(track_truth_cfg(the_args))
-    # algList.append(track_refitter_cfg())
+    # CKF Tracking
+    from Tracking.CKF_tracking import CKFTracker_cfg, deduper_cfg, track_filter_cfg, track_truth_cfg, ActsGeoSvc_cfg, track_refitter_cfg
+    ActsGeoSvc_cfg(the_args)  # service: configure it, do NOT append to the algorithm list
+    algList.append(CKFTracker_cfg(the_args))
+    algList.append(deduper_cfg())
+    algList.append(track_filter_cfg())
+    algList.append(track_truth_cfg(the_args))
+    #algList.append(track_refitter_cfg())
 
     # Track Performance Monitoring
     if the_args.doTrackPerf:
@@ -32,8 +29,8 @@ def makeRecoAlgList(the_args):
         algList.append(trackTruth_cfg())
 
     # Pandora PFOs
-    #from ParticleFlow.pandora import pandoraPFA_cfg, fastJet_cfg
-    #algList.append(pandoraPFA_cfg())
-    #algList.append(fastJet_cfg())
+    from ParticleFlow.pandora import pandoraPFA_cfg, fastJet_cfg
+    algList.append(pandoraPFA_cfg())
+    algList.append(fastJet_cfg())
 
     return algList
