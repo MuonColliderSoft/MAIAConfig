@@ -37,30 +37,30 @@ def makeDigiAlgList(the_args):
         algList += tracker_coner_cfgs(the_args)
 
     # EM, Hadronic Calorimeter Digitization
-    from CaloDigi.calorimetry_EM import ECalBarrelDigi_cfg, ECalBarrelReco_cfg
-    from CaloDigi.calorimetry_EM import ECalEndcapDigi_cfg, ECalEndcapReco_cfg
-    algList.append(ECalBarrelDigi_cfg(the_args))
-    algList.append(ECalBarrelReco_cfg())
-    algList.append(ECalEndcapDigi_cfg(the_args))
-    algList.append(ECalEndcapReco_cfg())
-    from CaloDigi.calorimetry_HAD import HCalBarrelDigi_cfg, HCalBarrelReco_cfg
-    from CaloDigi.calorimetry_HAD import HCalEndcapDigi_cfg, HCalEndcapReco_cfg
-    algList.append(HCalBarrelDigi_cfg(the_args))
-    algList.append(HCalBarrelReco_cfg())
-    algList.append(HCalEndcapDigi_cfg(the_args))
-    algList.append(HCalEndcapReco_cfg())
+    #from CaloDigi.calorimetry_EM import ECalBarrelDigi_cfg, ECalBarrelReco_cfg
+    #from CaloDigi.calorimetry_EM import ECalEndcapDigi_cfg, ECalEndcapReco_cfg
+    #algList.append(ECalBarrelDigi_cfg(the_args))
+    #algList.append(ECalBarrelReco_cfg())
+    #algList.append(ECalEndcapDigi_cfg(the_args))
+    #algList.append(ECalEndcapReco_cfg())
+    #from CaloDigi.calorimetry_HAD import HCalBarrelDigi_cfg, HCalBarrelReco_cfg
+    #from CaloDigi.calorimetry_HAD import HCalEndcapDigi_cfg, HCalEndcapReco_cfg
+    #algList.append(HCalBarrelDigi_cfg(the_args))
+    #algList.append(HCalBarrelReco_cfg())
+    #algList.append(HCalEndcapDigi_cfg(the_args))
+    #algList.append(HCalEndcapReco_cfg())
 
     # Calorimeter Hit Coning + BIB Selection. Always run, mirroring steer_reco.py:
     # each region is coned around the signal MC particles and then thresholded,
     # producing the "...Sel" collections that Pandora consumes.
-    from CaloDigi.calo_coning import calo_coner_cfgs, calo_selector_cfgs
-    algList += calo_coner_cfgs()
-    algList += calo_selector_cfgs()
+    #from CaloDigi.calo_coning import calo_coner_cfgs, calo_selector_cfgs
+    #algList += calo_coner_cfgs()
+    #algList += calo_selector_cfgs()
 
     # Muon Calorimeter Digitization
-    from CaloDigi.calorimetry_MU import MuonBarrelDigi_cfg, MuonEndcapDigi_cfg
-    algList.append(MuonBarrelDigi_cfg(the_args))
-    algList.append(MuonEndcapDigi_cfg(the_args))
+    #from CaloDigi.calorimetry_MU import MuonBarrelDigi_cfg, MuonEndcapDigi_cfg
+    #algList.append(MuonBarrelDigi_cfg(the_args))
+    #algList.append(MuonEndcapDigi_cfg(the_args))
 
     # Vertex Filtering
     if the_args.doFilterDL:
