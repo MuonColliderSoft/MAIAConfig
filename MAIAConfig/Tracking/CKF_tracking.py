@@ -1,6 +1,8 @@
 from GaudiKernel.Constants import INFO, WARNING, DEBUG
 from Configurables import ActsGeoSvc, CKFTrackingAlg, ACTSDuplicateRemoval, FilterTracksAlg, TrackTruthAlg, RefitFinal
 
+import os
+
 def ActsGeoSvc_cfg(args):
     """Configure the ACTS GeoSvc.
     Set use_dd4hep_field=True to make ACTS use the real, position-dependent
@@ -8,7 +10,8 @@ def ActsGeoSvc_cfg(args):
     """
     return ActsGeoSvc(
         "ActsGeoSvc",
-        #UseDD4hepBField=args.use_dd4hep_field
+        UseDD4hepBField=args.use_dd4hep_field,
+        MaterialMapFile = os.environ.get("ACTSTRACKING_DATA") + "/k4ActsTracking/data/MAIA_v0_gen3_material_map.json",
     )
 
 def CKFTracker_cfg(args):
@@ -33,7 +36,7 @@ def CKFTracker_cfg(args):
         SeedFinding_RMax = 150,
         SeedFinding_MinPt = 500,
         SeedFinding_ImpactMax = 3,
-        CKF_NumMeasurementsCutOff = 1,
+        CKF_NumMeasurementsCutOff = 2,
         SeedFinding_SigmaScattering = 50,
         SeedFinding_CollisionRegion = 6,
         SeedFinding_RadLengthPerSeed = 0.1,
