@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from reco_args import get_reco_args
 from recoAlgList import makeRecoAlgList
-from Common.steering import build_application
+from Common.steering import build_application, drop_calorimeter_hits, drop_tracker_hits
 
 # Collect arguments and build the reconstruction algorithm list
 args = get_reco_args()
@@ -21,6 +21,13 @@ app = build_application(
     output_file = "reco_output.edm4hep.root",
     histo_file = "reco_histograms.root",
 )
+
+# With background overlaid the hit collections dominate the output file size,
+# so drop every (Sim)TrackerHit and (Sim)CalorimeterHit collection from the reco
+# output. The reconstructed objects (tracks, clusters, PFOs, jets) are kept.
+if args.doOverlayIP or args.doOverlayFull:
+    drop_tracker_hits()
+    drop_calorimeter_hits()
 
 # Per-algorithm CPU monitoring via the Gaudi Auditor Service. The ChronoAuditor
 # records CPU usage of each algorithm's execute() and ChronoStatSvc prints the

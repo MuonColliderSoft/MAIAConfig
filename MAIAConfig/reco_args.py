@@ -49,4 +49,25 @@ def get_reco_args():
         default=False,
     )
 
+    # Shared with digi_args: the overlay flags are declared at digitisation, but
+    # the reco steering needs to know about them too so that the (very large)
+    # tracker and calorimeter hit collections can be dropped from the output
+    # when background is overlaid. add_argument_once keeps the combined
+    # digi_reco job working.
+    add_argument_once(
+        parser,
+        "--doOverlayFull",
+        help="Do BIB overlay",
+        action="store_true",
+        default=False,
+    )
+
+    add_argument_once(
+        parser,
+        "--doOverlayIP",
+        help="Do incoherent pairs overlay",
+        action="store_true",
+        default=False,
+    )
+
     return parser.parse_known_args()[0]
