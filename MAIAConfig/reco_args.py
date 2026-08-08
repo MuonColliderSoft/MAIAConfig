@@ -70,4 +70,13 @@ def get_reco_args():
         default=False,
     )
 
+    parser.add_argument(
+        "--keepEverything",
+        help="Write every collection to the reconstruction output, including "
+             "the tracker and calorimeter hits that are otherwise dropped when "
+             "an overlay is enabled",
+        action="store_true",
+        default=False,
+    )
+
     return parser.parse_known_args()[0]

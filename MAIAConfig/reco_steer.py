@@ -25,7 +25,8 @@ app = build_application(
 # With background overlaid the hit collections dominate the output file size,
 # so drop every (Sim)TrackerHit and (Sim)CalorimeterHit collection from the reco
 # output. The reconstructed objects (tracks, clusters, PFOs, jets) are kept.
-if args.doOverlayIP or args.doOverlayFull:
+# --keepEverything switches the dropping off and writes the full event.
+if (args.doOverlayIP or args.doOverlayFull) and not args.keepEverything:
     drop_tracker_hits()
     drop_calorimeter_hits()
 

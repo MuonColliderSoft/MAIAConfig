@@ -106,6 +106,7 @@ The full set is:
 | `--doTrackerConing` | digi + reco | `False` | Cone-filter the tracker hits around the signal MC particles (BIB cleaning). When enabled, the digi step writes the `…Coned` hit collections and the merger reads them before tracking. |
 | `--RandSeed` | digi | `42` | Random seed for the digitisation smearing. |
 | `--doTrackPerf` | reco | `False` | Run the tracking performance monitoring. |
+| `--keepEverything` | reco | `False` | Write every collection to the reconstruction output, overriding the hit dropping that `--doOverlayFull`/`--doOverlayIP` would otherwise trigger (see below). |
 | `--TrackingThreads` | reco | `1` | Internal thread count of the CKF tracking and truth-matching algorithms (independent of `--numThreads`). |
 | `--numThreads` | both | `1` | Number of threads for the Gaudi event loop. `1` runs serially; any value `> 1` enables the multi-threaded Gaudi Hive event loop with that many threads (scheduler + event slots); `0` auto-detects a sensible count from the CPU count. |
 
@@ -126,6 +127,13 @@ The reconstructed objects — tracks, Pandora clusters, PFOs, jets, vertices,
 `MCParticles` and the track ↔ MC-particle links — are kept, but any reference
 they hold into a dropped hit collection (`Track::trackerHits`,
 `Cluster::hits`, …) no longer resolves in the output file.
+
+Pass `--keepEverything` to switch the dropping off and write the full event
+even with an overlay enabled:
+
+```bash
+k4run reco_steer.py --doOverlayFull --keepEverything
+```
 
 ### BIB hit cleaning
 
