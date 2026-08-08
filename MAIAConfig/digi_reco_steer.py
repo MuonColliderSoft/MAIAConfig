@@ -14,7 +14,12 @@ from digi_args import get_digi_args
 from reco_args import get_reco_args
 from digiAlgList import makeDigiAlgList
 from recoAlgList import makeRecoAlgList
-from Common.steering import build_application, merge_alg_lists
+from Common.steering import (
+    build_application,
+    drop_calorimeter_hits,
+    drop_tracker_hits,
+    merge_alg_lists,
+)
 
 # Register the digi arguments first, then the reco arguments; the returned reco
 # namespace is a superset that carries every option needed by both lists. The
@@ -33,3 +38,10 @@ build_application(
     output_file = "digireco_output.edm4hep.root",
     histo_file = "digireco_histograms.root",
 )
+
+# Same output slimming as reco_steer.py: with background overlaid the hit
+# collections dominate the output file size, so drop every (Sim)TrackerHit and
+# (Sim)CalorimeterHit collection unless --keepEverything asks for the full event.
+if (args.doOverlayIP or args.doOverlayFull) and not args.keepEverything:
+    drop_tracker_hits()
+    drop_calorimeter_hits()
