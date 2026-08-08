@@ -71,6 +71,6 @@ def overlay_ip_cfg(args):
         OutputSimTrackerHits = out_tracker_hits,
         OutputSimCalorimeterHits = out_calo_hits,
         OutputCaloHitContributions = out_calo_contribs,
-        MergeMCParticles = False,
+        #MergeMCParticles = False,
         OutputLevel = INFO
     )
