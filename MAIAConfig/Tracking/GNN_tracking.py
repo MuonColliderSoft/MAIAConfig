@@ -18,10 +18,8 @@ def GNNTracker_cfg(args):
     Create a new GNNTrackFinder instance for GNN tracking.
     """
     return GNNTrackFinder(
-        "Reconstructor",
-        #EdgeClassifierModelPath=[str(args.modelBase + "/edge_classifier-Filter.onnx"), str(args.modelBase + "/edge_classifier-InteractionGNN.onnx")],
+        "GNNTrackFinder",
         EdgeClassifierModelPath=[str(args.modelBase + "/edge_classifier-InteractionGNN2-v1.onnx")],
-        #EdgeClassifierCut=[0.0,0.1],
         EdgeClassifierCut=[0.01],
         NodeEmbeddingModelPath=str(
             args.modelBase + "/graph_construction-MetricLearningT-v1.onnx"
@@ -29,19 +27,10 @@ def GNNTracker_cfg(args):
         EdgeBuildingRadius=0.1,
         EdgeBuildingKnn=100.0,
         EmbeddingFixedInputLength=-1,
-        # InteractionGNN2 is exported at a fixed 100 nodes too, so the padding
-        # rows have to survive the embedding stage and reach it. The edge
-        # building still runs on the real hits alone.
         KeepEmbeddingPadding=False,
-        # ... and at a fixed 2000 edges. The padding edges are self loops on a
-        # padding node and are dropped again after the classification.
         EdgeClassifierFixedInputLength=-1,
-        #InputFeaturesEmbedding="r,phi,z,t",
         InputFeaturesEmbedding="r,phi,z,eta,t",
-        #InputScalesEmbedding="1000,3.14,1000,1",
         InputScalesEmbedding="1000, 3.14, 1000, 1, 1",
-        #InputFeaturesEdgeClassifier=["r,phi,z,t,volume_id,layer_id,module_id", "r,phi,z,t"],
-        #InputScalesEdgeClassifier=["1000,3.14,1000,1,7,10,500", "1000,3.14,1000,1"],
         InputFeaturesEdgeClassifier=["r,phi,z,eta,t"],
         InputScalesEdgeClassifier=["1000, 3.14, 1000, 1, 1"],
         # InteractionGNN2 has three inputs and takes the six edge features
