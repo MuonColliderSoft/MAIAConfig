@@ -28,22 +28,22 @@ def GNNTracker_cfg(args):
         ),
         EdgeBuildingRadius=0.1,
         EdgeBuildingKnn=100.0,
-        EmbeddingFixedInputLength=100,
+        EmbeddingFixedInputLength=-1,
         # InteractionGNN2 is exported at a fixed 100 nodes too, so the padding
         # rows have to survive the embedding stage and reach it. The edge
         # building still runs on the real hits alone.
-        KeepEmbeddingPadding=True,
+        KeepEmbeddingPadding=False,
         # ... and at a fixed 2000 edges. The padding edges are self loops on a
         # padding node and are dropped again after the classification.
-        EdgeClassifierFixedInputLength=2000,
+        EdgeClassifierFixedInputLength=-1,
         #InputFeaturesEmbedding="r,phi,z,t",
-        InputFeaturesEmbedding="r,phi,eta,z,t",
+        InputFeaturesEmbedding="r,phi,z,eta,t",
         #InputScalesEmbedding="1000,3.14,1000,1",
-        InputScalesEmbedding="1,1,1,1,1",
+        InputScalesEmbedding="1000, 3.14, 1000, 1, 1",
         #InputFeaturesEdgeClassifier=["r,phi,z,t,volume_id,layer_id,module_id", "r,phi,z,t"],
         #InputScalesEdgeClassifier=["1000,3.14,1000,1,7,10,500", "1000,3.14,1000,1"],
-        InputFeaturesEdgeClassifier=["r,phi,eta,z,t"],
-        InputScalesEdgeClassifier=["1,1,1,1,1"],
+        InputFeaturesEdgeClassifier=["r,phi,z,eta,t"],
+        InputScalesEdgeClassifier=["1000, 3.14, 1000, 1, 1"],
         # InteractionGNN2 has three inputs and takes the six edge features
         # (dr, dphi, dz, deta, phislope, rphislope) as its edge_attr, so they
         # have to be computed. The scales are those of r, phi, z and eta -- in
