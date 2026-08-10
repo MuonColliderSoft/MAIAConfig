@@ -51,7 +51,7 @@ def GNNTracker_cfg(args):
         # above. The classifier does not scale its edge input, so these have to
         # be the scales it was trained with. Turn both off for a two-input model.
         ComputeEdgeFeatures=True,
-        EdgeFeatureScales="1,1,1,1",
+        EdgeFeatureScales="1000, 3.14, 1000., 1",
         PhiBins=50,
         PhiOverlap=0.1,
         TrackBuilding="cc-and-walk",
