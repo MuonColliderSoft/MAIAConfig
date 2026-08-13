@@ -1,5 +1,7 @@
 from GaudiKernel.Constants import INFO, WARNING, DEBUG
-from Configurables import ActsGeoSvc, CKFTrackingAlg, ACTSDuplicateRemoval, FilterTracksAlg, TrackTruthAlg, RefitFinal
+from Configurables import ActsGeoSvc, CKFTrackingAlg, ACTSDuplicateRemoval, FilterTracksAlg, TrackTruthAlg
+
+import os
 
 def ActsGeoSvc_cfg(args):
     """Configure the ACTS GeoSvc.
@@ -8,7 +10,8 @@ def ActsGeoSvc_cfg(args):
     """
     return ActsGeoSvc(
         "ActsGeoSvc",
-        #UseDD4hepBField=args.use_dd4hep_field
+        UseDD4hepBField=args.use_dd4hep_field,
+        MaterialMapFile = args.materialMapFile,
     )
 
 def CKFTracker_cfg(args):
@@ -33,7 +36,9 @@ def CKFTracker_cfg(args):
         SeedFinding_RMax = 150,
         SeedFinding_MinPt = 500,
         SeedFinding_ImpactMax = 3,
-        CKF_NumMeasurementsCutOff = 1,
+        # CKF_NumMeasurementsCutOff: controls the CKF branching during track extension.
+        # Set to 1 to keep only the best candidate.
+        CKF_NumMeasurementsCutOff = 2,
         SeedFinding_SigmaScattering = 50,
         SeedFinding_CollisionRegion = 6,
         SeedFinding_RadLengthPerSeed = 0.1,
@@ -56,7 +61,6 @@ def deduper_cfg():
         OutputTrackCollectionName = ["DedupedTracks"],
         OutputLevel = INFO
     )
-
 
 def track_filter_cfg():
     """
@@ -87,28 +91,5 @@ def track_truth_cfg(args):
         InputTrackCollectionName = ["SiTracks"],
         InputTrackerHit2SimTrackerHitRelationName = ["MergedTrackerHitsRelations"],
         OutputParticle2TrackRelationName = ["SiTrackRelations"],
-        OutputLevel = INFO
-    )
-
-def track_refitter_cfg():
-    """
-    Create a new TrackRefitter instance for refitting tracks.
-    """
-    return RefitFinal(
-        "Refitter",
-#        DoCutsOnRedChi2Nhits = True,
-        EnergyLossOn = True,
-        InputRelationCollectionName = ["SiTrackRelations"],
-        InputTrackCollectionName = ["SiTracks"],
-        Max_Chi2_Incr = 1.79769e+30,
-        MinClustersOnTrackAfterFit = 3,
-        MultipleScatteringOn = True,
-#        NHitsCuts = ["1,2", "1", "3,4", "1", "5,6", "0"],
-        OutputRelationCollectionName = ["SiTracks_Refitted_Relation"],
-        OutputTrackCollectionName = ["SiTracks_Refitted"],
-#        ReducedChi2Cut = 10.,
-        ReferencePoint = -1,
-        SmoothOn = False,
-        extrapolateForward = True,
         OutputLevel = INFO
     )

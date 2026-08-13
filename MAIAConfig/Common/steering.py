@@ -24,6 +24,68 @@ def merge_alg_lists(*alg_lists):
     return merged
 
 
+# EDM4hep collection types covering every flavour of tracker hit written by the
+# MAIA chain: the simulated hits, both the plane-measurement (VXD/IT/OT) and the
+# 3D digitised/merged hits, and the hit <-> simulated-hit links, which would
+# otherwise be left pointing at collections that are no longer in the file.
+TRACKER_HIT_TYPES = [
+    "edm4hep::SimTrackerHitCollection",
+    "edm4hep::TrackerHitPlaneCollection",
+    "edm4hep::TrackerHit3DCollection",
+    "podio::LinkCollection<edm4hep::TrackerHit,edm4hep::SimTrackerHit>",
+]
+
+# The calorimeter counterpart: the simulated hits together with their per-hit
+# contributions, the digitised/reconstructed hits (ECal, HCal and the muon
+# system, which uses the same type), and the hit <-> simulated-hit links.
+CALORIMETER_HIT_TYPES = [
+    "edm4hep::SimCalorimeterHitCollection",
+    "edm4hep::CaloHitContributionCollection",
+    "edm4hep::CalorimeterHitCollection",
+    "podio::LinkCollection<edm4hep::CalorimeterHit,edm4hep::SimCalorimeterHit>",
+]
+
+
+def _drop_collection_types(collection_types):
+    """
+    Append type-based drop commands to the IOSvc keep/drop switch.
+
+    Reading the current value back before appending keeps successive calls
+    (tracker + calorimeter) from overwriting each other.
+    """
+    from k4FWCore import IOSvc
+
+    io_svc = IOSvc("IOSvc")
+    commands = list(getattr(io_svc, "outputCommands", [])) or ["keep *"]
+    commands += ["drop type " + coll_type for coll_type in collection_types]
+    io_svc.outputCommands = commands
+
+
+def drop_tracker_hits():
+    """
+    Exclude all TrackerHit and SimTrackerHit collections (and their relation
+    links) from the output file.
+
+    Must be called after build_application, which creates the IOSvc that the
+    keep/drop switch belongs to. The selection is type based, so it also
+    catches the collections created downstream (merged hits) whose names are
+    not known here.
+    """
+    _drop_collection_types(TRACKER_HIT_TYPES)
+
+
+def drop_calorimeter_hits():
+    """
+    Exclude all CalorimeterHit and SimCalorimeterHit collections (plus the
+    calorimeter contributions and relation links) from the output file.
+
+    Same call-after-build_application requirement as drop_tracker_hits. Note
+    that the Pandora clusters and PFOs are kept, but their references into the
+    calorimeter hits no longer resolve once the hits are gone.
+    """
+    _drop_collection_types(CALORIMETER_HIT_TYPES)
+
+
 def build_application(args, alg_list, input_files, output_file, histo_file, evt_max=10):
     """
     Configure the services, IO and ApplicationMgr common to every steering

@@ -71,6 +71,7 @@ def overlay_ip_cfg(args):
         OutputSimTrackerHits = out_tracker_hits,
         OutputSimCalorimeterHits = out_calo_hits,
         OutputCaloHitContributions = out_calo_contribs,
-        MergeMCParticles = False,
+        # Uncomment when https://github.com/key4hep/k4FWCore/pull/413 is merged.
+        #MergeMCParticles = False,
         OutputLevel = INFO
     )

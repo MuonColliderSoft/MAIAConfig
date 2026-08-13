@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-mucoll-image:
+  build-and-test-mucoll-sim-main:
     runs-on: ubuntu-latest
     steps:
       - name: Free Disk Space (Ubuntu)

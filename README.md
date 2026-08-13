@@ -97,18 +97,44 @@ The full set is:
 | `--inputFiles` | both | per macro (see above) | Input EDM4hep file(s) to read; accepts several files. |
 | `--outputFile` | both | per macro (see above) | Output EDM4hep file to write. |
 | `--histoFile` | both | per macro | Output ROOT file for the histograms. |
-| `--doOverlayFull` | digi | `False` | Overlay beam-induced background (BIB). |
+| `--doOverlayFull` | digi + reco | `False` | Overlay beam-induced background (BIB). In the reco step it only acts as a flag: when set, all tracker and calorimeter hit collections are dropped from the reconstruction output (see below). |
 | `--OverlayFullPathToMuPlus` | digi | `/path/to/muplus/` | Directory of the μ⁺ BIB overlay files (used with `--doOverlayFull`). |
 | `--OverlayFullPathToMuMinus` | digi | `/path/to/muminus/` | Directory of the μ⁻ BIB overlay files (used with `--doOverlayFull`). |
 | `--OverlayFullNumberBackground` | digi | `812` | Number of BIB background files overlaid (used with `--doOverlayFull`). |
-| `--doOverlayIP` | digi | `False` | Overlay incoherent pairs. When both overlays are enabled they are chained (BIB then IP) before digitisation. |
+| `--doOverlayIP` | digi + reco | `False` | Overlay incoherent pairs. When both overlays are enabled they are chained (BIB then IP) before digitisation. In the reco step it only acts as a flag: when set, all tracker and calorimeter hit collections are dropped from the reconstruction output (see below). |
 | `--OverlayIPBackgroundFileNames` | digi | `[/path/to/pairs.slcio]` | Incoherent-pair overlay input file(s) (used with `--doOverlayIP`). |
 | `--doFilterDL` | digi | `False` | Double-layer hit filtering in the vertex detector. |
 | `--doTrackerConing` | digi + reco | `False` | Cone-filter the tracker hits around the signal MC particles (BIB cleaning). When enabled, the digi step writes the `…Coned` hit collections and the merger reads them before tracking. |
 | `--RandSeed` | digi | `42` | Random seed for the digitisation smearing. |
 | `--doTrackPerf` | reco | `False` | Run the tracking performance monitoring. |
+| `--keepEverything` | reco | `False` | Write every collection to the reconstruction output, overriding the hit dropping that `--doOverlayFull`/`--doOverlayIP` would otherwise trigger (see below). |
 | `--TrackingThreads` | reco | `1` | Internal thread count of the CKF tracking and truth-matching algorithms (independent of `--numThreads`). |
 | `--numThreads` | both | `1` | Number of threads for the Gaudi event loop. `1` runs serially; any value `> 1` enables the multi-threaded Gaudi Hive event loop with that many threads (scheduler + event slots); `0` auto-detects a sensible count from the CPU count. |
+
+### Hit collections in the overlay output
+
+Running with background (`--doOverlayFull` and/or `--doOverlayIP`) makes the hit
+collections dominate the output file, so `reco_steer.py` drops all of them from
+the reconstruction output when either flag is set: the tracker hits
+(`drop_tracker_hits`, i.e. `SimTrackerHit`, `TrackerHitPlane`, `TrackerHit3D`)
+and the calorimeter hits (`drop_calorimeter_hits`, i.e. `SimCalorimeterHit`,
+`CaloHitContribution`, `CalorimeterHit`, which also covers the muon system),
+together with the corresponding hit ↔ simulated-hit link collections. The
+selection is done by collection *type* through the `IOSvc` keep/drop switch, so
+it also covers the collections produced during reconstruction (e.g.
+`MergedTrackerHits`).
+
+The reconstructed objects — tracks, Pandora clusters, PFOs, jets, vertices,
+`MCParticles` and the track ↔ MC-particle links — are kept, but any reference
+they hold into a dropped hit collection (`Track::trackerHits`,
+`Cluster::hits`, …) no longer resolves in the output file.
+
+Pass `--keepEverything` to switch the dropping off and write the full event
+even with an overlay enabled:
+
+```bash
+k4run reco_steer.py --doOverlayFull --keepEverything
+```
 
 ### BIB hit cleaning
 
