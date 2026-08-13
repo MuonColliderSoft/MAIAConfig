@@ -1,5 +1,4 @@
 from Gaudi.Configuration import *
-from MAIAConfig.MAIAConfig.Tracking.CKF_tracking import track_truth_cfg
 
 def makeRecoAlgList(the_args):
     '''-------------------------------------------------------------'''
