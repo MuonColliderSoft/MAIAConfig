@@ -1,10 +1,17 @@
 from GaudiKernel.Constants import INFO, WARNING, DEBUG
 from Configurables import DDPandoraPFANewAlgorithm, FastJetAlg
 
-def pandoraPFA_cfg():
+from Common.pandora_settings import resolve_pandora_settings
+
+def pandoraPFA_cfg(the_args=None):
     """
     Create a new DDPandoraPFANewAlgorithm instance for Pandora PFA.
+
+    The Pandora settings XML is located inside this package (or wherever
+    --pandoraSettings / MAIA_PANDORA_SETTINGS_DIR point), so the job does not
+    have to run from a directory containing a copy of PandoraSettings/.
     """
+    settings = getattr(the_args, "pandoraSettings", None) or "PandoraSettingsDefault.xml"
     return DDPandoraPFANewAlgorithm(
         "PandoraPFANew",
         CreateGaps = False,
@@ -60,7 +67,7 @@ def pandoraPFA_cfg():
         MuonToMipCalibration = 19607.8,
         NOuterSamplingLayers = 3,
         OutputEnergyCorrectionPoints = [],
-        PandoraSettingsXmlFile = "PandoraSettings/PandoraSettingsDefault.xml",
+        PandoraSettingsXmlFile = resolve_pandora_settings(settings),
         ReachesECalBarrelTrackerOuterDistance = -100,
         ReachesECalBarrelTrackerZMaxDistance = -50,
         ReachesECalFtdZMaxDistance = 1,

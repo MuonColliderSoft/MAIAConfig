@@ -29,7 +29,7 @@ def makeRecoAlgList(the_args):
 
     # Pandora PFOs
     from ParticleFlow.pandora import pandoraPFA_cfg, fastJet_cfg
-    algList.append(pandoraPFA_cfg())
+    algList.append(pandoraPFA_cfg(the_args))
     algList.append(fastJet_cfg())
 
     return algList

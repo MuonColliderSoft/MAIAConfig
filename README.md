@@ -34,8 +34,9 @@ domain (following the CLDConfig convention):
   (`overlay_IP.py`) overlay.
 - `ParticleFlow/` — Pandora PFA and jet clustering.
 - `Diagnostics/` — tracking performance monitoring.
-- `PandoraSettings/` — Pandora steering and likelihood data XMLs (must be
-  present in the directory where reconstruction is run).
+- `PandoraSettings/` — Pandora steering and likelihood data XMLs. These are
+  located automatically, so reconstruction can be run from any directory; use
+  `--pandoraSettings` (or `MAIA_PANDORA_SETTINGS_DIR`) to point at your own.
 
 ## Usage
 
