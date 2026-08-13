@@ -1,14 +1,16 @@
 from GaudiKernel.Constants import INFO, WARNING, DEBUG
 from Configurables import TrackTruthAlg
 
-def trackTruth_cfg():
+
+def track_truth_cfg(args):
     """
-    Create a new TrackTruthAlg instance for associating tracks with MC particles.
+    Create a new TrackTruth instance for track truth matching.
     """
     return TrackTruthAlg(
-        "AssociationCreator",
-        OutputParticle2TrackRelationName = ["MCParticle_SiTracks"],
+        "TruthMatcher",
+        NumThreads = args.TrackingThreads,
         InputTrackCollectionName = ["SiTracks"],
         InputTrackerHit2SimTrackerHitRelationName = ["MergedTrackerHitsRelations"],
+        OutputParticle2TrackRelationName = ["SiTrackRelations"],
         OutputLevel = INFO
     )
