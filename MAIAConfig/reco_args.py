@@ -28,7 +28,7 @@ def get_reco_args():
         "--doTrackPerf",
         help="Run Performance Analysis on Tracking",
         action="store_true",
-        default=False
+        default=True
     )
 
     parser.add_argument(
