@@ -22,22 +22,15 @@ app = build_application(
     histo_file = "reco_histograms.root",
 )
 
-# With background overlaid the hit collections dominate the output file size,
-# so drop every (Sim)TrackerHit and (Sim)CalorimeterHit collection from the reco
-# output. The reconstructed objects (tracks, clusters, PFOs, jets) are kept.
-# --keepEverything switches the dropping off and writes the full event.
+# With BIB, drop every (Sim)TrackerHit and (Sim)CalorimeterHit collection
+# from the reco output. --keepEverything writes the full event.
 if (args.doOverlayIP or args.doOverlayFull) and not args.keepEverything:
     drop_tracker_hits()
     drop_calorimeter_hits()
 
-# Per-algorithm CPU monitoring via the Gaudi Auditor Service. The ChronoAuditor
-# records CPU usage of each algorithm's execute() and ChronoStatSvc prints the
-# per-algorithm total + per-event-average table ("Final CPU consumption") at end
-# of job. Most meaningful single-threaded.
-#
-# The global message level is raised to INFO so the ChronoStatSvc table (emitted
-# under the "*****Chrono*****" / "<Alg>:Execute" message sources) is not
-# suppressed by the WARNING default that build_application sets.
+# Per-algorithm CPU monitoring via the Gaudi Auditor Service. Most meaningful
+# single-threaded. Global message level raised to INFO not to be suppressed
+# by the WARNING default.
 from GaudiKernel.Constants import INFO
 from Configurables import AuditorSvc, ChronoStatSvc
 app.OutputLevel = INFO

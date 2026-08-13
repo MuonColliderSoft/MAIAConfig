@@ -16,6 +16,14 @@ def get_reco_args():
         default=os.environ.get("k4geo_DIR", "")+"/MuColl/MAIA/compact/MAIA_v0/MAIA_v0.xml",
     )
 
+    add_argument_once(
+        parser,
+        "--materialMapFile",
+        help="Material map file",
+        type=str,
+        default=os.environ.get("ACTSTRACKING_DATA") + "/k4ActsTracking/data/MAIA_v0_gen3_material_map.json",
+    )
+
     parser.add_argument(
         "--doTrackPerf",
         help="Run Performance Analysis on Tracking",
@@ -38,9 +46,7 @@ def get_reco_args():
         default=1,
     )
 
-    # Shared with digi_args: the digi step produces the "...Coned" collections
-    # and the merger here must read them. add_argument_once allows the two
-    # parsers to coexist in the combined digi_reco job.
+    # Shared with digi_args.
     add_argument_once(
         parser,
         "--doTrackerConing",
@@ -49,11 +55,7 @@ def get_reco_args():
         default=False,
     )
 
-    # Shared with digi_args: the overlay flags are declared at digitisation, but
-    # the reco steering needs to know about them too so that the (very large)
-    # tracker and calorimeter hit collections can be dropped from the output
-    # when background is overlaid. add_argument_once keeps the combined
-    # digi_reco job working.
+    # Shared with digi_args.
     add_argument_once(
         parser,
         "--doOverlayFull",

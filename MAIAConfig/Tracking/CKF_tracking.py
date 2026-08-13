@@ -1,5 +1,5 @@
 from GaudiKernel.Constants import INFO, WARNING, DEBUG
-from Configurables import ActsGeoSvc, CKFTrackingAlg, ACTSDuplicateRemoval, FilterTracksAlg, TrackTruthAlg, RefitFinal
+from Configurables import ActsGeoSvc, CKFTrackingAlg, ACTSDuplicateRemoval, FilterTracksAlg, TrackTruthAlg
 
 import os
 
@@ -11,7 +11,7 @@ def ActsGeoSvc_cfg(args):
     return ActsGeoSvc(
         "ActsGeoSvc",
         UseDD4hepBField=args.use_dd4hep_field,
-        MaterialMapFile = os.environ.get("ACTSTRACKING_DATA") + "/k4ActsTracking/data/MAIA_v0_gen3_material_map.json",
+        MaterialMapFile = args.materialMapFile,
     )
 
 def CKFTracker_cfg(args):
@@ -62,7 +62,6 @@ def deduper_cfg():
         OutputLevel = INFO
     )
 
-
 def track_filter_cfg():
     """
     Create a new FilterTracksAlg instance for filtering tracks.
@@ -92,28 +91,5 @@ def track_truth_cfg(args):
         InputTrackCollectionName = ["SiTracks"],
         InputTrackerHit2SimTrackerHitRelationName = ["MergedTrackerHitsRelations"],
         OutputParticle2TrackRelationName = ["SiTrackRelations"],
-        OutputLevel = INFO
-    )
-
-def track_refitter_cfg():
-    """
-    Create a new TrackRefitter instance for refitting tracks.
-    """
-    return RefitFinal(
-        "Refitter",
-#        DoCutsOnRedChi2Nhits = True,
-        EnergyLossOn = True,
-        InputRelationCollectionName = ["SiTrackRelations"],
-        InputTrackCollectionName = ["SiTracks"],
-        Max_Chi2_Incr = 1.79769e+30,
-        MinClustersOnTrackAfterFit = 3,
-        MultipleScatteringOn = True,
-#        NHitsCuts = ["1,2", "1", "3,4", "1", "5,6", "0"],
-        OutputRelationCollectionName = ["SiTracks_Refitted_Relation"],
-        OutputTrackCollectionName = ["SiTracks_Refitted"],
-#        ReducedChi2Cut = 10.,
-        ReferencePoint = -1,
-        SmoothOn = False,
-        extrapolateForward = True,
         OutputLevel = INFO
     )
