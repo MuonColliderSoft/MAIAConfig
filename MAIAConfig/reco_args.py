@@ -80,7 +80,7 @@ def get_reco_args():
         action="store_true",
         default=False,
     )
-    
+
     parser.add_argument(
         "--pandoraSettings",
         help="Pandora settings XML. A bare file name is looked up in the "
