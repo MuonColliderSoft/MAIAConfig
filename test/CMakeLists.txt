@@ -32,6 +32,14 @@ add_test(NAME digi_help
 )
 set_property(TEST digi_help APPEND PROPERTY PASS_REGULAR_EXPRESSION "show this help message and exit")
 
+# The Pandora settings XML and the likelihood data it references must resolve
+# from a working directory that holds no copy of PandoraSettings/.
+add_test(NAME pandora_settings_path
+         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+         COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${MAIAConfig_DIR}
+                 python3 ${CMAKE_CURRENT_LIST_DIR}/check_pandora_settings.py
+)
+
 add_test(NAME reco_help
          WORKING_DIRECTORY ${MAIAConfig_DIR}
          COMMAND k4run --help reco_steer.py

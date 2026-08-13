@@ -22,7 +22,7 @@ def get_reco_args():
         action="store_true",
         default=False
     )
-    
+
     parser.add_argument(
         "--use_dd4hep_field",
         help="Use DD4hep field",
@@ -47,6 +47,16 @@ def get_reco_args():
         help="Filter tracker hits into cones around the signal MC particles (BIB cleaning)",
         action="store_true",
         default=False,
+    )
+
+    parser.add_argument(
+        "--pandoraSettings",
+        help="Pandora settings XML. A bare file name is looked up in the "
+             "PandoraSettings directory shipped with MAIAConfig (override it "
+             "with MAIA_PANDORA_SETTINGS_DIR); an absolute or run-directory "
+             "relative path is used as given",
+        type=str,
+        default="PandoraSettingsDefault.xml",
     )
 
     return parser.parse_known_args()[0]
