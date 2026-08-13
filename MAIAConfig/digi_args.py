@@ -62,8 +62,7 @@ def get_digi_args():
         default=False,
     )
 
-    # Shared with reco_args (the merger reads the coned hits when enabled), so
-    # added once to allow combining the two parsers in a single job.
+    # Shared with reco_args (the merger reads the coned hits when enabled).
     add_argument_once(
         parser,
         "--doTrackerConing",
