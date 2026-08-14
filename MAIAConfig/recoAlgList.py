@@ -15,9 +15,13 @@ def makeRecoAlgList(the_args):
     algList.append(mergehitsrelations_cfg(the_args))
 
     # CKF Tracking
-    from Tracking.CKF_tracking import CKFTracker_cfg, deduper_cfg, track_filter_cfg, ActsGeoSvc_cfg
+    from Tracking.CKF_tracking import CKFTracker_cfg, CKFFromSeeds_cfg, deduper_cfg, track_filter_cfg, ActsGeoSvc_cfg
+    from Tracking.GNN_tracking import GNNTracker_cfg
     ActsGeoSvc_cfg(the_args)  # service: configure it, do NOT append to the algorithm list
-    algList.append(CKFTracker_cfg(the_args))
+    # GNN track finding produces seed candidates that are fed into the CKF.
+    algList.append(GNNTracker_cfg(the_args))
+    algList.append(CKFFromSeeds_cfg(the_args))
+    #algList.append(CKFTracker_cfg(the_args))
     algList.append(deduper_cfg())
     algList.append(track_filter_cfg())
 

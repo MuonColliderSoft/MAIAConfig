@@ -1,5 +1,5 @@
 from GaudiKernel.Constants import INFO, WARNING, DEBUG
-from Configurables import ActsGeoSvc, CKFTrackingAlg, ACTSDuplicateRemoval, FilterTracksAlg, TrackTruthAlg
+from Configurables import ActsGeoSvc, CKFTrackingAlg, CKFTrackingFromSeedsAlg, ACTSDuplicateRemoval, FilterTracksAlg, TrackTruthAlg
 
 import os
 
@@ -47,6 +47,24 @@ def CKFTracker_cfg(args):
         OutputSeedCollection = "SeedTracks",
         InputTrackerHitCollection = "MergedTrackerHits",
         InputTrackerHitRelationCollection = "MergedTrackerHitsRelations",
+        NumThreads = args.TrackingThreads,
+        OutputLevel = INFO,
+    )
+
+def CKFFromSeeds_cfg(args):
+    """
+    Create a CKFTrackingFromSeedsAlg instance that runs the CKF using the track
+    candidates from the GNN track finder as seeds (instead of internal seeding).
+    """
+    return CKFTrackingFromSeedsAlg(
+        "SeededCKFReconstructor",
+        CKF_Chi2CutOff = 10,
+        CKF_NumMeasurementsCutOff = 1,
+        MinSeedHits = 3,
+        InputTrackerHitCollection = "MergedTrackerHits",
+        InputSeedTrackCollection = "GNNTrackCandidates",
+        OutputTrackCollection = "AllTracks",
+        OutputSeedCollection = "GNNSeededTracks",
         NumThreads = args.TrackingThreads,
         OutputLevel = INFO,
     )

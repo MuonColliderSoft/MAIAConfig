@@ -91,4 +91,20 @@ def get_reco_args():
         default="PandoraSettingsDefault.xml",
     )
 
+    # GNN CKF tracking arg
+    add_argument_once(
+        parser,
+        "--modelBase",
+        help="Path to base directory containing the GNN models",
+        type=str,
+        default=os.environ.get("MODEL_DIR", ""),
+    )
+    add_argument_once(
+        parser,
+        "--device",
+        help="Device to run the GNN pipeline on: 'cpu' or 'cuda' (optionally 'cuda:<index>')",
+        type=str,
+        default="cpu",
+    )
+
     return parser.parse_known_args()[0]
