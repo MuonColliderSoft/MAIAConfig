@@ -13,6 +13,12 @@ from Common.calo_thresholds import find_calo_thresholds
 # Cone half-opening angle around the MC particles [rad] (same for all regions).
 _CONE_WIDTH = 0.6
 
+# Selector max time window per technology [ns]
+_SELECTOR_TIME_WINDOW_MAX = {
+    "ECAL": 1.0,
+    "HCAL": 10.0,
+}
+
 # Calorimeter regions: (collection prefix, technology). The reco collections come
 # from calorimetry_{EM,HAD}.py: "<prefix>CollectionRec" / "<prefix>RelationsSimRec".
 _CALO_REGIONS = [
@@ -45,7 +51,7 @@ def _selector_cfg(prefix, technology):
         GoodRelationCollection = [f"{prefix}RelationsSimSel"],
         Nsigma = 0,
         TimeWindowMin = -0.3,
-        TimeWindowMax = 0.3,
+        TimeWindowMax = _SELECTOR_TIME_WINDOW_MAX[technology],
         DoBIBsubtraction = False,
         OutputLevel = INFO,
     )
