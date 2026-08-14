@@ -100,7 +100,7 @@ The full set is:
 | `--doOverlayFull` | digi + reco | `False` | Overlay beam-induced background (BIB). In the reco step it only acts as a flag: when set, all tracker and calorimeter hit collections are dropped from the reconstruction output (see below). |
 | `--OverlayFullPathToMuPlus` | digi | `/path/to/muplus/` | Directory of the μ⁺ BIB overlay files (used with `--doOverlayFull`). |
 | `--OverlayFullPathToMuMinus` | digi | `/path/to/muminus/` | Directory of the μ⁻ BIB overlay files (used with `--doOverlayFull`). |
-| `--OverlayFullNumberBackground` | digi | `812` | Number of BIB background files overlaid (used with `--doOverlayFull`). |
+| `--OverlayFullNumberBackground` | digi | `1667` | Number of BIB background files overlaid (used with `--doOverlayFull`). |
 | `--doOverlayIP` | digi + reco | `False` | Overlay incoherent pairs. When both overlays are enabled they are chained (BIB then IP) before digitisation. In the reco step it only acts as a flag: when set, all tracker and calorimeter hit collections are dropped from the reconstruction output (see below). |
 | `--OverlayIPBackgroundFileNames` | digi | `[/path/to/pairs.slcio]` | Incoherent-pair overlay input file(s) (used with `--doOverlayIP`). |
 | `--doFilterDL` | digi | `False` | Double-layer hit filtering in the vertex detector. |
