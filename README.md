@@ -118,22 +118,37 @@ The full set is:
 
 `--findGNNTracks` runs the GNN track finder *in addition to* the standard CKF
 chain rather than in place of it, so a single job produces both and they can be
-compared directly. The hits are sorted by φ, the GNN turns them into track
-candidates, and those candidates seed a second CKF pass which is then deduped,
-filtered and (with `--doTrackPerf`) truth-matched exactly like the standard one:
+compared directly. The hits are sorted by φ and the GNN turns them into track
+candidates, which are then taken down two paths — one seeding a CKF pass, one
+straight from the GNN — each deduped, filtered and (with `--doTrackPerf`)
+truth-matched exactly like the standard chain:
 
 ```
 MergedTrackerHits -> MergedTrackerHitsSortedByPhi -> GNNTrackCandidates
-                  -> GNNAllTracks -> GNNDedupedTracks -> GNNSiTracks
-                  (+ GNNSeededTracks, GNNSiTrackRelations)
+   seeded: -> GNNAllTracks       -> GNNDedupedTracks       -> GNNSiTracks
+           (+ GNNSeededTracks, GNNSiTrackRelations)
+   direct: -> GNNDirectDedupedTracks -> GNNDirectSiTracks
+           (+ GNNDirectSiTrackRelations)
 ```
 
-The standard chain keeps writing `AllTracks` / `DedupedTracks` / `SiTracks` and
-is bit-for-bit unchanged whether or not the flag is set. The models are picked
-up from `--modelBase`:
+The seeded path measures what the CKF makes of the GNN candidates; the direct
+path measures what the GNN finds on its own. The standard chain keeps writing
+`AllTracks` / `DedupedTracks` / `SiTracks` and is unchanged whether or not the
+flag is set. The models are picked up from `--modelBase`:
 
 ```bash
 k4run reco_steer.py --findGNNTracks --modelBase /path/to/onnx_files
+```
+
+Both GNN paths use the same filter cuts as the standard chain, so the three are
+directly comparable. Note that those cuts are tuned for CKF output — in
+particular `NHitsTotal = 7`, whereas the GNN's own `MinHitsPerTrack` is 3 — so
+raw candidates that the CKF would have extended are rejected on the direct path.
+Loosen it for that instance alone when studying GNN-only efficiency:
+
+```bash
+k4run reco_steer.py --findGNNTracks --modelBase /path/to/onnx_files \
+      --GNNDirectFilterer.NHitsTotal 3
 ```
 
 ### Hit collections in the overlay output
