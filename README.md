@@ -109,7 +109,32 @@ The full set is:
 | `--doTrackPerf` | reco | `False` | Run the tracking performance monitoring. |
 | `--keepEverything` | reco | `False` | Write every collection to the reconstruction output, overriding the hit dropping that `--doOverlayFull`/`--doOverlayIP` would otherwise trigger (see below). |
 | `--TrackingThreads` | reco | `1` | Internal thread count of the CKF tracking and truth-matching algorithms (independent of `--numThreads`). |
+| `--findGNNTracks` | reco | `False` | Additionally run the GNN track finder and seed a second CKF pass with its candidates. Runs alongside the standard CKF chain, which is unaffected; the results go to the separate `GNN…` collections (see below). |
+| `--modelBase` | reco | `$MODEL_DIR` | Directory holding the GNN ONNX models (used with `--findGNNTracks`). |
+| `--device` | reco | `cpu` | Device for the GNN pipeline: `cpu` or `cuda` (optionally `cuda:<index>`). The default image ships a CPU-only onnxruntime, so `cuda` needs a CUDA-enabled build. |
 | `--numThreads` | both | `1` | Number of threads for the Gaudi event loop. `1` runs serially; any value `> 1` enables the multi-threaded Gaudi Hive event loop with that many threads (scheduler + event slots); `0` auto-detects a sensible count from the CPU count. |
+
+### GNN track finding
+
+`--findGNNTracks` runs the GNN track finder *in addition to* the standard CKF
+chain rather than in place of it, so a single job produces both and they can be
+compared directly. The hits are sorted by φ, the GNN turns them into track
+candidates, and those candidates seed a second CKF pass which is then deduped,
+filtered and (with `--doTrackPerf`) truth-matched exactly like the standard one:
+
+```
+MergedTrackerHits -> MergedTrackerHitsSortedByPhi -> GNNTrackCandidates
+                  -> GNNAllTracks -> GNNDedupedTracks -> GNNSiTracks
+                  (+ GNNSeededTracks, GNNSiTrackRelations)
+```
+
+The standard chain keeps writing `AllTracks` / `DedupedTracks` / `SiTracks` and
+is bit-for-bit unchanged whether or not the flag is set. The models are picked
+up from `--modelBase`:
+
+```bash
+k4run reco_steer.py --findGNNTracks --modelBase /path/to/onnx_files
+```
 
 ### Hit collections in the overlay output
 

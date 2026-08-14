@@ -91,7 +91,16 @@ def get_reco_args():
         default="PandoraSettingsDefault.xml",
     )
 
-    # GNN CKF tracking arg
+    # GNN CKF tracking args
+    parser.add_argument(
+        "--findGNNTracks",
+        help="Additionally run the GNN track finder and seed a second CKF pass "
+             "with its candidates, into the GNN* collections. The standard CKF "
+             "chain is unaffected and keeps writing SiTracks",
+        action="store_true",
+        default=False,
+    )
+
     add_argument_once(
         parser,
         "--modelBase",
