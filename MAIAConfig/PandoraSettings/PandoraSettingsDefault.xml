@@ -84,7 +84,7 @@
         <HistogramFile>PandoraSettings/PandoraLikelihoodData12EBin.xml</HistogramFile>
     </algorithm>
 
-    <!-- 
+    <!--
         10 July 2025 MAIA: Eventually we'd like to change this to be an external clustering that
             1. Isn't so distance-centric. Because of the busy environment, we need an energy weighting a la LHC
             2. Federico and Larry propose a clustering algorithm that starts with seeds on the outside (less BIB-ful) region of the calo and then lets the clusters grow inward. They are then merged with the track clusters which are created at the surface of the ECal, maybe with the ProximityBasedMerging tool. This would hopefully reduce the dependency on the BIB population at inner radii.
