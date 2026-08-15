@@ -81,7 +81,7 @@
         <ClusterListName>PhotonClusters</ClusterListName>
         <ReplaceCurrentClusterList>false</ReplaceCurrentClusterList>
         <ShouldMakePdfHistograms>false</ShouldMakePdfHistograms>
-        <HistogramFile>/code/SteeringMacros/PandoraSettings/PandoraLikelihoodData12EBin.xml</HistogramFile>
+        <HistogramFile>PandoraSettings/PandoraLikelihoodData12EBin.xml</HistogramFile>
     </algorithm>
 
     <!-- 
