@@ -67,6 +67,9 @@
         <ReplaceCurrentPfoList>false</ReplaceCurrentPfoList>
     </algorithm>
 
+    <!-- Doing the most basic clustering algorithm -->
+
+
     <!-- Standalone photon clustering -->
     <algorithm type = "PhotonReconstruction">
         <algorithm type = "ConeClustering" description = "PhotonClusterFormation">
@@ -81,301 +84,40 @@
         <HistogramFile>PandoraSettings/PandoraLikelihoodData12EBin.xml</HistogramFile>
     </algorithm>
 
+    <!--
+        10 July 2025 MAIA: Eventually we'd like to change this to be an external clustering that
+            1. Isn't so distance-centric. Because of the busy environment, we need an energy weighting a la LHC
+            2. Federico and Larry propose a clustering algorithm that starts with seeds on the outside (less BIB-ful) region of the calo and then lets the clusters grow inward. They are then merged with the track clusters which are created at the surface of the ECal, maybe with the ProximityBasedMerging tool. This would hopefully reduce the dependency on the BIB population at inner radii.
+     -->
     <!-- Clustering parent algorithm runs a daughter clustering algorithm -->
     <algorithm type = "ClusteringParent">
-        <algorithm type = "ConeClustering" description = "ClusterFormation"/>
+        <algorithm type = "ConeClustering" description = "ClusterFormation">
+            <ClusterSeedStrategy>2</ClusterSeedStrategy>    <!-- default value -->
+            <ShouldUseTrackSeed>true</ShouldUseTrackSeed> <!-- default value -->
+        </algorithm>
         <algorithm type = "TopologicalAssociationParent" description = "ClusterAssociation">
             <associationAlgorithms>
-                <algorithm type = "LoopingTracks"/>
-                <algorithm type = "BrokenTracks"/>
-                <algorithm type = "ShowerMipMerging"/>
+                <algorithm type = "BrokenTracks">
+                    <MaxLayerDifference>2</MaxLayerDifference>
+                    <MaxCentroidDifference>50</MaxCentroidDifference>
+                </algorithm>
+                <algorithm type = "ShowerMipMerging">
+                    <!-- Brought down from default of 1000. -->
+                    <MaxCentroidDifference>500</MaxCentroidDifference>
+                </algorithm>
                 <algorithm type = "ShowerMipMerging2"/>
-                <algorithm type = "BackscatteredTracks"/>
-                <algorithm type = "BackscatteredTracks2"/>
-                <algorithm type = "ShowerMipMerging3"/>
-                <algorithm type = "ShowerMipMerging4"/>
                 <algorithm type = "ProximityBasedMerging">
                     <algorithm type = "TrackClusterAssociation"/>
                 </algorithm>
                 <algorithm type = "ConeBasedMerging">
                     <algorithm type = "TrackClusterAssociation"/>
-                </algorithm>
-                <algorithm type = "MipPhotonSeparation">
-                    <algorithm type = "TrackClusterAssociation"/>
-                </algorithm>
-                <algorithm type = "HighEnergyPhotonRecovery">
-                    <algorithm type = "TrackClusterAssociation"/>
-                    <AdditionalClusterListNames>PhotonClusters</AdditionalClusterListNames>
-                </algorithm>
-                <algorithm type = "SoftClusterMerging">
-                    <algorithm type = "TrackClusterAssociation"/>
-                    <AdditionalClusterListNames>PhotonClusters</AdditionalClusterListNames>
-                </algorithm>
-                <algorithm type = "IsolatedHitMerging">
-                    <AdditionalClusterListNames>PhotonClusters</AdditionalClusterListNames>
+                    <!-- Corresponds to an angle of 0.1 radians. Much smaller than default of 0.9 (~0.45 rad). -->
+                    <ConeCosineHalfAngle>0.995</ConeCosineHalfAngle>
                 </algorithm>
             </associationAlgorithms>
         </algorithm>
         <ClusterListName>PrimaryClusters</ClusterListName>
         <ReplaceCurrentClusterList>true</ReplaceCurrentClusterList>
-    </algorithm>
-
-    <!-- Reclustering algorithms run multiple clustering algorithms -->
-    <algorithm type = "SplitTrackAssociations" instance = "SplitTrackAssociations1">
-        <clusteringAlgorithms>
-            <algorithm type = "ConeClustering" instance = "Reclustering1">
-                <TanConeAngleFine>0.24</TanConeAngleFine>
-                <TanConeAngleCoarse>0.4</TanConeAngleCoarse>
-                <AdditionalPadWidthsFine>2</AdditionalPadWidthsFine>
-                <AdditionalPadWidthsCoarse>2</AdditionalPadWidthsCoarse>
-                <SameLayerPadWidthsFine>2.24</SameLayerPadWidthsFine>
-                <SameLayerPadWidthsCoarse>1.44</SameLayerPadWidthsCoarse>
-                <MaxTrackSeedSeparation>100</MaxTrackSeedSeparation>
-                <MaxLayersToTrackSeed>0</MaxLayersToTrackSeed>
-                <MaxLayersToTrackLikeHit>0</MaxLayersToTrackLikeHit>
-                <TrackPathWidth>0</TrackPathWidth>
-            </algorithm>
-            <algorithm type = "ConeClustering" instance = "Reclustering2">
-                <TanConeAngleFine>0.18</TanConeAngleFine>
-                <TanConeAngleCoarse>0.3</TanConeAngleCoarse>
-                <AdditionalPadWidthsFine>1.5</AdditionalPadWidthsFine>
-                <AdditionalPadWidthsCoarse>1.5</AdditionalPadWidthsCoarse>
-                <SameLayerPadWidthsFine>1.68</SameLayerPadWidthsFine>
-                <SameLayerPadWidthsCoarse>1.08</SameLayerPadWidthsCoarse>
-                <MaxTrackSeedSeparation>100</MaxTrackSeedSeparation>
-                <MaxLayersToTrackSeed>0</MaxLayersToTrackSeed>
-                <MaxLayersToTrackLikeHit>0</MaxLayersToTrackLikeHit>
-                <TrackPathWidth>0</TrackPathWidth>
-            </algorithm>
-            <algorithm type = "ConeClustering" instance = "Reclustering3">
-                <TanConeAngleFine>0.15</TanConeAngleFine>
-                <TanConeAngleCoarse>0.25</TanConeAngleCoarse>
-                <AdditionalPadWidthsFine>1.25</AdditionalPadWidthsFine>
-                <AdditionalPadWidthsCoarse>1.25</AdditionalPadWidthsCoarse>
-                <SameLayerPadWidthsFine>1.4</SameLayerPadWidthsFine>
-                <SameLayerPadWidthsCoarse>0.9</SameLayerPadWidthsCoarse>
-                <MaxTrackSeedSeparation>100</MaxTrackSeedSeparation>
-                <MaxLayersToTrackSeed>0</MaxLayersToTrackSeed>
-                <MaxLayersToTrackLikeHit>0</MaxLayersToTrackLikeHit>
-                <TrackPathWidth>0</TrackPathWidth>
-            </algorithm>
-            <algorithm type = "ConeClustering" instance = "Reclustering4">
-                <TanConeAngleFine>0.12</TanConeAngleFine>
-                <TanConeAngleCoarse>0.2</TanConeAngleCoarse>
-                <AdditionalPadWidthsFine>1</AdditionalPadWidthsFine>
-                <AdditionalPadWidthsCoarse>1</AdditionalPadWidthsCoarse>
-                <SameLayerPadWidthsFine>1.12</SameLayerPadWidthsFine>
-                <SameLayerPadWidthsCoarse>0.72</SameLayerPadWidthsCoarse>
-                <MaxTrackSeedSeparation>100</MaxTrackSeedSeparation>
-                <MaxLayersToTrackSeed>0</MaxLayersToTrackSeed>
-                <MaxLayersToTrackLikeHit>0</MaxLayersToTrackLikeHit>
-                <TrackPathWidth>0</TrackPathWidth>
-            </algorithm>
-            <algorithm type = "ConeClustering" instance = "Reclustering5">
-                <TanConeAngleFine>0.09</TanConeAngleFine>
-                <TanConeAngleCoarse>0.15</TanConeAngleCoarse>
-                <AdditionalPadWidthsFine>0.75</AdditionalPadWidthsFine>
-                <AdditionalPadWidthsCoarse>0.75</AdditionalPadWidthsCoarse>
-                <SameLayerPadWidthsFine>0.84</SameLayerPadWidthsFine>
-                <SameLayerPadWidthsCoarse>0.54</SameLayerPadWidthsCoarse>
-                <MaxTrackSeedSeparation>100</MaxTrackSeedSeparation>
-                <MaxLayersToTrackSeed>0</MaxLayersToTrackSeed>
-                <MaxLayersToTrackLikeHit>0</MaxLayersToTrackLikeHit>
-                <TrackPathWidth>0</TrackPathWidth>
-            </algorithm>
-            <algorithm type = "ConeClustering" instance = "Reclustering6">
-                <TanConeAngleFine>0.075</TanConeAngleFine>
-                <TanConeAngleCoarse>0.125</TanConeAngleCoarse>
-                <AdditionalPadWidthsFine>0.625</AdditionalPadWidthsFine>
-                <AdditionalPadWidthsCoarse>0.625</AdditionalPadWidthsCoarse>
-                <SameLayerPadWidthsFine>0.7</SameLayerPadWidthsFine>
-                <SameLayerPadWidthsCoarse>0.45</SameLayerPadWidthsCoarse>
-                <MaxTrackSeedSeparation>100</MaxTrackSeedSeparation>
-                <MaxLayersToTrackSeed>0</MaxLayersToTrackSeed>
-                <MaxLayersToTrackLikeHit>0</MaxLayersToTrackLikeHit>
-                <TrackPathWidth>0</TrackPathWidth>
-            </algorithm>
-            <algorithm type = "ConeClustering" instance = "Reclustering7">
-                <TanConeAngleFine>0.06</TanConeAngleFine>
-                <TanConeAngleCoarse>0.1</TanConeAngleCoarse>
-                <AdditionalPadWidthsFine>0.5</AdditionalPadWidthsFine>
-                <AdditionalPadWidthsCoarse>0.5</AdditionalPadWidthsCoarse>
-                <SameLayerPadWidthsFine>0.56</SameLayerPadWidthsFine>
-                <SameLayerPadWidthsCoarse>0.36</SameLayerPadWidthsCoarse>
-                <MaxTrackSeedSeparation>100</MaxTrackSeedSeparation>
-                <MaxLayersToTrackSeed>0</MaxLayersToTrackSeed>
-                <MaxLayersToTrackLikeHit>0</MaxLayersToTrackLikeHit>
-                <TrackPathWidth>0</TrackPathWidth>
-            </algorithm>
-            <algorithm type = "ConeClustering" instance = "Reclustering8">
-                <TanConeAngleFine>0.045</TanConeAngleFine>
-                <TanConeAngleCoarse>0.075</TanConeAngleCoarse>
-                <AdditionalPadWidthsFine>0.375</AdditionalPadWidthsFine>
-                <AdditionalPadWidthsCoarse>0.375</AdditionalPadWidthsCoarse>
-                <SameLayerPadWidthsFine>0.42</SameLayerPadWidthsFine>
-                <SameLayerPadWidthsCoarse>0.27</SameLayerPadWidthsCoarse>
-                <MaxTrackSeedSeparation>100</MaxTrackSeedSeparation>
-                <MaxLayersToTrackSeed>0</MaxLayersToTrackSeed>
-                <MaxLayersToTrackLikeHit>0</MaxLayersToTrackLikeHit>
-                <TrackPathWidth>0</TrackPathWidth>
-            </algorithm>
-            <algorithm type = "ConeClustering" instance = "Reclustering9">
-                <TanConeAngleFine>0.03</TanConeAngleFine>
-                <TanConeAngleCoarse>0.05</TanConeAngleCoarse>
-                <AdditionalPadWidthsFine>0.25</AdditionalPadWidthsFine>
-                <AdditionalPadWidthsCoarse>0.25</AdditionalPadWidthsCoarse>
-                <SameLayerPadWidthsFine>0.28</SameLayerPadWidthsFine>
-                <SameLayerPadWidthsCoarse>0.18</SameLayerPadWidthsCoarse>
-                <MaxTrackSeedSeparation>100</MaxTrackSeedSeparation>
-                <MaxLayersToTrackSeed>0</MaxLayersToTrackSeed>
-                <MaxLayersToTrackLikeHit>0</MaxLayersToTrackLikeHit>
-                <TrackPathWidth>0</TrackPathWidth>
-            </algorithm>
-            <algorithm type = "ConeClustering" instance = "Reclustering10">
-                <MaxTrackSeedSeparation>250</MaxTrackSeedSeparation>
-                <MaxLayersToTrackSeed>3</MaxLayersToTrackSeed>
-                <MaxLayersToTrackLikeHit>3</MaxLayersToTrackLikeHit>
-                <TrackPathWidth>2</TrackPathWidth>
-            </algorithm>
-            <algorithm type = "ConeClustering" instance = "Reclustering11">
-                <ShouldUseTrackSeed>false</ShouldUseTrackSeed>
-                <MaxTrackSeedSeparation>0</MaxTrackSeedSeparation>
-                <MaxLayersToTrackSeed>0</MaxLayersToTrackSeed>
-                <MaxLayersToTrackLikeHit>0</MaxLayersToTrackLikeHit>
-                <TrackPathWidth>0</TrackPathWidth>
-            </algorithm>
-            <algorithm type = "ConeClustering" instance = "Reclustering12">
-                <MaxTrackSeedSeparation>1000</MaxTrackSeedSeparation>
-                <MaxLayersToTrackSeed>6</MaxLayersToTrackSeed>
-                <MaxLayersToTrackLikeHit>3</MaxLayersToTrackLikeHit>
-                <TrackPathWidth>0</TrackPathWidth>
-            </algorithm>
-        </clusteringAlgorithms>
-        <algorithm type = "TopologicalAssociationParent" description = "ClusterAssociation" instance = "reclusterAssociation">
-            <associationAlgorithms>
-                <algorithm type = "LoopingTracks"/>
-                <algorithm type = "BrokenTracks"/>
-                <algorithm type = "ShowerMipMerging"/>
-                <algorithm type = "ShowerMipMerging2"/>
-                <algorithm type = "BackscatteredTracks"/>
-                <algorithm type = "BackscatteredTracks2"/>
-                <algorithm type = "ShowerMipMerging3"/>
-                <algorithm type = "ShowerMipMerging4"/>
-                <algorithm type = "ProximityBasedMerging">
-                    <algorithm type = "TrackClusterAssociation"/>
-                </algorithm>
-                <algorithm type = "ConeBasedMerging">
-                    <algorithm type = "TrackClusterAssociation"/>
-                </algorithm>
-                <algorithm type = "MipPhotonSeparation">
-                    <algorithm type = "TrackClusterAssociation"/>
-                </algorithm>
-                <algorithm type = "SoftClusterMerging">
-                    <algorithm type = "TrackClusterAssociation"/>
-                </algorithm>
-                <algorithm type = "IsolatedHitMerging"/>
-            </associationAlgorithms>
-        </algorithm>
-        <algorithm type = "TrackClusterAssociation" description = "TrackClusterAssociation"></algorithm>
-        <UsingOrderedAlgorithms>true</UsingOrderedAlgorithms>
-        <ShouldUseForcedClustering>true</ShouldUseForcedClustering>
-        <algorithm type = "ForcedClustering" description = "ForcedClustering"/>
-    </algorithm>
-
-    <algorithm type = "SplitMergedClusters" instance = "SplitMergedClusters1">
-        <clusteringAlgorithms>
-            <algorithm type = "ConeClustering" instance = "Reclustering1"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering2"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering3"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering4"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering5"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering6"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering7"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering8"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering9"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering10"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering11"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering12"/>
-        </clusteringAlgorithms>
-        <algorithm type = "TopologicalAssociationParent" description = "ClusterAssociation" instance = "reclusterAssociation"></algorithm>
-        <algorithm type = "TrackClusterAssociation" description = "TrackClusterAssociation"></algorithm>
-        <UsingOrderedAlgorithms>true</UsingOrderedAlgorithms>
-        <ShouldUseForcedClustering>true</ShouldUseForcedClustering>
-        <algorithm type = "ForcedClustering" description = "ForcedClustering"/>
-    </algorithm>
-
-    <algorithm type = "TrackDrivenMerging">
-        <algorithm type = "TrackClusterAssociation" description = "TrackClusterAssociation"></algorithm>
-    </algorithm>
-
-    <algorithm type = "ResolveTrackAssociations">
-        <clusteringAlgorithms>
-            <algorithm type = "ConeClustering" instance = "Reclustering1"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering2"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering3"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering4"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering5"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering6"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering7"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering8"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering9"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering10"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering11"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering12"/>
-        </clusteringAlgorithms>
-        <algorithm type = "TopologicalAssociationParent" description = "ClusterAssociation" instance = "reclusterAssociation"></algorithm>
-        <algorithm type = "TrackClusterAssociation" description = "TrackClusterAssociation"></algorithm>
-        <UsingOrderedAlgorithms>true</UsingOrderedAlgorithms>
-        <ShouldUseForcedClustering>true</ShouldUseForcedClustering>
-        <algorithm type = "ForcedClustering" description = "ForcedClustering"/>
-    </algorithm>
-
-    <algorithm type = "SplitTrackAssociations" instance = "SplitTrackAssociations1"/>
-    <algorithm type = "SplitMergedClusters" instance = "SplitMergedClusters1"/>
-
-    <algorithm type = "TrackDrivenAssociation">
-        <clusteringAlgorithms>
-            <algorithm type = "ConeClustering" instance = "Reclustering1"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering2"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering3"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering4"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering5"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering6"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering7"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering8"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering9"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering10"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering11"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering12"/>
-        </clusteringAlgorithms>
-        <algorithm type = "TopologicalAssociationParent" description = "ClusterAssociation" instance = "reclusterAssociation"></algorithm>
-        <algorithm type = "TrackClusterAssociation" description = "TrackClusterAssociation"></algorithm>
-        <UsingOrderedAlgorithms>true</UsingOrderedAlgorithms>
-    </algorithm>
-
-    <algorithm type = "SplitTrackAssociations" instance = "SplitTrackAssociations1"/>
-    <algorithm type = "SplitMergedClusters" instance = "SplitMergedClusters1"/>
-
-    <algorithm type = "ExitingTrack">
-        <clusteringAlgorithms>
-            <algorithm type = "ConeClustering" instance = "Reclustering1"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering2"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering3"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering4"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering5"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering6"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering7"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering8"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering9"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering10"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering11"/>
-            <algorithm type = "ConeClustering" instance = "Reclustering12"/>
-        </clusteringAlgorithms>
-        <algorithm type = "TopologicalAssociationParent" description = "ClusterAssociation" instance = "reclusterAssociation"></algorithm>
-        <algorithm type = "TrackClusterAssociation" description = "TrackClusterAssociation"></algorithm>
-        <UsingOrderedAlgorithms>true</UsingOrderedAlgorithms>
-        <ShouldUseForcedClustering>true</ShouldUseForcedClustering>
-        <algorithm type = "ForcedClustering" description = "ForcedClustering"/>
     </algorithm>
 
     <!-- Muon clustering -->
@@ -404,15 +146,6 @@
         <CoilCorrectionMinInnerRadius>3483</CoilCorrectionMinInnerRadius>
     </algorithm>
 
-    <!-- Photon recovery -->
-    <algorithm type = "PhotonRecovery">
-        <algorithm type = "TrackClusterAssociation"/>
-    </algorithm>
-
-    <algorithm type = "MuonPhotonSeparation">
-        <algorithm type = "TrackClusterAssociation"/>
-    </algorithm>
-
     <!-- Prepare particle flow objects -->
     <algorithm type = "TrackPreparation">
         <CandidateListNames>Input</CandidateListNames>
@@ -427,6 +160,7 @@
         </trackClusterAssociationAlgorithms>
     </algorithm>
 
+    <!-- After testing without these, I see many clusters per event. So it seems important. -->
     <algorithm type = "MainFragmentRemoval"/>
     <algorithm type = "NeutralFragmentRemoval"/>
     <algorithm type = "PhotonFragmentRemoval"/>
@@ -436,6 +170,7 @@
         <MergedCandidateListName>PfoCreation</MergedCandidateListName>
     </algorithm>
 
+    <!-- After testing without these, I see many clusters per event. So it seems important. -->
     <algorithm type = "PhotonSplitting"/>
     <algorithm type = "PhotonFragmentMerging"/>
 
@@ -453,6 +188,13 @@
     <!-- Particle flow object modification algorithms -->
     <algorithm type = "FinalParticleId"/>
     <algorithm type = "V0PfoCreation"/>
-    <!--algorithm type = "DumpPfosMonitoring"/-->
-    <!--algorithm type = "VisualMonitoring"/-->
+    <algorithm type = "DumpPfosMonitoring"/>
+    <!-- Commenting below out - it is for event displays. This will crash if PandoraMonitoring is not in the software environment.-->
+    <!-- <algorithm type = "VisualMonitoring"/>
+        <DisplayDetector>true</DisplayDetector>
+        <ShowCurrentTracks>true</ShowCurrentTracks>
+        <ShowCurrentCaloHits>true</ShowCurrentCaloHits>
+        <ShowCurrentClusters>true</ShowCurrentClusters>
+        <ShowCurrentPfos>true</ShowCurrentPfos>
+        <TrackListNames>SiTracks</TrackListNames> -->
 </pandora>
