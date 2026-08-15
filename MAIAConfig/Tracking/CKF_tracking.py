@@ -1,5 +1,5 @@
 from GaudiKernel.Constants import INFO, WARNING, DEBUG
-from Configurables import ActsGeoSvc, CKFTrackingAlg, ACTSDuplicateRemoval, FilterTracksAlg, TrackTruthAlg
+from Configurables import ActsGeoSvc, CKFTrackingAlg, CKFTrackingFromSeedsAlg, ACTSDuplicateRemoval, FilterTracksAlg, TrackTruthAlg
 
 import os
 
@@ -51,24 +51,46 @@ def CKFTracker_cfg(args):
         OutputLevel = INFO,
     )
 
-def deduper_cfg():
+def CKFFromSeeds_cfg(args):
+    """
+    Create a CKFTrackingFromSeedsAlg instance that runs the CKF using the track
+    candidates from the GNN track finder as seeds instead of internal seeding.
+    Writes to its own collections so it can run alongside CKFTracker_cfg.
+    """
+    return CKFTrackingFromSeedsAlg(
+        "SeededCKFReconstructor",
+        CKF_Chi2CutOff = 10,
+        CKF_NumMeasurementsCutOff = 1,
+        MinSeedHits = 3,
+        InputTrackerHitCollection = "MergedTrackerHits",
+        InputSeedTrackCollection = "GNNTrackCandidates",
+        OutputTrackCollection = "GNNAllTracks",
+        OutputSeedCollection = "GNNSeededTracks",
+        NumThreads = args.TrackingThreads,
+        OutputLevel = INFO,
+    )
+
+def deduper_cfg(name = "Deduper", input = "AllTracks", output = "DedupedTracks"):
     """
     Create a new ACTSDuplicateRemoval instance for removing duplicate tracks.
+    The names are parameters so the GNN-seeded pass can run its own instance
+    over the GNN* collections; the defaults are the standard CKF chain.
     """
     return ACTSDuplicateRemoval(
-        "Deduper",
-        InputTrackCollectionName = ["AllTracks"],
-        OutputTrackCollectionName = ["DedupedTracks"],
+        name,
+        InputTrackCollectionName = [input],
+        OutputTrackCollectionName = [output],
         OutputLevel = INFO
     )
 
-def track_filter_cfg():
+def track_filter_cfg(name = "Filterer", input = "DedupedTracks", output = "SiTracks"):
     """
     Create a new FilterTracksAlg instance for filtering tracks.
+    Parametrised like deduper_cfg, with the standard CKF chain as default.
     """
     return FilterTracksAlg(
-        "Filterer",
-        InputTrackCollectionName = ["DedupedTracks"],
+        name,
+        InputTrackCollectionName = [input],
         MinPt = "0.5",
         MaxD0 = 10,
         MaxZ0 = 10,
@@ -77,6 +99,6 @@ def track_filter_cfg():
         NHitsTotal = "7",
         NHitsVertex = "0",
         MaxHoles = 2,
-        OutputTrackCollectionName = ["SiTracks"],
+        OutputTrackCollectionName = [output],
         OutputLevel = INFO
     )
