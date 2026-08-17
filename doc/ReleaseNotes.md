@@ -62,8 +62,10 @@ reorganised to follow, as closely as possible, the layout of
     `…Coned` collections and the hit merger reads them before tracking.
   - `CaloDigi/calo_coning.py` — `CaloConer` (cone filtering) followed by
     `CaloHitSelector` (energy + time thresholding) for each ECal/HCal region.
-    These run unconditionally after calorimeter reconstruction and produce the
-    `…Sel` collections that Pandora now consumes.
+    The coning is gated by `--doCaloConing`; the selectors always run after
+    calorimeter reconstruction, reading the `…Coned` collections when the coning
+    is enabled and the reconstructed hits otherwise, and produce the `…Sel`
+    collections that Pandora now consumes.
   - `Common/calo_thresholds.py` — locates the `MyBIBUtils` per-`(theta, layer)`
     threshold ROOT files in the software stack (override with
     `MUCOLL_CALO_THRESHOLDS_DIR`). The ECal selector uses these maps; the HCal

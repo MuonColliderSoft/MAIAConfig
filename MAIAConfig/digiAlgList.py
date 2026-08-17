@@ -50,12 +50,14 @@ def makeDigiAlgList(the_args):
     algList.append(HCalEndcapDigi_cfg(the_args))
     algList.append(HCalEndcapReco_cfg())
 
-    # Calorimeter Hit Coning + BIB Selection. Always run, mirroring steer_reco.py:
-    # each region is coned around the signal MC particles and then thresholded,
-    # producing the "...Sel" collections that Pandora consumes.
+    # Calorimeter Hit Coning (optional) + BIB Selection, mirroring steer_reco.py:
+    # each region is coned around the signal MC particles when --doCaloConing is
+    # set, and then thresholded, producing the "...Sel" collections that Pandora
+    # consumes. Without the coning the selector reads the reconstructed hits.
     from CaloDigi.calo_coning import calo_coner_cfgs, calo_selector_cfgs
-    algList += calo_coner_cfgs()
-    algList += calo_selector_cfgs()
+    if the_args.doCaloConing:
+        algList += calo_coner_cfgs()
+    algList += calo_selector_cfgs(the_args)
 
     # Muon Calorimeter Digitization
     from CaloDigi.calorimetry_MU import MuonBarrelDigi_cfg, MuonEndcapDigi_cfg

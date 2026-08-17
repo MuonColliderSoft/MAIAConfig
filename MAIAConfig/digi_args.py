@@ -30,7 +30,7 @@ def get_digi_args():
         "--OverlayFullNumberBackground",
         help="Number of background files used for BIB overlay",
         type=int,
-        default=1666, #Magic number for EU24 BIB
+        default=1667, #Magic number for EU24 BIB
     )
 
     parser.add_argument(
@@ -67,6 +67,14 @@ def get_digi_args():
         parser,
         "--doTrackerConing",
         help="Filter tracker hits into cones around the signal MC particles (BIB cleaning)",
+        action="store_true",
+        default=False,
+    )
+
+    parser.add_argument(
+        "--doCaloConing",
+        help="Filter calorimeter hits into cones around the signal MC particles "
+             "before the BIB hit selection",
         action="store_true",
         default=False,
     )

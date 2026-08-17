@@ -2,10 +2,12 @@
 '''  Calorimeter hit cone filtering and BIB selection            '''
 '''-------------------------------------------------------------'''
 # Gaudi-native equivalent of the Marlin CaloConer + CaloHitSelector chain in
-# steer_reco.py. For each calorimeter region the reconstructed hits are first
-# restricted to a cone around the signal MC particles (CaloConer, "...Coned"),
-# then thresholded in energy and time to suppress the beam-induced background
-# (CaloHitSelector, "...Sel"). Pandora consumes the "...Sel" collections.
+# steer_reco.py. For each calorimeter region the reconstructed hits are optionally
+# restricted to a cone around the signal MC particles (CaloConer, "...Coned",
+# enabled with --doCaloConing), then thresholded in energy and time to suppress
+# the beam-induced background (CaloHitSelector, "...Sel"). When the coning is
+# disabled the selector reads the reconstructed hits directly. Pandora always
+# consumes the "...Sel" collections.
 from GaudiKernel.Constants import INFO
 from Configurables import CaloConer, CaloHitSelector
 from Common.calo_thresholds import find_calo_thresholds
@@ -42,11 +44,14 @@ def _coner_cfg(prefix):
     )
 
 
-def _selector_cfg(prefix, technology):
+def _selector_cfg(prefix, technology, args):
+    # With the coning enabled the selector picks up the coner output, otherwise
+    # it thresholds the reconstructed hits directly.
+    suffix = "Coned" if getattr(args, "doCaloConing", False) else "Rec"
     selector = CaloHitSelector(
         f"{prefix}Selector",
-        CaloHitCollectionName = [f"{prefix}CollectionConed"],
-        CaloRelationCollectionName = [f"{prefix}RelationsSimConed"],
+        CaloHitCollectionName = [f"{prefix}Collection{suffix}"],
+        CaloRelationCollectionName = [f"{prefix}RelationsSim{suffix}"],
         GoodHitCollection = [f"{prefix}CollectionSel"],
         GoodRelationCollection = [f"{prefix}RelationsSimSel"],
         Nsigma = 0,
@@ -69,6 +74,6 @@ def calo_coner_cfgs():
     return [_coner_cfg(prefix) for prefix, _ in _CALO_REGIONS]
 
 
-def calo_selector_cfgs():
+def calo_selector_cfgs(args):
     """Return the four CaloHitSelector instances (one per calorimeter region)."""
-    return [_selector_cfg(prefix, tech) for prefix, tech in _CALO_REGIONS]
+    return [_selector_cfg(prefix, tech, args) for prefix, tech in _CALO_REGIONS]
