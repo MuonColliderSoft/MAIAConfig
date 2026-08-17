@@ -62,7 +62,8 @@ reorganised to follow, as closely as possible, the layout of
     `…Coned` collections and the hit merger reads them before tracking.
   - `CaloDigi/calo_coning.py` — `CaloConer` (cone filtering) followed by
     `CaloHitSelector` (energy + time thresholding) for each ECal/HCal region.
-    The coning is gated by `--doCaloConing`; the selectors always run after
+    The coning is gated by `--doCaloConing` with the cone half-opening angle set
+    by `--caloConeWidth` (default 0.6 rad); the selectors always run after
     calorimeter reconstruction, reading the `…Coned` collections when the coning
     is enabled and the reconstructed hits otherwise, and produce the `…Sel`
     collections that Pandora now consumes.

@@ -80,6 +80,14 @@ def get_digi_args():
     )
 
     parser.add_argument(
+        "--caloConeWidth",
+        help="Half-opening angle [rad] of the calorimeter cones (used with "
+             "--doCaloConing)",
+        type=float,
+        default=0.6,
+    )
+
+    parser.add_argument(
         "--RandSeed",
         help="Random seed for digitization",
         type=int,

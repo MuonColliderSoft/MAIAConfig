@@ -56,7 +56,7 @@ def makeDigiAlgList(the_args):
     # consumes. Without the coning the selector reads the reconstructed hits.
     from CaloDigi.calo_coning import calo_coner_cfgs, calo_selector_cfgs
     if the_args.doCaloConing:
-        algList += calo_coner_cfgs()
+        algList += calo_coner_cfgs(the_args)
     algList += calo_selector_cfgs(the_args)
 
     # Muon Calorimeter Digitization
