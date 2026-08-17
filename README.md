@@ -105,6 +105,8 @@ The full set is:
 | `--OverlayIPBackgroundFileNames` | digi | `[/path/to/pairs.slcio]` | Incoherent-pair overlay input file(s) (used with `--doOverlayIP`). |
 | `--doFilterDL` | digi | `False` | Double-layer hit filtering in the vertex detector. |
 | `--doTrackerConing` | digi + reco | `False` | Cone-filter the tracker hits around the signal MC particles (BIB cleaning). When enabled, the digi step writes the `…Coned` hit collections and the merger reads them before tracking. |
+| `--doCaloConing` | digi | `False` | Cone-filter the calorimeter hits around the signal MC particles before the BIB hit selection. When enabled, the selectors threshold the `…Coned` collections instead of the reconstructed hits; either way they write the `…Sel` collections that Pandora consumes. |
+| `--caloConeWidth` | digi | `0.6` | Half-opening angle [rad] of the calorimeter cones, the same for every ECal/HCal region (used with `--doCaloConing`). |
 | `--RandSeed` | digi | `42` | Random seed for the digitisation smearing. |
 | `--doTrackPerf` | reco | `False` | Run the tracking performance monitoring. |
 | `--keepEverything` | reco | `False` | Write every collection to the reconstruction output, overriding the hit dropping that `--doOverlayFull`/`--doOverlayIP` would otherwise trigger (see below). |
@@ -179,11 +181,13 @@ k4run reco_steer.py --doOverlayFull --keepEverything
 ### BIB hit cleaning
 
 Mirroring the Marlin `steer_reco.py` workflow, once the calorimeter hits are
-reconstructed (in the digitisation step) they are always cone-filtered
-(`CaloConer`) and then thresholded in energy and time (`CaloHitSelector`),
-producing the `…Sel` collections that Pandora consumes during reconstruction.
-The ECAL selector reads its per-`(theta, layer)` threshold
-maps from the `MyBIBUtils` ROOT files shipped with the software stack; set
-`MUCOLL_CALO_THRESHOLDS_DIR` to point at the directory holding those maps if they
-cannot be found automatically. Tracker-hit coning is the optional `FilterConeHits`
-counterpart, enabled with `--doTrackerConing`.
+reconstructed (in the digitisation step) they are optionally cone-filtered
+(`CaloConer`, enabled with `--doCaloConing`, cone half-opening angle
+`--caloConeWidth`) and then always thresholded in
+energy and time (`CaloHitSelector`), producing the `…Sel` collections that
+Pandora consumes during reconstruction. Without `--doCaloConing` the selectors
+threshold the reconstructed hits directly. The ECAL selector reads its
+per-`(theta, layer)` threshold maps from the `MyBIBUtils` ROOT files shipped with
+the software stack; set `MUCOLL_CALO_THRESHOLDS_DIR` to point at the directory
+holding those maps if they cannot be found automatically. Tracker-hit coning is
+the `FilterConeHits` counterpart, enabled with `--doTrackerConing`.

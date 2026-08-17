@@ -1,17 +1,14 @@
 '''-------------------------------------------------------------'''
 '''  Calorimeter hit cone filtering and BIB selection            '''
 '''-------------------------------------------------------------'''
-# Gaudi-native equivalent of the Marlin CaloConer + CaloHitSelector chain in
-# steer_reco.py. For each calorimeter region the reconstructed hits are first
-# restricted to a cone around the signal MC particles (CaloConer, "...Coned"),
-# then thresholded in energy and time to suppress the beam-induced background
-# (CaloHitSelector, "...Sel"). Pandora consumes the "...Sel" collections.
+# For each calorimeter region the reconstructed hits are optionally
+# restricted to a cone around the signal MC particles (CaloConer, "...Coned",
+# enabled with --doCaloConing), then thresholded in energy and time to suppress
+# the beam-induced background (CaloHitSelector, "...Sel"). Pandora always
+# consumes the "...Sel" collections.
 from GaudiKernel.Constants import INFO
 from Configurables import CaloConer, CaloHitSelector
 from Common.calo_thresholds import find_calo_thresholds
-
-# Cone half-opening angle around the MC particles [rad] (same for all regions).
-_CONE_WIDTH = 0.6
 
 # Selector max time window per technology [ns]
 _SELECTOR_TIME_WINDOW_MAX = {
@@ -29,7 +26,7 @@ _CALO_REGIONS = [
 ]
 
 
-def _coner_cfg(prefix):
+def _coner_cfg(prefix, cone_width):
     return CaloConer(
         f"{prefix}Coner",
         MCParticleCollectionName = ["MCParticles"],
@@ -37,16 +34,19 @@ def _coner_cfg(prefix):
         CaloRelationCollectionName = [f"{prefix}RelationsSimRec"],
         GoodHitCollection = [f"{prefix}CollectionConed"],
         GoodRelationCollection = [f"{prefix}RelationsSimConed"],
-        ConeWidth = _CONE_WIDTH,
+        ConeWidth = cone_width,
         OutputLevel = INFO,
     )
 
 
-def _selector_cfg(prefix, technology):
+def _selector_cfg(prefix, technology, args):
+    # With the coning enabled the selector picks up the coner output, otherwise
+    # it thresholds the reconstructed hits directly.
+    suffix = "Coned" if getattr(args, "doCaloConing", False) else "Rec"
     selector = CaloHitSelector(
         f"{prefix}Selector",
-        CaloHitCollectionName = [f"{prefix}CollectionConed"],
-        CaloRelationCollectionName = [f"{prefix}RelationsSimConed"],
+        CaloHitCollectionName = [f"{prefix}Collection{suffix}"],
+        CaloRelationCollectionName = [f"{prefix}RelationsSim{suffix}"],
         GoodHitCollection = [f"{prefix}CollectionSel"],
         GoodRelationCollection = [f"{prefix}RelationsSimSel"],
         Nsigma = 0,
@@ -64,11 +64,12 @@ def _selector_cfg(prefix, technology):
     return selector
 
 
-def calo_coner_cfgs():
+def calo_coner_cfgs(args):
     """Return the four CaloConer instances (one per calorimeter region)."""
-    return [_coner_cfg(prefix) for prefix, _ in _CALO_REGIONS]
+    cone_width = getattr(args, "caloConeWidth", DEFAULT_CONE_WIDTH)
+    return [_coner_cfg(prefix, cone_width) for prefix, _ in _CALO_REGIONS]
 
 
-def calo_selector_cfgs():
+def calo_selector_cfgs(args):
     """Return the four CaloHitSelector instances (one per calorimeter region)."""
-    return [_selector_cfg(prefix, tech) for prefix, tech in _CALO_REGIONS]
+    return [_selector_cfg(prefix, tech, args) for prefix, tech in _CALO_REGIONS]
