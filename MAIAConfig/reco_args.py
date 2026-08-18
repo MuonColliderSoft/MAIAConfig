@@ -91,6 +91,41 @@ def get_reco_args():
         default="PandoraSettingsDefault.xml",
     )
 
+    # CLUE args
+    parser.add_argument(
+        "--doCLUE",
+        help="Enable CLUE clustering in addition to Pandora.",
+        action="store_true"
+    )
+
+    parser.add_argument(
+        "--clueCriticalDistance",
+        help="Critical distance used to compute the local density in CLUE clustering",
+        type=float,
+        default=30,
+    )
+
+    parser.add_argument(
+        "--clueMinLocalDensity",
+        help="Minimum local density for a point to be promoted to a seed in CLUE clustering",
+        type=float,
+        default=0.1,
+    )
+
+    parser.add_argument(
+        "--clueFollowerDistance",
+        help="Maximum distance considered to search for followers in CLUE clustering",
+        type=float,
+        default=120,
+    )
+
+    parser.add_argument(
+        "--clueSeedCriticalDistance",
+        help="Critical distance used to promote a high density point as a seed in CLUE clustering; defaults to critical distance if set to -1.",
+        type=float,
+        default=-1,
+    )
+
     # GNN CKF tracking args
     parser.add_argument(
         "--findGNNTracks",
