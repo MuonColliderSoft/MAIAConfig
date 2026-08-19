@@ -21,8 +21,18 @@
 
     <!-- ALGORITHM SETTINGS -->
 
-    <!-- Set calo hit properties, then select tracks and hits to use for clustering -->
-    <algorithm type = "CaloHitPreparation"/>
+    <!-- Set calo hit properties, then select tracks and hits to use for clustering.
+         BIB cuts: 3-gaussian (two-sided core + wide) fits to the per-pseudolayer
+         neighbourhood EM energy of 100% BIB ECAL hits, fitted separately for barrel
+         and endcap, at the x2 working point. Converted to the hadronic energy density
+         this algorithm computes via cut[L] = 2 * arc[L] * (1.371/1.02373335516)
+         / (pi * 25^2 * nSampledLayers(L)); trailing 0 disables layers >= 31.
+         BIBCutDistance=25 matches the fine-granularity neighbourhood of the fit. -->
+    <algorithm type = "CaloHitPreparation">
+        <BIBCutDistance>25</BIBCutDistance>
+        <BIBEnergyDensityCutsBarrel>3.78335e-05 3.53307e-05 3.35445e-05 3.56501e-05 3.09254e-05 2.41141e-05 2.00749e-05 1.71867e-05 1.43138e-05 1.14641e-05 8.82194e-06 6.52256e-06 4.63341e-06 3.16236e-06 2.07372e-06 1.30652e-06 7.90881e-07 4.59975e-07 2.57031e-07 1.37996e-07 7.11825e-08 3.52785e-08 1.67986e-08 7.6854e-09 3.37821e-09 1.42671e-09 5.78913e-10 2.25693e-10 8.45381e-11 3.04239e-11 1.05197e-11 0</BIBEnergyDensityCutsBarrel>
+        <BIBEnergyDensityCutsEndcap>0.000603136 0.000529584 0.00053617 0.000608107 0.000578847 0.000506584 0.000425111 0.000357179 0.000305714 0.000264039 0.000226433 0.000190873 0.000157526 0.000127138 0.000100326 7.74014e-05 5.83822e-05 4.30534e-05 3.10406e-05 2.188e-05 1.50786e-05 1.01594e-05 6.69226e-06 4.30995e-06 2.71373e-06 1.67054e-06 1.00541e-06 5.91594e-07 3.4033e-07 1.91413e-07 1.05254e-07 0</BIBEnergyDensityCutsEndcap>
+    </algorithm>
     <algorithm type = "EventPreparation">
         <OutputTrackListName>Tracks</OutputTrackListName>
         <OutputCaloHitListName>CaloHits</OutputCaloHitListName>
