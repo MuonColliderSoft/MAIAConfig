@@ -66,7 +66,7 @@ def _selector_cfg(prefix, technology, args):
 
 def calo_coner_cfgs(args):
     """Return the four CaloConer instances (one per calorimeter region)."""
-    cone_width = getattr(args, "caloConeWidth", DEFAULT_CONE_WIDTH)
+    cone_width = getattr(args, "caloConeWidth")
     return [_coner_cfg(prefix, cone_width) for prefix, _ in _CALO_REGIONS]
 
 
