@@ -38,6 +38,7 @@
             <ConeApproachMaxSeparation>2000</ConeApproachMaxSeparation>
             <MaxClusterDirProjection>2000</MaxClusterDirProjection>
             <ShouldUseIsolatedHits>true</ShouldUseIsolatedHits>
+            <ShouldExcludeBIBHits>true</ShouldExcludeBIBHits>
             <LayersToStepBackCoarse>30</LayersToStepBackCoarse>
             <AdditionalPadWidthsCoarse>1</AdditionalPadWidthsCoarse>
             <SameLayerPadWidthsCoarse>1.8</SameLayerPadWidthsCoarse>
@@ -47,6 +48,7 @@
             <MaxLayersToTrackLikeHit>0</MaxLayersToTrackLikeHit>
             <TrackPathWidth>0</TrackPathWidth>
         </algorithm>
+        <ShouldExcludeBIBHits>true</ShouldExcludeBIBHits>
         <MinClusterOccupiedLayers>5</MinClusterOccupiedLayers>
         <MinClusterLayerSpan>5</MinClusterLayerSpan>
         <MaxClusterCaloHits>30</MaxClusterCaloHits>
@@ -76,6 +78,7 @@
             <ClusterSeedStrategy>0</ClusterSeedStrategy>
             <ShouldUseTrackSeed>false</ShouldUseTrackSeed>
             <ShouldUseOnlyECalHits>true</ShouldUseOnlyECalHits>
+            <ShouldExcludeBIBHits>true</ShouldExcludeBIBHits>
             <ConeApproachMaxSeparation>250.</ConeApproachMaxSeparation>
         </algorithm>
         <ClusterListName>PhotonClusters</ClusterListName>
@@ -94,6 +97,7 @@
         <algorithm type = "ConeClustering" description = "ClusterFormation">
             <ClusterSeedStrategy>2</ClusterSeedStrategy>    <!-- default value -->
             <ShouldUseTrackSeed>true</ShouldUseTrackSeed> <!-- default value -->
+            <ShouldExcludeBIBHits>true</ShouldExcludeBIBHits>
         </algorithm>
         <algorithm type = "TopologicalAssociationParent" description = "ClusterAssociation">
             <associationAlgorithms>
@@ -124,6 +128,7 @@
     <algorithm type = "ClusteringParent">
         <algorithm type = "ConeClustering" description = "ClusterFormation">
             <TanConeAngleCoarse>0.75</TanConeAngleCoarse>
+            <ShouldExcludeBIBHits>true</ShouldExcludeBIBHits>
             <AdditionalPadWidthsCoarse>12.5</AdditionalPadWidthsCoarse>
             <SameLayerPadWidthsCoarse>14</SameLayerPadWidthsCoarse>
             <ShouldUseTrackSeed>false</ShouldUseTrackSeed>
