@@ -99,7 +99,7 @@ def pandoraPFA_cfg(the_args=None):
         KinkVertexCollections = [],#"KinkVertices"],
         V0VertexCollections = [],#"V0Vertices"],
         TrackCollections = ["SiTracks"],
-        RelTrackCollections = [],#"MergedTrackerHitsRelations"],
+        RelTrackCollections = ["MergedTrackerHitsRelations"],
         MCParticleCollections = ["MCParticles"],
         MuonCaloHitCollections = ["MuonBarrelHits", "MuonEndcapHits"],
         # ECAL/HCAL hits are coned and BIB-selected upstream (see
