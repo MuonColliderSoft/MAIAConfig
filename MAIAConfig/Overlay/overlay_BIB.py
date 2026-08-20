@@ -5,15 +5,34 @@ def overlay_full_cfg(args):
     """
     Create a new overlay instance with the given parameters.
     """
+    background_files = [
+        [args.OverlayFullPathToMuPlus],
+        [args.OverlayFullPathToMuMinus],
+    ]
+    number_background = [
+        args.OverlayFullNumberBackground,
+        args.OverlayFullNumberBackground,
+    ]
+
+    if args.OverlayFullUseMuonComponent:
+        background_files += [
+            [args.OverlayFullMuonPathToMuPlus],
+            [args.OverlayFullMuonPathToMuMinus],
+        ]
+        number_background += [
+            args.OverlayFullMuonNumberBackground,
+            args.OverlayFullMuonNumberBackground,
+        ]
+
     # TODO: the Yoke (muon) calorimeter collections are intentionally omitted for
     # now. DDSimpleMuonDigi resolves its input cellID encoding at initialize(),
     # which is not available for overlay-produced collections, so the muon
     # digitisers read the base Yoke* hits instead. Add YokeBarrelCollection /
     # YokeEndcapCollection back to TimeWindows, SimCalorimeterHits,
     # OutputSimCalorimeterHits and OutputCaloHitContributions once that is resolved.
-    return OverlayTimingRandomMix(
+    overlay = OverlayTimingRandomMix(
         "OverlayFull",
-        BackgroundFileNames = [[args.OverlayFullPathToMuPlus], [args.OverlayFullPathToMuMinus]],
+        BackgroundFileNames = background_files,
         TimeWindows = {
             "VertexBarrelCollection": [-0.18, 0.18],
             "VertexEndcapCollection": [-0.18, 0.18],
@@ -27,7 +46,7 @@ def overlay_full_cfg(args):
             "HCalEndcapCollection": [-0.5, 15.] },
         BackgroundMCParticleCollectionName = "MCParticles",
         MergeMCParticles = False,
-        NumberBackground = [args.OverlayFullNumberBackground, args.OverlayFullNumberBackground],
+        NumberBackground = number_background,
         SimTrackerHits = [
             "VertexBarrelCollection", "VertexEndcapCollection",
             "InnerTrackerBarrelCollection", "InnerTrackerEndcapCollection",
@@ -48,3 +67,9 @@ def overlay_full_cfg(args):
             "OverlayHCalBarrelContributionCollection", "OverlayHCalEndcapContributionCollection"],
         OutputLevel = INFO
     )
+
+    if args.OverlayFullUseMuonComponent:
+        overlay.Poisson_random_NOverlay = [False, False, True, True]
+        overlay.AllowReusingBackgroundFiles = True
+
+    return overlay
