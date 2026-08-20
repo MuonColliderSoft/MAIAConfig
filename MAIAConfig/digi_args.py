@@ -62,7 +62,7 @@ def get_digi_args():
         default=False,
     )
 
-    # Realistic (charge-transport) tracker digitisation. 
+    # Realistic (charge-transport) tracker digitisation.
     parser.add_argument(
         "--doRealisticDigiVertex",
         help="Digitise the vertex detector with the realistic MuonCVXDDigitiser "
