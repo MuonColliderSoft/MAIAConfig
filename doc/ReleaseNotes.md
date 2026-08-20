@@ -81,6 +81,9 @@ reorganised to follow, as closely as possible, the layout of
 - The tracking algorithms (CKF tracking and truth matching) take their internal
   thread count from a separate `--TrackingThreads` option (default `1`),
   independent of the Gaudi event-loop `--numThreads` setting.
+- `build_application` now defaults to `evt_max=-1`, so a steering macro run
+  without `k4run -n` processes every event in the input file instead of the
+  first 10. `-n` continues to override it.
 
 ### MAIA-specific cleanups
 
