@@ -52,6 +52,20 @@ reorganised to follow, as closely as possible, the layout of
   `Overlay/overlay_BIB.py` for re-enabling it.
 - Renamed `overlay_full.py` to `overlay_BIB.py` for clarity.
 
+### Tracker digitisation
+
+- Added the realistic (charge-transport) tracker digitisation as an option next
+  to the parametric smearing: `TrackerDigi/realistic_{vertex,inner,outer}.py`
+  configure one `MuonCVXDDigitiser` per subdetector region, gated by the new
+  `--doRealisticDigiVertex`, `--doRealisticDigiInner` and `--doRealisticDigiOuter`
+  flags (each subdetector can be switched independently).
+- The realistic digitisers write the same hit and hit <-> sim-hit link
+  collections as the `DDPlanarDigi` ones they replace (`VXDBarrelHits`,
+  `VXDBarrelHitsRelations`, ...), so they drop into the existing chain: coning,
+  double-layer filtering, hit merging and tracking are unchanged. They also
+  produce the local-frame sim hits and raw-hit links, which nothing downstream
+  reads. Unlike `DDPlanarDigi`, `MuonCVXDDigitiser` applies no time window.
+
 ### Beam-induced-background hit cleaning
 
 - Scheduled the Gaudi-native BIB-cleaning algorithms (from k4Reco) to mimic the

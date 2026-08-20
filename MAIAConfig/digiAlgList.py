@@ -19,10 +19,20 @@ def makeDigiAlgList(the_args):
         from Overlay.overlay_IP import overlay_ip_cfg
         algList.append(overlay_ip_cfg(the_args))
 
-    # Tracker Digitization
-    from TrackerDigi.tracking_vertex import VXDBarrel_cfg, VXDEndcap_cfg
-    from TrackerDigi.tracking_inner import ITBarrel_cfg, ITEndcap_cfg
-    from TrackerDigi.tracking_outer import OTBarrel_cfg, OTEndcap_cfg
+    # Tracker Digitization. Each subdetector runs either the parametric
+    # smearing or, the realistic charge-transport digitisation
+    if the_args.doRealisticDigiVertex:
+        from TrackerDigi.realistic_vertex import VXDBarrel_cfg, VXDEndcap_cfg
+    else:
+        from TrackerDigi.tracking_vertex import VXDBarrel_cfg, VXDEndcap_cfg
+    if the_args.doRealisticDigiInner:
+        from TrackerDigi.realistic_inner import ITBarrel_cfg, ITEndcap_cfg
+    else:
+        from TrackerDigi.tracking_inner import ITBarrel_cfg, ITEndcap_cfg
+    if the_args.doRealisticDigiOuter:
+        from TrackerDigi.realistic_outer import OTBarrel_cfg, OTEndcap_cfg
+    else:
+        from TrackerDigi.tracking_outer import OTBarrel_cfg, OTEndcap_cfg
     algList.append(VXDBarrel_cfg(the_args))
     algList.append(VXDEndcap_cfg(the_args))
     algList.append(ITBarrel_cfg(the_args))
