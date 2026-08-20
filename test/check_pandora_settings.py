@@ -19,9 +19,10 @@ if not os.path.isabs(settings) or not os.path.isfile(settings):
 with open(settings) as f:
     text = f.read()
 
-referenced = re.findall(r"<HistogramFile>\s*([^<]*?)\s*</HistogramFile>", text)
-if not referenced:
-    sys.exit(f"No <HistogramFile> reference found in {settings}")
+# uncomment if PhotonReconstruction is implemented
+#referenced = re.findall(r"<HistogramFile>\s*([^<]*?)\s*</HistogramFile>", text)
+#if not referenced:
+#    sys.exit(f"No <HistogramFile> reference found in {settings}")
 
 for path in referenced:
     if not os.path.isabs(path):
