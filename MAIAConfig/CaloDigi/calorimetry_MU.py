@@ -1,12 +1,13 @@
 from GaudiKernel.Constants import INFO, WARNING
 from Configurables import DDSimpleMuonDigi
+from Common.overlay_utils import overlay_input
 
 def MuonBarrelDigi_cfg(args):
     """
     Create a new Muon Barrel digitiser instance with the given parameters.
     """
     # Yoke is not overlaid (see Overlay/overlay_IP.py); always read the base hits.
-    inputHitCollections = ["YokeBarrelCollection"]
+    inputHitCollections = overlay_input("YokeBarrelCollection", args)
     return DDSimpleMuonDigi(
         "MuonBarrelDigitiser",
         CalibrMUON = 70.1,
@@ -24,7 +25,7 @@ def MuonEndcapDigi_cfg(args):
     Create a new Muon Endcap digitiser instance with the given parameters.
     """
     # Yoke is not overlaid (see Overlay/overlay_IP.py); always read the base hits.
-    inputHitCollections = ["YokeEndcapCollection"]
+    inputHitCollections = overlay_input("YokeEndcapCollection", args)
     return DDSimpleMuonDigi(
         "MuonEndcapDigitiser",
         CalibrMUON = 70.1,
