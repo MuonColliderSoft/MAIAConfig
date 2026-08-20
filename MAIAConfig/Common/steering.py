@@ -86,7 +86,7 @@ def drop_calorimeter_hits():
     _drop_collection_types(CALORIMETER_HIT_TYPES)
 
 
-def build_application(args, alg_list, input_files, output_file, histo_file, evt_max=10):
+def build_application(args, alg_list, input_files, output_file, histo_file, evt_max=-1):
     """
     Configure the services, IO and ApplicationMgr common to every steering
     macro and return the ApplicationMgr instance.
@@ -97,7 +97,7 @@ def build_application(args, alg_list, input_files, output_file, histo_file, evt_
     input_files  : list of input EDM4hep files for the IOSvc.
     output_file  : output EDM4hep file for the IOSvc.
     histo_file   : ROOT file for the THistSvc histogram output.
-    evt_max      : number of events to process (default 10).
+    evt_max      : number of events to process (default -1 = every event in the input).
     """
     from GaudiKernel.Constants import WARNING
     from Common.muc_mt import get_mt_args, get_k4run_mt
