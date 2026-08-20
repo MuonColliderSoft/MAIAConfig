@@ -1,4 +1,4 @@
-from GaudiKernel.Constants import INFO, WARNING
+from GaudiKernel.Constants import INFO, WARNING, DEBUG
 from Configurables import OverlayTimingRandomMix
 
 def overlay_full_cfg(args):
@@ -24,7 +24,9 @@ def overlay_full_cfg(args):
             "ECalBarrelCollection": [-0.5, 15.],
             "ECalEndcapCollection": [-0.5, 15.],
             "HCalBarrelCollection": [-0.5, 15.],
-            "HCalEndcapCollection": [-0.5, 15.] },
+            "HCalEndcapCollection": [-0.5, 15.],
+            "YokeBarrelCollection": [-0.5, 15.],
+            "YokeEndcapCollection": [-0.5, 15.] },
         BackgroundMCParticleCollectionName = "MCParticles",
         MergeMCParticles = False,
         NumberBackground = [args.OverlayFullNumberBackground, args.OverlayFullNumberBackground],
@@ -34,7 +36,8 @@ def overlay_full_cfg(args):
             "OuterTrackerBarrelCollection", "OuterTrackerEndcapCollection"],
         SimCalorimeterHits = [
             "ECalBarrelCollection", "ECalEndcapCollection",
-            "HCalBarrelCollection", "HCalEndcapCollection"],
+            "HCalBarrelCollection", "HCalEndcapCollection",
+            "YokeBarrelCollection", "YokeEndcapCollection"],
         MCParticles = ["MCParticles"],
         OutputSimTrackerHits = [
             "OverlayVertexBarrelCollection", "OverlayVertexEndcapCollection",
@@ -42,9 +45,11 @@ def overlay_full_cfg(args):
             "OverlayOuterTrackerBarrelCollection", "OverlayOuterTrackerEndcapCollection"],
         OutputSimCalorimeterHits = [
             "OverlayECalBarrelCollection", "OverlayECalEndcapCollection",
-            "OverlayHCalBarrelCollection", "OverlayHCalEndcapCollection"],
+            "OverlayHCalBarrelCollection", "OverlayHCalEndcapCollection",
+            "OverlayYokeBarrelCollection", "OverlayYokeEndcapCollection"],
         OutputCaloHitContributions = [
             "OverlayECalBarrelContributionCollection", "OverlayECalEndcapContributionCollection",
-            "OverlayHCalBarrelContributionCollection", "OverlayHCalEndcapContributionCollection"],
+            "OverlayHCalBarrelContributionCollection", "OverlayHCalEndcapContributionCollection",
+            "OverlayYokeBarrelContributionCollection", "OverlayYokeEndcapContributionCollection"],
         OutputLevel = INFO
     )
