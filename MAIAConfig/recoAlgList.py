@@ -40,6 +40,10 @@ def makeRecoAlgList(the_args):
         algList.append(deduper_cfg("GNNDirectDeduper", "GNNTrackCandidates", "GNNDirectDedupedTracks"))
         algList.append(track_filter_cfg("GNNDirectFilterer", "GNNDirectDedupedTracks", "GNNDirectSiTracks"))
 
+    if the_args.doCLUE:
+        from Clustering.clue import CLUEWrapper_cfg
+        algList.append(CLUEWrapper_cfg(the_args))
+
     # Track Performance Monitoring
     if the_args.doTrackPerf:
         from Diagnostics.track_performance import track_truth_cfg
