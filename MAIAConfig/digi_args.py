@@ -28,14 +28,14 @@ def get_digi_args():
 
     parser.add_argument(
         "--OverlayFullMuonPathToMuPlus",
-        help="Path to muplus BIB decays containing muons",
+        help="Path to muplus BIB decays that contain muons",
         type=str,
         default="/path/to/muplus/muon/",
     )
 
     parser.add_argument(
         "--OverlayFullMuonPathToMuMinus",
-        help="Path to muminus BIB decays containing muons",
+        help="Path to muminus BIB decays that contain muons",
         type=str,
         default="/path/to/muminus/muon/",
     )
@@ -45,13 +45,6 @@ def get_digi_args():
         help="Number of background files used for BIB overlay",
         type=int,
         default=1667, #Magic number for EU24 BIB
-    )
-
-    parser.add_argument(
-        "--OverlayFullMuonNumberBackground",
-        help="Poisson mean for each BIB muon-component stream",
-        type=float,
-        default=None, #7924.2 for a full BX: 14,218,800 * 743 / (6666 * 200)
     )
 
     parser.add_argument(
@@ -71,7 +64,7 @@ def get_digi_args():
 
     parser.add_argument(
         "--OverlayFullUseMuonComponent",
-        help="Add separately sampled BIB decays containing muons",
+        help="Overlay BIB decays containing muons separately",
         action="store_true",
         default=False,
     )
@@ -123,11 +116,5 @@ def get_digi_args():
     )
 
     args = parser.parse_known_args()[0]
-
-    if args.OverlayFullUseMuonComponent:
-        if args.OverlayFullMuonNumberBackground is None:
-            parser.error("--OverlayFullMuonNumberBackground is required")
-        if args.OverlayFullMuonNumberBackground <= 0:
-            parser.error("--OverlayFullMuonNumberBackground must be positive")
 
     return args

@@ -15,13 +15,15 @@ def overlay_full_cfg(args):
     ]
 
     if args.OverlayFullUseMuonComponent:
+        # Each file groups K unrotated muon-producing decays, K ~ Poisson(4.75).
+        # 4.75 = 14_218_800 * 743 / (6666 * 200 * 1667).
         background_files += [
             [args.OverlayFullMuonPathToMuPlus],
             [args.OverlayFullMuonPathToMuMinus],
         ]
         number_background += [
-            args.OverlayFullMuonNumberBackground,
-            args.OverlayFullMuonNumberBackground,
+            args.OverlayFullNumberBackground,
+            args.OverlayFullNumberBackground,
         ]
 
     # TODO: the Yoke (muon) calorimeter collections are intentionally omitted for
@@ -67,9 +69,5 @@ def overlay_full_cfg(args):
             "OverlayHCalBarrelContributionCollection", "OverlayHCalEndcapContributionCollection"],
         OutputLevel = INFO
     )
-
-    if args.OverlayFullUseMuonComponent:
-        overlay.Poisson_random_NOverlay = [False, False, True, True]
-        overlay.AllowReusingBackgroundFiles = True
 
     return overlay
