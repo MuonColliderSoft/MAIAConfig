@@ -14,12 +14,12 @@ def overlay_full_cfg(args):
         args.OverlayFullNumberBackground,
     ]
 
-    if args.OverlayFullUseMuonComponent:
-        # Each file groups K unrotated muon-producing decays, K ~ Poisson(4.75).
+    if args.OverlayBHMuonsSeparately:
+        # Each file groups K unrotated decays containing BH muons, K ~ Poisson(4.75).
         # 4.75 = 14_218_800 * 743 / (6666 * 200 * 1667).
         background_files += [
-            [args.OverlayFullMuonPathToMuPlus],
-            [args.OverlayFullMuonPathToMuMinus],
+            [args.OverlayFullBHPathToMuPlus],
+            [args.OverlayFullBHPathToMuMinus],
         ]
         number_background += [
             args.OverlayFullNumberBackground,
