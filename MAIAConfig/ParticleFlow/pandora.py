@@ -2,6 +2,7 @@ from GaudiKernel.Constants import INFO, WARNING, DEBUG
 from Configurables import DDPandoraPFANewAlgorithm, FastJetAlg
 
 from Common.pandora_settings import resolve_pandora_settings
+from Common.pandora_calibration import pandora_calibration_params
 
 def pandoraPFA_cfg(the_args=None):
     """
@@ -10,8 +11,15 @@ def pandoraPFA_cfg(the_args=None):
     The Pandora settings XML is located inside this package (or wherever
     --pandoraSettings / MAIA_PANDORA_SETTINGS_DIR point), so the job does not
     have to run from a directory containing a copy of PandoraSettings/.
+
+    The theta-energy calibration payloads are located the same way (see
+    Common/pandora_calibration.py) and applied by default, so a plain
+    reconstruction job produces calibrated cluster and PFO energies. Pass
+    --pandoraCalibration none to switch them off, or a comma-separated list of
+    payload names/paths to use your own.
     """
     settings = getattr(the_args, "pandoraSettings", None) or "PandoraSettingsDefault.xml"
+    calibration = pandora_calibration_params(getattr(the_args, "pandoraCalibration", None))
     return DDPandoraPFANewAlgorithm(
         "PandoraPFANew",
         CreateGaps = False,
@@ -31,6 +39,10 @@ def pandoraPFA_cfg(the_args=None):
         ECalSiToHadGeVCalibrationBarrel = 1,
         ECalSiToHadGeVCalibrationEndCap = 1,
         ECalSiToMipCalibration = 1,
+        # The four flat GeV calibrations below define the energy basis the
+        # theta-energy calibration tables are trained in. Change any of them and
+        # the tables in Calibration/ have to be regenerated to match, or the
+        # correction is applied in a different basis than it was measured in.
         ECalToEMGeVCalibration = 1.02373335516,
         ECalToHadGeVCalibrationBarrel = 1.371,
         ECalToHadGeVCalibrationEndCap = 1.371,
@@ -112,7 +124,14 @@ def pandoraPFA_cfg(the_args=None):
             "MuonBarrelHitsRelations", "MuonEndcapHitsRelations"],
         PFOCollectionName = ["PandoraPFOs"],
         StartVertexCollectionName = ["PandoraStartVertices"],
-        OutputLevel = INFO
+        OutputLevel = INFO,
+        # Theta-energy calibration: the Electromagnetic/HadronicThetaEnergy-
+        # Correction* properties built from Calibration/*.json. Empty when
+        # --pandoraCalibration none or when no payloads are installed, in which
+        # case the correction plugins register with empty tables and act as the
+        # identity. The plugins also have to be named in
+        # PandoraSettings/PandoraSettingsDefault.xml to be called at all.
+        **calibration
     )
 
 def fastJet_cfg():
