@@ -62,6 +62,31 @@ def get_digi_args():
         default=False,
     )
 
+    # Realistic (charge-transport) tracker digitisation.
+    parser.add_argument(
+        "--doRealisticDigiVertex",
+        help="Digitise the vertex detector with the realistic MuonCVXDDigitiser "
+             "instead of the parametric DDPlanarDigi smearing",
+        action="store_true",
+        default=False,
+    )
+
+    parser.add_argument(
+        "--doRealisticDigiInner",
+        help="Digitise the inner tracker with the realistic MuonCVXDDigitiser "
+             "instead of the parametric DDPlanarDigi smearing",
+        action="store_true",
+        default=False,
+    )
+
+    parser.add_argument(
+        "--doRealisticDigiOuter",
+        help="Digitise the outer tracker with the realistic MuonCVXDDigitiser "
+             "instead of the parametric DDPlanarDigi smearing",
+        action="store_true",
+        default=False,
+    )
+
     # Shared with reco_args (the merger reads the coned hits when enabled).
     add_argument_once(
         parser,
