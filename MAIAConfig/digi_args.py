@@ -27,6 +27,20 @@ def get_digi_args():
     )
 
     parser.add_argument(
+        "--OverlayFullBHPathToMuPlus",
+        help="Path to muplus BIB decays containing BH muons",
+        type=str,
+        default="/path/to/muplus/muon/",
+    )
+
+    parser.add_argument(
+        "--OverlayFullBHPathToMuMinus",
+        help="Path to muminus BIB decays containing BH muons",
+        type=str,
+        default="/path/to/muminus/muon/",
+    )
+
+    parser.add_argument(
         "--OverlayFullNumberBackground",
         help="Number of background files used for BIB overlay",
         type=int,
@@ -44,6 +58,13 @@ def get_digi_args():
     parser.add_argument(
         "--doOverlayFull",
         help="Do BIB overlay",
+        action="store_true",
+        default=False,
+    )
+
+    parser.add_argument(
+        "--OverlayBHMuonsSeparately",
+        help="Overlay BIB decays containing BH muons separately",
         action="store_true",
         default=False,
     )
@@ -119,4 +140,6 @@ def get_digi_args():
         default=42,
     )
 
-    return parser.parse_known_args()[0]
+    args = parser.parse_known_args()[0]
+
+    return args
