@@ -63,8 +63,8 @@ def get_digi_args():
     )
 
     parser.add_argument(
-        "--OverlayFullUseMuonComponent",
-        help="Overlay BIB decays containing muons separately",
+        "--OverlayMuonsSeparately",
+        help="Separately overlay BIB decays containing muons",
         action="store_true",
         default=False,
     )
