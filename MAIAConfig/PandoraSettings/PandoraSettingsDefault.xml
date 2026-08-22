@@ -7,7 +7,8 @@
     <ShouldCollapseMCParticlesToPfoTarget>true</ShouldCollapseMCParticlesToPfoTarget>
 
     <!-- PLUGIN REGISTRATION -->
-    <HadronicEnergyCorrectionPlugins>SoftwareCompensation</HadronicEnergyCorrectionPlugins>
+    <HadronicEnergyCorrectionPlugins>SoftwareCompensation HadronicThetaEnergyBinned</HadronicEnergyCorrectionPlugins>
+    <ElectromagneticEnergyCorrectionPlugins>PhotonEMNonLinearity</ElectromagneticEnergyCorrectionPlugins>
     <EmShowerPlugin>LCEmShowerId</EmShowerPlugin>
     <PhotonPlugin>LCPhotonId</PhotonPlugin>
     <ElectronPlugin>LCElectronId</ElectronPlugin>
