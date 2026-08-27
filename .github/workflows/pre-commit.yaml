@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v7
-    - uses: cvmfs-contrib/github-action-cvmfs@v3.1
+    - uses: cvmfs-contrib/github-action-cvmfs@v5.5
     - uses: aidasoft/run-lcg-view@v6
       with:
         release-platform: LCG_101/x86_64-centos7-clang12-opt
