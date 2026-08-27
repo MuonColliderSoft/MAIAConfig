@@ -29,7 +29,7 @@ jobs:
           rm_cmd: "rmz"  # Use 'rmz' for faster deletion (default: 'rm')
           rmz_version: "3.1.1"  # Required when rm_cmd is 'rmz'
           testing: false
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Launch Container
         run: |
           docker run -it --name ci_container --privileged -v ${GITHUB_WORKSPACE}:/packages -d ghcr.io/muoncollidersoft/mucoll-sim-ubuntu24:main tail -f /dev/null
