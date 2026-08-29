@@ -27,17 +27,24 @@ def get_digi_args():
     )
 
     parser.add_argument(
-        "--OverlayFullBHPathToMuPlus",
+        "--OverlayBHPathToMuPlus",
         help="Path to muplus BIB decays containing BH muons",
         type=str,
         default="/path/to/muplus/muon/",
     )
 
     parser.add_argument(
-        "--OverlayFullBHPathToMuMinus",
+        "--OverlayBHPathToMuMinus",
         help="Path to muminus BIB decays containing BH muons",
         type=str,
         default="/path/to/muminus/muon/",
+    )
+
+    parser.add_argument(
+        "--OverlayBHMeanDecays",
+        help="Poisson mean number of BIB decays containing BH muons",
+        type=float,
+        default=7924.2,  # 14_218_800 * 743 / (6_666 * 200)
     )
 
     parser.add_argument(

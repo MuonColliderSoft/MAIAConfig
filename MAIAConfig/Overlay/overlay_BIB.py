@@ -1,10 +1,13 @@
 from GaudiKernel.Constants import INFO, WARNING
+# File-based sampling for existing one-entry-per-file BIB banks.
 from Configurables import OverlayTimingRandomMix
 
 def overlay_full_cfg(args):
     """
     Create a new overlay instance with the given parameters.
     """
+    overlay_type = OverlayTimingRandomMix
+
     background_files = [
         [args.OverlayFullPathToMuPlus],
         [args.OverlayFullPathToMuMinus],
@@ -15,15 +18,17 @@ def overlay_full_cfg(args):
     ]
 
     if args.OverlayBHMuonsSeparately:
-        # Each file groups K unrotated decays containing BH muons, K ~ Poisson(4.75).
-        # 4.75 = 14_218_800 * 743 / (6666 * 200 * 1667).
+        # Entry-based sampling supports multi-entry files and selecting with replacement.
+        from Configurables import OverlayTimingRandomEntryMix
+
+        overlay_type = OverlayTimingRandomEntryMix
         background_files += [
-            [args.OverlayFullBHPathToMuPlus],
-            [args.OverlayFullBHPathToMuMinus],
+            [args.OverlayBHPathToMuPlus],
+            [args.OverlayBHPathToMuMinus],
         ]
         number_background += [
-            args.OverlayFullNumberBackground,
-            args.OverlayFullNumberBackground,
+            args.OverlayBHMeanDecays,
+            args.OverlayBHMeanDecays,
         ]
 
     # TODO: the Yoke (muon) calorimeter collections are intentionally omitted for
@@ -32,7 +37,7 @@ def overlay_full_cfg(args):
     # digitisers read the base Yoke* hits instead. Add YokeBarrelCollection /
     # YokeEndcapCollection back to TimeWindows, SimCalorimeterHits,
     # OutputSimCalorimeterHits and OutputCaloHitContributions once that is resolved.
-    overlay = OverlayTimingRandomMix(
+    overlay = overlay_type(
         "OverlayFull",
         BackgroundFileNames = background_files,
         TimeWindows = {
@@ -69,5 +74,9 @@ def overlay_full_cfg(args):
             "OverlayHCalBarrelContributionCollection", "OverlayHCalEndcapContributionCollection"],
         OutputLevel = INFO
     )
+
+    if args.OverlayBHMuonsSeparately:
+        overlay.Poisson_random_NOverlay = [False, False, True, True]
+        overlay.AllowReusingBackgroundEntries = [False, False, True, True]
 
     return overlay
