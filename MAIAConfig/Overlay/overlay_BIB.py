@@ -76,6 +76,8 @@ def overlay_full_cfg(args):
     )
 
     if args.OverlayBHMuonsSeparately:
+        # Bulk files contain one event; packed BH files are sampled by entry.
+        overlay.OneEntryPerFile = [True, True, False, False]
         overlay.Poisson_random_NOverlay = [False, False, True, True]
         overlay.AllowReusingBackgroundEntries = [False, False, True, True]
 
