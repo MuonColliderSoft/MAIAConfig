@@ -35,22 +35,49 @@ reorganised to follow, as closely as possible, the layout of
 
 ### Overlay
 
-- Added the incoherent-pair (IP) overlay (`Overlay/overlay_IP.py`), the fully
-  Gaudi-native equivalent of the Marlin `OverlayTimingGeneric` processor, using
-  the k4FWCore `OverlayTiming` Configurable (selected explicitly to avoid the
-  shadowed k4Reco component of the same name).
-- IP overlay is gated by `--doOverlayIP` and chained after the BIB overlay: it
-  reads the BIB `Overlay*` collections when `--doOverlayFull` is also set,
-  otherwise the raw simulation collections, and writes `OverlayIP*` collections.
+- Added the overlay of the beam-induced background (BIB, `--doOverlayFull`) and
+  of the incoherent pairs (`--doOverlayIP`), both driven by the k4FWCore
+  `OverlayTiming` Configurable (selected explicitly to avoid the shadowed k4Reco
+  component of the same name).
+- A **single** `OverlayTiming` instance (`Overlay/overlay.py`) handles every
+  enabled background: `BackgroundFileNames`, `NumberBackground` and
+  `Poisson_random_NOverlay` are indexed by group, so the two BIB beams and the
+  incoherent pairs are three independent background groups overlaid in one pass
+  over the raw simulation collections. It writes `Overlay*` collections whatever
+  combination of flags is used.
+- Chaining two `OverlayTiming` instances (BIB then IP) was tried first and does
+  not work: the algorithm resolves its background collections by its own *input*
+  names, so a second pass reading the `Overlay*` collections looks for
+  `OverlayVertexBarrelCollection` in the pair file, finds nothing and overlays no
+  pairs, then segfaults in `CaloHitContributionCollection::prepareForWrite()` --
+  the calorimeter-contribution copy path indexes `oparticles` with an unguarded
+  `getObjectID().index`, which is `-1` for the first pass' background
+  contributions. Neither can be worked around from the configuration.
 - Centralised the digitiser input-collection selection in
-  `Common/overlay_utils.overlay_input` (precedence: IP > BIB > raw), used by all
-  tracker and calorimeter digitisers.
+  `Common/overlay_utils.overlay_input`, which prefixes with `OUTPUT_PREFIX`
+  ("Overlay") whenever either background is enabled, used by all tracker and
+  calorimeter digitisers.
+- The BIB overlay uses `RandomMixBackgroundFiles = True` (added upstream in
+  key4hep/k4FWCore#413), which folds the random one-pseudo-event-per-file mixing
+  of the k4Reco `OverlayTimingRandomMix` into `OverlayTiming`. The
+  `BackgroundFileNames` entries are directories, whose `.root` files the
+  algorithm collects itself. `AllowReusingBackgroundFiles` has to be set
+  explicitly, unlike with `OverlayTimingRandomMix`, which always wrapped around:
+  each BIB file holds a single pseudo-event, so a random draw repeats a file well
+  before the input is exhausted and the job would abort on the first repeat.
+- Added `--OverlayThreads` (default `1`), the number of worker threads the
+  overlay uses to read and decompress the background files within a single event.
+  Only the reading is parallelised -- the randomness is drawn up front and the
+  merge stays serial and in order -- so the result does not depend on it. It is
+  independent of `--numThreads` but draws from the same Gaudi thread pool.
+- The background MC particles are not stored (`MergeMCParticles = False`, also
+  added in key4hep/k4FWCore#413): the tracker hits keep the momentum of their
+  originating particle and the calorimeter contributions get an empty particle.
+  Only the signal particles reach `MCParticlesOverlay`.
 - The Yoke (muon) collections are currently **not** overlaid: `DDSimpleMuonDigi`
   resolves its input cellID encoding at `initialize()`, which is not available
   for overlay-produced collections. The muon digitisers therefore read the base
-  `Yoke*` collections. This applies to both overlays; see the `TODO` in
-  `Overlay/overlay_BIB.py` for re-enabling it.
-- Renamed `overlay_full.py` to `overlay_BIB.py` for clarity.
+  `Yoke*` collections; see the `TODO` in `Overlay/overlay.py`.
 
 ### Tracker digitisation
 
