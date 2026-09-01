@@ -30,8 +30,8 @@ domain (following the CLDConfig convention):
 - `TrackerDigi/` — tracker digitisation (vertex/inner/outer) and tracker-hit
   cone filtering (`coning.py`).
 - `Tracking/` — hit merging, CKF track reconstruction, and double-layer filtering.
-- `Overlay/` — beam-induced-background (`overlay_BIB.py`) and incoherent-pair
-  (`overlay_IP.py`) overlay.
+- `Overlay/` — beam-induced-background and incoherent-pair overlay
+  (`overlay.py`).
 - `ParticleFlow/` — Pandora PFA and jet clustering.
 - `Diagnostics/` — tracking performance monitoring.
 - `PandoraSettings/` — Pandora steering and likelihood data XMLs. These are
@@ -101,7 +101,8 @@ The full set is:
 | `--OverlayFullPathToMuPlus` | digi | `/path/to/muplus/` | Directory of the μ⁺ BIB overlay files (used with `--doOverlayFull`). |
 | `--OverlayFullPathToMuMinus` | digi | `/path/to/muminus/` | Directory of the μ⁻ BIB overlay files (used with `--doOverlayFull`). |
 | `--OverlayFullNumberBackground` | digi | `1667` | Number of BIB background files overlaid (used with `--doOverlayFull`). |
-| `--doOverlayIP` | digi + reco | `False` | Overlay incoherent pairs. When both overlays are enabled they are chained (BIB then IP) before digitisation. In the reco step it only acts as a flag: when set, all tracker and calorimeter hit collections are dropped from the reconstruction output (see below). |
+| `--OverlayThreads` | digi | `1` | Number of worker threads the overlay uses to read and decompress the background files *within one event*; `1` reads them serially. Only the reading is parallelised — the merge into the output collections stays serial and in order, so the result does not depend on this value. Independent of `--numThreads`, but drawn from the same thread pool. |
+| `--doOverlayIP` | digi + reco | `False` | Overlay incoherent pairs. Can be combined freely with `--doOverlayFull`; both are then overlaid by the same algorithm in one pass. In the reco step it only acts as a flag: when set, all tracker and calorimeter hit collections are dropped from the reconstruction output (see below). |
 | `--OverlayIPBackgroundFileNames` | digi | `[/path/to/pairs.slcio]` | Incoherent-pair overlay input file(s) (used with `--doOverlayIP`). |
 | `--doFilterDL` | digi | `False` | Double-layer hit filtering in the vertex detector. |
 | `--doRealisticDigiVertex` | digi | `False` | Digitise the vertex detector with the realistic `MuonCVXDDigitiser` (charge transport in the sensor) instead of the parametric `DDPlanarDigi` smearing. The output collection names are unchanged (see below). |
@@ -155,6 +156,64 @@ Loosen it for that instance alone when studying GNN-only efficiency:
 k4run reco_steer.py --findGNNTracks --modelBase /path/to/onnx_files \
       --GNNDirectFilterer.NHitsTotal 3
 ```
+
+### Overlay
+
+Both backgrounds are overlaid by a **single** k4FWCore `OverlayTiming` instance
+reading the raw simulation collections and writing `Overlay*` collections, which
+the digitisers pick up through `Common.overlay_utils.overlay_input`. The output
+names do not depend on which backgrounds are enabled.
+
+`OverlayTiming` indexes `BackgroundFileNames`, `NumberBackground` and
+`Poisson_random_NOverlay` by *group*, and draws from each group independently, so
+one instance covers every combination of the two flags:
+
+| Flags | Background groups |
+|-------|-------------------|
+| `--doOverlayFull` | μ⁺ BIB, μ⁻ BIB |
+| `--doOverlayIP` | incoherent pairs |
+| both | μ⁺ BIB, μ⁻ BIB, incoherent pairs |
+
+The BIB is stored as thousands of files holding a single pseudo-event each, so
+`RandomMixBackgroundFiles = True` treats every file in a group as an independent
+event source and draws a random set of `--OverlayFullNumberBackground` files per
+event and per beam. `--OverlayFullPathToMuPlus` / `--OverlayFullPathToMuMinus`
+are directories — the algorithm collects their `.root` files itself.
+`AllowReusingBackgroundFiles = True` goes with it: with one pseudo-event per
+file, a random draw hits the same file again before long, and the job would
+otherwise abort with *"No more events in background file"*.
+
+Reading and decompressing the background dominates the runtime, so
+`--OverlayThreads N` reads the files of one event on `N` worker threads. Only the
+reading is parallelised; the randomness is drawn up front and the merge into the
+output collections is serial and in order, so the result is identical for any
+`--OverlayThreads` and for any `--numThreads`.
+
+The background MC particles are not kept (`MergeMCParticles = False`): the
+tracker hits carry the momentum of their originating particle instead of a
+particle link, and the calorimeter contributions get an empty particle. Only the
+signal particles reach `MCParticlesOverlay`; `MCParticles` itself is passed
+through untouched and is what the reconstruction uses.
+
+Everything is overlaid onto the single bunch crossing that holds the physics
+event (`NBunchtrain = 1`), so no time offsets are applied and the same
+per-collection integration windows are used for every background.
+
+#### Why one instance and not two chained ones
+
+Running a second `OverlayTiming` behind the first does not work, and cannot be
+made to work from the configuration. The algorithm looks its background
+collections up by its own *input* names
+(`backgroundEvent.get(inputLocations(...)[i])`), so a second pass reading the
+first pass' `Overlay*` collections searches the pair file for
+`OverlayVertexBarrelCollection` and finds nothing — it silently overlays no
+pairs at all. It then segfaults in `CaloHitContributionCollection::prepareForWrite()`,
+because the copy path for calorimeter contributions does
+`oparticles[contrib.getParticle().getObjectID().index]` with no `index != -1`
+guard (the tracker-hit path immediately above it has one), and the first pass'
+background contributions carry exactly that empty particle. Making the first pass
+write its outputs in place would avoid the name mismatch, but a Gaudi functional
+algorithm cannot use the same key as both input and output.
 
 ### Hit collections in the overlay output
 

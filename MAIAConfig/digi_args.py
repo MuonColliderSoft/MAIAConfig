@@ -34,6 +34,14 @@ def get_digi_args():
     )
 
     parser.add_argument(
+        "--OverlayThreads",
+        help="Number of worker threads the overlay uses to read and decompress "
+             "the background files within one event; 1 runs the reading serially",
+        type=int,
+        default=1,
+    )
+
+    parser.add_argument(
         "--OverlayIPBackgroundFileNames",
         help="Path(s) to file(s) used for incoherent pairs overlay",
         type=str,

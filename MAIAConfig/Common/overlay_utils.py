@@ -1,25 +1,26 @@
 '''-------------------------------------------------------------'''
 '''  Helpers for resolving digitiser input collections          '''
 '''-------------------------------------------------------------'''
-# The overlay algorithms rename their output collections, so a digitiser must
-# read whichever collection sits at the end of the overlay chain.
+# The overlay renames its output collections, so a digitiser must read the
+# overlay output rather than the raw simulation collection when it ran.
+
+# Prefix the overlay puts on its output collections. Overlay/overlay.py builds
+# its output collection names from this, so the two cannot drift apart.
+OUTPUT_PREFIX = "Overlay"
 
 
 def overlay_input(base_name, args):
     """
     Return the input collection list for a digitiser that nominally reads
-    `base_name`, accounting for the overlay chain produced upstream:
+    `base_name`, accounting for the overlay run upstream:
 
-      * if --doOverlayIP   -> "OverlayIP<base_name>"
-      * elif --doOverlayFull -> "Overlay<base_name>"
-      * else               -> "<base_name>" (raw simulation collection)
+      * if --doOverlayFull and/or --doOverlayIP -> "Overlay<base_name>"
+      * else                                    -> "<base_name>" (raw simulation)
 
-    IP takes precedence because, when both overlays run, the IP step is the
-    last in the chain: it reads the BIB output ("Overlay*") and writes
-    "OverlayIP*".
+    A single overlay instance handles every enabled background (see
+    Overlay/overlay.py), so there is one output prefix regardless of which
+    combination of backgrounds is switched on.
     """
-    if getattr(args, "doOverlayIP", False):
-        return ["OverlayIP" + base_name]
-    if getattr(args, "doOverlayFull", False):
-        return ["Overlay" + base_name]
+    if getattr(args, "doOverlayFull", False) or getattr(args, "doOverlayIP", False):
+        return [OUTPUT_PREFIX + base_name]
     return [base_name]
