@@ -21,8 +21,30 @@
 
     <!-- ALGORITHM SETTINGS -->
 
-    <!-- Set calo hit properties, then select tracks and hits to use for clustering -->
-    <algorithm type = "CaloHitPreparation"/>
+    <!-- Set calo hit properties, then select tracks and hits to use for clustering.
+         BIB cuts: 3-gaussian (two-sided core + wide) fits to the per-pseudolayer
+         neighbourhood EM energy of 100% BIB ECAL hits, fitted separately for barrel
+         and endcap, at the x2 working point. Converted to the EM energy density this
+         algorithm computes via cut[L] = 2 * arc[L] / (pi * 25^2 * nSampledLayers(L)).
+         Vectors span the full ECAL depth (layers 0-50) so the tiny tail cuts still
+         flag zero-neighbour hits; the trailing 0 leaves HCAL and yoke untouched.
+         BIBCutDistance=25 matches the fine-granularity neighbourhood of the fit. -->
+    <algorithm type = "CaloHitPreparation">
+        <BIBCutDistance>25</BIBCutDistance>
+        <!-- Per-pseudolayer BIB energy density cuts, one file per subdetector and region;
+             a subdetector/region without a file is disabled. Current files: the x2 working
+             point of the barrel/endcap 3-gaussian fits (see the files for the derivation).
+             HCAL flagging is available but disabled: add BIBCutsFileHCalBarrel /
+             BIBCutsFileHCalEndcap to enable it. -->
+        <BIBCutsFileECalBarrel>PandoraSettings/BIBCutsECalBarrel.txt</BIBCutsFileECalBarrel>
+        <BIBCutsFileECalEndcap>PandoraSettings/BIBCutsECalEndcap.txt</BIBCutsFileECalEndcap>
+        <!-- Optional timing window (disabled): when enabled, hits with time outside
+             [BIBTimingWindowLow, BIBTimingWindowHigh] ns are also flagged as possible BIB.
+        <BIBTimingCutEnabled>true</BIBTimingCutEnabled>
+        <BIBTimingWindowLow>-0.5</BIBTimingWindowLow>
+        <BIBTimingWindowHigh>15.</BIBTimingWindowHigh>
+        -->
+    </algorithm>
     <algorithm type = "EventPreparation">
         <OutputTrackListName>Tracks</OutputTrackListName>
         <OutputCaloHitListName>CaloHits</OutputCaloHitListName>
@@ -38,6 +60,7 @@
             <ConeApproachMaxSeparation>2000</ConeApproachMaxSeparation>
             <MaxClusterDirProjection>2000</MaxClusterDirProjection>
             <ShouldUseIsolatedHits>true</ShouldUseIsolatedHits>
+            <ShouldExcludeBIBHits>true</ShouldExcludeBIBHits>
             <LayersToStepBackCoarse>30</LayersToStepBackCoarse>
             <AdditionalPadWidthsCoarse>1</AdditionalPadWidthsCoarse>
             <SameLayerPadWidthsCoarse>1.8</SameLayerPadWidthsCoarse>
@@ -47,6 +70,7 @@
             <MaxLayersToTrackLikeHit>0</MaxLayersToTrackLikeHit>
             <TrackPathWidth>0</TrackPathWidth>
         </algorithm>
+        <ShouldExcludeBIBHits>true</ShouldExcludeBIBHits>
         <MinClusterOccupiedLayers>5</MinClusterOccupiedLayers>
         <MinClusterLayerSpan>5</MinClusterLayerSpan>
         <MaxClusterCaloHits>30</MaxClusterCaloHits>
@@ -76,6 +100,7 @@
             <ClusterSeedStrategy>0</ClusterSeedStrategy>
             <ShouldUseTrackSeed>false</ShouldUseTrackSeed>
             <ShouldUseOnlyECalHits>true</ShouldUseOnlyECalHits>
+            <ShouldExcludeBIBHits>true</ShouldExcludeBIBHits>
             <ConeApproachMaxSeparation>250.</ConeApproachMaxSeparation>
         </algorithm>
         <ClusterListName>PhotonClusters</ClusterListName>
@@ -94,6 +119,7 @@
         <algorithm type = "ConeClustering" description = "ClusterFormation">
             <ClusterSeedStrategy>2</ClusterSeedStrategy>    <!-- default value -->
             <ShouldUseTrackSeed>true</ShouldUseTrackSeed> <!-- default value -->
+            <ShouldExcludeBIBHits>true</ShouldExcludeBIBHits>
         </algorithm>
         <algorithm type = "TopologicalAssociationParent" description = "ClusterAssociation">
             <associationAlgorithms>
@@ -124,6 +150,7 @@
     <algorithm type = "ClusteringParent">
         <algorithm type = "ConeClustering" description = "ClusterFormation">
             <TanConeAngleCoarse>0.75</TanConeAngleCoarse>
+            <ShouldExcludeBIBHits>true</ShouldExcludeBIBHits>
             <AdditionalPadWidthsCoarse>12.5</AdditionalPadWidthsCoarse>
             <SameLayerPadWidthsCoarse>14</SameLayerPadWidthsCoarse>
             <ShouldUseTrackSeed>false</ShouldUseTrackSeed>
