@@ -30,8 +30,8 @@ domain (following the CLDConfig convention):
 - `TrackerDigi/` — tracker digitisation (vertex/inner/outer) and tracker-hit
   cone filtering (`coning.py`).
 - `Tracking/` — hit merging, CKF track reconstruction, and double-layer filtering.
-- `Overlay/` — beam-induced-background (`overlay_BIB.py`) and incoherent-pair
-  (`overlay_IP.py`) overlay.
+- `Overlay/` — background overlay (`overlay.py`), covering both the
+  beam-induced background and the incoherent pairs.
 - `ParticleFlow/` — Pandora PFA and jet clustering.
 - `Diagnostics/` — tracking performance monitoring.
 - `PandoraSettings/` — Pandora steering and likelihood data XMLs. These are
@@ -101,8 +101,8 @@ The full set is:
 | `--OverlayFullPathToMuPlus` | digi | `/path/to/muplus/` | Directory of the μ⁺ BIB overlay files (used with `--doOverlayFull`). |
 | `--OverlayFullPathToMuMinus` | digi | `/path/to/muminus/` | Directory of the μ⁻ BIB overlay files (used with `--doOverlayFull`). |
 | `--OverlayFullNumberBackground` | digi | `1667` | Number of BIB background files overlaid (used with `--doOverlayFull`). |
-| `--doOverlayIP` | digi + reco | `False` | Overlay incoherent pairs. When both overlays are enabled they are chained (BIB then IP) before digitisation. In the reco step it only acts as a flag: when set, all tracker and calorimeter hit collections are dropped from the reconstruction output (see below). |
-| `--OverlayIPBackgroundFileNames` | digi | `[/path/to/pairs.slcio]` | Incoherent-pair overlay input file(s) (used with `--doOverlayIP`). |
+| `--doOverlayIP` | digi + reco | `False` | Overlay incoherent pairs. When both overlays are enabled they are overlaid together by a single algorithm (see below). In the reco step it only acts as a flag: when set, all tracker and calorimeter hit collections are dropped from the reconstruction output (see below). |
+| `--OverlayIPBackgroundFileNames` | digi | `[/path/to/pairs.edm4hep.root]` | Incoherent-pair overlay input file(s), or the directories holding them (used with `--doOverlayIP`). Combined with `--doOverlayFull` the paths are taken as directories, see below. |
 | `--doFilterDL` | digi | `False` | Double-layer hit filtering in the vertex detector. |
 | `--doRealisticDigiVertex` | digi | `False` | Digitise the vertex detector with the realistic `MuonCVXDDigitiser` (charge transport in the sensor) instead of the parametric `DDPlanarDigi` smearing. The output collection names are unchanged (see below). |
 | `--doRealisticDigiInner` | digi | `False` | Same for the inner tracker. |
@@ -155,6 +155,29 @@ Loosen it for that instance alone when studying GNN-only efficiency:
 k4run reco_steer.py --findGNNTracks --modelBase /path/to/onnx_files \
       --GNNDirectFilterer.NHitsTotal 3
 ```
+
+### Overlaying BIB and incoherent pairs together
+
+Both background sources are overlaid by one `OverlayTimingRandomMix` instance
+(`Overlay/overlay.py`), which reads the simulated hit collections and writes the
+`Overlay*` collections the digitisers consume. Each source is a separate
+background group: μ⁺ BIB, μ⁻ BIB, and — with `--doOverlayIP` — the incoherent
+pairs, one pair event per signal event.
+
+They are deliberately *not* run as two chained algorithms. A second overlay
+instance reading the `Overlay*` output of the first would look its background
+collections up in the pair files under those output names, which do not exist
+there, so no pair hit would be overlaid at all; and it would index the signal
+`MCParticles` collection with the unset particle references the first instance
+leaves on the background calorimeter contributions, which reads out of bounds
+and segfaults.
+
+One consequence for `--OverlayIPBackgroundFileNames`: the algorithm decides once,
+from the first entry of its file list, whether the whole list names files or
+directories, and the BIB samples can only be given as directories. So when
+`--doOverlayFull` is on as well, each pair path is replaced by the directory that
+contains it, and the pair event is drawn from every `.root` file in there. Given
+on its own, `--doOverlayIP` uses exactly the files listed.
 
 ### Hit collections in the overlay output
 
