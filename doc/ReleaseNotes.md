@@ -28,29 +28,36 @@ reorganised to follow, as closely as possible, the layout of
   - `TrackerDigi/` — tracker digitisation (vertex / inner / outer).
   - `Tracking/` — hit merging, CKF track reconstruction and double-layer filtering.
   - `CaloDigi/` — ECal, HCal and Muon calorimeter digitisation/reconstruction.
-  - `Overlay/` — beam-induced-background and incoherent-pair overlay.
+  - `Overlay/` — background overlay (beam-induced background, incoherent pairs).
   - `ParticleFlow/` — Pandora PFA and jet clustering.
   - `Diagnostics/` — tracking performance monitoring.
   - `PandoraSettings/` — Pandora steering and likelihood-data XMLs.
 
 ### Overlay
 
-- Added the incoherent-pair (IP) overlay (`Overlay/overlay_IP.py`), the fully
-  Gaudi-native equivalent of the Marlin `OverlayTimingGeneric` processor, using
-  the k4FWCore `OverlayTiming` Configurable (selected explicitly to avoid the
-  shadowed k4Reco component of the same name).
-- IP overlay is gated by `--doOverlayIP` and chained after the BIB overlay: it
-  reads the BIB `Overlay*` collections when `--doOverlayFull` is also set,
-  otherwise the raw simulation collections, and writes `OverlayIP*` collections.
+- Added the incoherent-pair (IP) overlay, the fully Gaudi-native equivalent of
+  the Marlin `OverlayTimingGeneric` processor, gated by `--doOverlayIP` and
+  reading the EDM4hep pair files given with `--OverlayIPBackgroundFileNames`.
+- Beam-induced background and incoherent pairs are overlaid by a *single*
+  `OverlayTimingRandomMix` instance (`Overlay/overlay.py`), one background group
+  per source, writing the `Overlay*` collections the digitisers consume.
+  Two chained overlay instances do not work: the second looks its background
+  collections up in the pair files under the *output* names of the first, which
+  do not exist there, and it indexes the signal `MCParticles` collection with the
+  unset particle references the first leaves on the background calorimeter
+  contributions — an out-of-bounds read that segfaults.
+- Because the algorithm decides from the first entry of its file list whether the
+  whole list names files or directories, `--OverlayIPBackgroundFileNames` paths
+  are folded into the directories that contain them when `--doOverlayFull` is
+  enabled as well; on its own `--doOverlayIP` uses exactly the files listed.
 - Centralised the digitiser input-collection selection in
-  `Common/overlay_utils.overlay_input` (precedence: IP > BIB > raw), used by all
-  tracker and calorimeter digitisers.
+  `Common/overlay_utils.overlay_input` (`Overlay*` with either overlay enabled,
+  the raw collections otherwise), used by all tracker and calorimeter digitisers.
 - The Yoke (muon) collections are currently **not** overlaid: `DDSimpleMuonDigi`
   resolves its input cellID encoding at `initialize()`, which is not available
   for overlay-produced collections. The muon digitisers therefore read the base
-  `Yoke*` collections. This applies to both overlays; see the `TODO` in
-  `Overlay/overlay_BIB.py` for re-enabling it.
-- Renamed `overlay_full.py` to `overlay_BIB.py` for clarity.
+  `Yoke*` collections. See the `TODO` in `Overlay/overlay.py` for re-enabling it.
+- Renamed `overlay_full.py` to `Overlay/overlay.py`.
 
 ### Tracker digitisation
 
