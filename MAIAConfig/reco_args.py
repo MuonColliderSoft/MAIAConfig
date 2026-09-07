@@ -91,6 +91,19 @@ def get_reco_args():
         default="PandoraSettingsDefault.xml",
     )
 
+    parser.add_argument(
+        "--pandoraCalibration",
+        help="Pandora theta-energy calibration payloads, as a comma-separated "
+             "list. A bare file name is looked up in the Calibration directory "
+             "shipped with MAIAConfig (override it with "
+             "MAIA_PANDORA_CALIBRATION_DIR); an absolute or run-directory "
+             "relative path is used as given. Pass 'none' to reconstruct "
+             "without any theta-energy calibration. Defaults to the payloads "
+             "shipped with this package",
+        type=str,
+        default=None,
+    )
+
     # CLUE args
     parser.add_argument(
         "--doCLUE",
