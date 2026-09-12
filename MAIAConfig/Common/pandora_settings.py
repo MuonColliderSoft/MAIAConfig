@@ -19,7 +19,13 @@ import tempfile
 # Relative file references inside the settings XML that have to be made
 # absolute. Only <HistogramFile> (the likelihood data) is used today; the tuple
 # is here so that further tags can be added without touching the logic below.
-_PATH_TAGS = ("HistogramFile",)
+_PATH_TAGS = (
+    "HistogramFile",
+    "BIBCutsFileECalBarrel",
+    "BIBCutsFileECalEndcap",
+    "BIBCutsFileHCalBarrel",
+    "BIBCutsFileHCalEndcap",
+)
 
 
 def pandora_settings_dir():
