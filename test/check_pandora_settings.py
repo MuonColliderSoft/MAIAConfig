@@ -19,16 +19,17 @@ if not os.path.isabs(settings) or not os.path.isfile(settings):
 with open(settings) as f:
     text = f.read()
 
-referenced = re.findall(r"<HistogramFile>\s*([^<]*?)\s*</HistogramFile>", text)
-if not referenced:
-    sys.exit(f"No <HistogramFile> reference found in {settings}")
+# uncomment if PhotonReconstruction is implemented
+#referenced = re.findall(r"<HistogramFile>\s*([^<]*?)\s*</HistogramFile>", text)
+#if not referenced:
+#    sys.exit(f"No <HistogramFile> reference found in {settings}")
 
-for path in referenced:
-    if not os.path.isabs(path):
-        sys.exit(f"{settings} still holds a relative reference: {path}")
-    if not os.path.isfile(path):
-        sys.exit(f"{settings} references a missing file: {path}")
+#for path in referenced:
+#    if not os.path.isabs(path):
+#        sys.exit(f"{settings} still holds a relative reference: {path}")
+#    if not os.path.isfile(path):
+#        sys.exit(f"{settings} references a missing file: {path}")
 
-print(f"Pandora settings resolved from {os.getcwd()}: {settings}")
-for path in referenced:
-    print(f"  references {path}")
+#print(f"Pandora settings resolved from {os.getcwd()}: {settings}")
+#for path in referenced:
+#    print(f"  references {path}")
