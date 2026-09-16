@@ -4,10 +4,11 @@ from Configurables import MuonCVXDDigitiser
 from Common.overlay_utils import overlay_input
 
 
-_OUTER_TRACKER_LAYER_IDS = [0, 1, 2, 3, 4, 5]
+_OUTER_TRACKER_BARREL_LAYER_IDS = [0, 1, 2]
+_OUTER_TRACKER_ENDCAP_LAYER_IDS = [0, 1, 2, 3]
 
 
-def _outer_tracker_digitiser(name, input_collection, sim_local_collection, hit_collection, relation_collection, raw_relation_collection):
+def _outer_tracker_digitiser(name, input_collection, sim_local_collection, hit_collection, relation_collection, raw_relation_collection, layer_ids):
     return MuonCVXDDigitiser(
         name,
         CollectionName = input_collection,
@@ -17,7 +18,7 @@ def _outer_tracker_digitiser(name, input_collection, sim_local_collection, hit_c
         RelationColName = [relation_collection],
         RawHitsLinkColName = [raw_relation_collection],
         SubDetectorName = sim_local_collection,
-        LayerIDs = _OUTER_TRACKER_LAYER_IDS,
+        LayerIDs = layer_ids,
         OutputLevel = INFO,
     )
 
@@ -34,6 +35,7 @@ def OTBarrel_cfg(args):
         "OTBarrelHits",
         "OTBarrelHitsRelations",
         "OTBarrelRawHitRelations",
+        _OUTER_TRACKER_BARREL_LAYER_IDS,
     )
 
 
@@ -49,4 +51,5 @@ def OTEndcap_cfg(args):
         "OTEndcapHits",
         "OTEndcapHitsRelations",
         "OTEndcapRawHitRelations",
+        _OUTER_TRACKER_ENDCAP_LAYER_IDS,
     )
