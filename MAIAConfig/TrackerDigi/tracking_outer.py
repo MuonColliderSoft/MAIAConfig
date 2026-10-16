@@ -9,7 +9,8 @@ def OTBarrel_cfg(args):
     inputHitCollections = overlay_input("OuterTrackerBarrelCollection", args)
     return DDPlanarDigi(
         "OTBarrelDigitiser",
-        CorrectTimesForPropagation = True,
+        CorrectTimesForPropagation = False,
+        CorrectTimeWindowForPropagation = True,
         IsStrip = False,
         ResolutionT = [0.06],
         ResolutionU = [0.007],
@@ -32,7 +33,8 @@ def OTEndcap_cfg(args):
     inputHitCollections = overlay_input("OuterTrackerEndcapCollection", args)
     return DDPlanarDigi(
         "OTEndcapDigitiser",
-        CorrectTimesForPropagation = True,
+        CorrectTimesForPropagation = False,
+        CorrectTimeWindowForPropagation = True,
         IsStrip = False,
         ResolutionT = [0.06],
         ResolutionU = [0.007],

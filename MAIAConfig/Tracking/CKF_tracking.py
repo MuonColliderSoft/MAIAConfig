@@ -21,28 +21,36 @@ def CKFTracker_cfg(args):
     return CKFTrackingAlg(
         "Reconstructor",
         RunCKF = True,
-        CKF_Chi2CutOff = 10,
+        CKF_Chi2CutOff = 12,
         # Hits with chi2CutOff <= local chi2 < chi2CutOffOutlier are kept as outliers; above -> hole.
         CKF_Chi2CutOffOutlier = 25,
         # CKF branch stopper: terminate fake branches early instead of extending
         # them through the whole detector, aligned with the downstream selection
         # (>= 8 hits, <= 2 holes).
         UseBranchStopper = True,
-        BranchStopper_MaxHoles = 2,
-        BranchStopper_MaxOutliers = 3,
+        BranchStopper_MaxHoles = 1,
+        BranchStopper_MaxOutliers = 1,
         BranchStopper_MinMeasurements = 8,
-        BranchStopper_PtMin = 0.5,
+        BranchStopper_PtMin = 1.0,
         BranchStopper_PtMinMeasurements = 4,
         SeedFinding_RMax = 150,
-        SeedFinding_MinPt = 500,
+        SeedFinding_MinPt = 1000,
         SeedFinding_ImpactMax = 3,
         # CKF_NumMeasurementsCutOff: controls the CKF branching during track extension.
         # Set to 1 to keep only the best candidate.
-        CKF_NumMeasurementsCutOff = 2,
+        CKF_NumMeasurementsCutOff = 1,
         SeedFinding_SigmaScattering = 50,
         SeedFinding_CollisionRegion = 6,
         SeedFinding_RadLengthPerSeed = 0.1,
-        SeedingSensorsCellIDs = ["system:1", "system:2,layer:1|2|3"],
+        SeedFinding_DoubletTimeCutNSigma = 3,
+        SeedFinding_TripletTimeChi2Max = 12,
+        SeedFinding_InteractionPointCut = True,
+        SeedFilter_CompatSeedWeight = 0,
+        InitialTrackError_QOverP = 0.03,
+        SeedingSensorsCellIDs = ["system:1", "system:2,layer:1|3|5"],
+        SeedFinding_zBinEdges = ["-599", "-240", "-160", "-100", "-70", "-20", "20", "70", "100", "160", "240", "599"],
+        UseHitTimeInCKF = True,
+        HitTimeResolutions = {"system:1|2": 0.03, "system:3|4|5|6": 0.06},
         AddEndcapCaloState = True,
         OutputTrackCollection = "AllTracks",
         OutputSeedCollection = "SeedTracks",
@@ -92,7 +100,7 @@ def track_filter_cfg(name = "Filterer", input = "DedupedTracks", output = "SiTra
     return FilterTracksAlg(
         name,
         InputTrackCollectionName = [input],
-        MinPt = "0.5",
+        MinPt = "1.0",
         MaxD0 = 10,
         MaxZ0 = 10,
         NHitsInner = "0",

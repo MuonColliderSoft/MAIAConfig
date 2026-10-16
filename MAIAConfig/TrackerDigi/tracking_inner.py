@@ -9,7 +9,8 @@ def ITBarrel_cfg(args):
     inputHitCollections = overlay_input("InnerTrackerBarrelCollection", args)
     return DDPlanarDigi(
         "InnerBarrelDigitiser",
-        CorrectTimesForPropagation = True,
+        CorrectTimesForPropagation = False,
+        CorrectTimeWindowForPropagation = True,
         IsStrip = False,
         ResolutionT = [0.06],
         ResolutionU = [0.007],
@@ -32,7 +33,8 @@ def ITEndcap_cfg(args):
     inputHitCollections = overlay_input("InnerTrackerEndcapCollection", args)
     return DDPlanarDigi(
         "InnerEndcapDigitiser",
-        CorrectTimesForPropagation = True,
+        CorrectTimesForPropagation = False,
+        CorrectTimeWindowForPropagation = True,
         IsStrip = False,
         ResolutionT = [0.06],
         ResolutionU = [0.007],
