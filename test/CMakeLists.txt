@@ -69,6 +69,14 @@ add_test(NAME pandora_settings_path
                  python3 ${CMAKE_CURRENT_LIST_DIR}/check_pandora_settings.py
 )
 
+# With --pandoraCalibration on, the theta-energy plugins must be added to the
+# settings XML, and the default settings must stay free of them.
+add_test(NAME pandora_theta_energy_settings
+         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+         COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${MAIAConfig_DIR}
+                 python3 ${CMAKE_CURRENT_LIST_DIR}/check_pandora_theta_energy_settings.py
+)
+
 # The parametric and realistic tracker digitisers must write the collections the tracking reads.
 # Without MuonCVXDDigitiser the check covers the parametric digitisers only.
 add_test(NAME tracker_collection_names

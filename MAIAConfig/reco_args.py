@@ -98,6 +98,20 @@ def get_reco_args():
         default="PandoraSettingsDefault.xml",
     )
 
+    parser.add_argument(
+        "--pandoraCalibration",
+        help="Opt in to the Pandora theta-energy calibration. Pass 'default' "
+             "to use the tables shipped in the Calibration directory of "
+             "MAIAConfig (override it with MAIA_PANDORA_CALIBRATION_DIR), or a "
+             "comma-separated list of table files; a bare file name is looked "
+             "up in the Calibration directory, an absolute or run-directory "
+             "relative path is used as given. The calibration plugins are "
+             "added at run time to the Pandora settings XML in use (the "
+             "default or --pandoraSettings). Off by default",
+        type=str,
+        default=None,
+    )
+
     # CLUE args
     parser.add_argument(
         "--doCLUE",
