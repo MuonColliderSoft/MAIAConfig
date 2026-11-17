@@ -73,7 +73,7 @@ def overlay_cfg(args):
     Beam-induced background (--doOverlayFull) and incoherent pairs
     (--doOverlayIP) are overlaid by a single algorithm, as parallel background
     groups.
-    
+
     The overlaid hits are written to the "Overlay*" collections that the
     digitisers pick up via Common.overlay_utils.overlay_input.
     """
