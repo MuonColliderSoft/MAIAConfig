@@ -14,11 +14,7 @@ _TRACKER_WINDOWS = {
     "OuterTrackerBarrelCollection": [-0.36, 0.36],
     "OuterTrackerEndcapCollection": [-0.36, 0.36],
 }
-# TODO: the Yoke (muon) calorimeter collections are intentionally omitted for
-# now. DDSimpleMuonDigi resolves its input cellID encoding at initialize(),
-# which is not available for overlay-produced collections, so the muon
-# digitisers read the base Yoke* hits instead. Add YokeBarrelCollection /
-# YokeEndcapCollection back here once that is resolved.
+
 _CALO_WINDOWS = {
     "ECalBarrelCollection": [-0.5, 15.],
     "ECalEndcapCollection": [-0.5, 15.],
@@ -76,13 +72,8 @@ def overlay_cfg(args):
 
     Beam-induced background (--doOverlayFull) and incoherent pairs
     (--doOverlayIP) are overlaid by a single algorithm, as parallel background
-    groups, rather than by two chained ones. Chaining does not work with this
-    algorithm: the second instance would look its background collections up in
-    the pair files under the *output* names of the first ("Overlay..."), which do
-    not exist there, and it would index the signal MCParticle collection with the
-    unset particle references that the first instance leaves on the background
-    calorimeter contributions -- an out-of-bounds read that segfaults.
-
+    groups.
+    
     The overlaid hits are written to the "Overlay*" collections that the
     digitisers pick up via Common.overlay_utils.overlay_input.
     """
@@ -95,6 +86,7 @@ def overlay_cfg(args):
         BackgroundFileNames = groups,
         NumberBackground = number_background,
         TimeWindows = {**_TRACKER_WINDOWS, **_CALO_WINDOWS},
+        KeepAllHitContributions = False,
         BackgroundMCParticleCollectionName = "MCParticles",
         # The background MC particles (millions of them per event) are not kept:
         # the background hits carry their truth momentum instead of a relation.
