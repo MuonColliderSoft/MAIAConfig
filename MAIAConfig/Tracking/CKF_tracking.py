@@ -55,6 +55,9 @@ def CKFTracker_cfg(args):
         SeedFilter_ForwardSeedConf_RMax = 0,
         SeedFilter_ForwardSeedConf_NTopForLargeR = 1,
         InitialTrackError_QOverP = 0.03,
+        InitialTrackError_Pos = 1.0,
+        InitialTrackError_Phi = 0.001745,  # 0.1 deg
+        InitialTrackError_Lambda = 0.001745,  # 0.1 deg
         SeedingSensorsCellIDs = ["system:1,layer:0|2|4|6", "system:2,layer:1|3|5|7", "system:4,layer:0"],
         MiniDoublet_Layers = [
             "system:1,layer:0;system:1,layer:1",
