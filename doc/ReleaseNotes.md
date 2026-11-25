@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+### BIB suppression in Pandora (requires LCContent with isPossibleBIB support)
+
+- Enabled `ShouldExcludeBIBHits` on all `ConeClustering` instances and on
+  `MuonReconstruction` in `PandoraSettingsDefault.xml`, and configured the
+  `CaloHitPreparation` BIB flagging with the per-pseudolayer energy-density
+  cut tables in `PandoraSettings/BIBCuts.txt` (one keyed file for all
+  subdetectors and regions), derived from 3-gaussian fits to the 10 TeV EU24
+  BIB neighbourhood-energy profile at a x2 working point. Only ECAL tables are
+  provided; HCAL tables and the hit-timing cut are supported but left
+  disabled, and the optional `BIBCutsHitTypes` list can restrict which tables
+  are applied. With a stock LCContent these settings are inert (the tags are
+  simply not read).
+- The `BIBCutsFile` tag is path-absolutised by `Common/pandora_settings.py`
+  alongside `HistogramFile`, so jobs keep working from any directory.
+
 Initial set of key4hep configuration scripts to run digitisation and
 reconstruction of the MAIA detector concept. The configuration was imported from
 [mucoll-benchmarks](https://github.com/MuonColliderSoft/mucoll-benchmarks) and

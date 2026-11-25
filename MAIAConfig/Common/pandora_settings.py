@@ -23,9 +23,13 @@ import tempfile
 import xml.etree.ElementTree as ET
 
 # Relative file references inside the settings XML that have to be made
-# absolute. Only <HistogramFile> (the likelihood data) is used today; the tuple
-# is here so that further tags can be added without touching the logic below.
-_PATH_TAGS = ("HistogramFile",)
+# absolute: <HistogramFile> (the likelihood data) and <BIBCutsFile> (the BIB
+# energy-density cut tables). Further tags can be added without touching the
+# logic below.
+_PATH_TAGS = (
+    "HistogramFile",
+    "BIBCutsFile",
+)
 
 # Theta-energy calibration: for each branch, the plugin-list tag and the plugin
 # name DDPandoraPFANewAlgorithm registers the table under. The plugin is
