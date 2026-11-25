@@ -17,14 +17,12 @@ import re
 import tempfile
 
 # Relative file references inside the settings XML that have to be made
-# absolute. Only <HistogramFile> (the likelihood data) is used today; the tuple
-# is here so that further tags can be added without touching the logic below.
+# absolute: <HistogramFile> (the likelihood data) and <BIBCutsFile> (the BIB
+# energy-density cut tables). Further tags can be added without touching the
+# logic below.
 _PATH_TAGS = (
     "HistogramFile",
-    "BIBCutsFileECalBarrel",
-    "BIBCutsFileECalEndcap",
-    "BIBCutsFileHCalBarrel",
-    "BIBCutsFileHCalEndcap",
+    "BIBCutsFile",
 )
 
 

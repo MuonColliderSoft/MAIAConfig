@@ -26,18 +26,20 @@
          neighbourhood EM energy of 100% BIB ECAL hits, fitted separately for barrel
          and endcap, at the x2 working point. Converted to the EM energy density this
          algorithm computes via cut[L] = 2 * arc[L] / (pi * 25^2 * nSampledLayers(L)).
-         Vectors span the full ECAL depth (layers 0-50) so the tiny tail cuts still
-         flag zero-neighbour hits; the trailing 0 leaves HCAL and yoke untouched.
+         Tables span the full ECAL depth (layers 0-50) so the tiny tail cuts still
+         flag zero-neighbour hits; HCAL and yoke have no table and are untouched.
          BIBCutDistance=25 matches the fine-granularity neighbourhood of the fit. -->
     <algorithm type = "CaloHitPreparation">
         <BIBCutDistance>25</BIBCutDistance>
-        <!-- Per-pseudolayer BIB energy density cuts, one file per subdetector and region;
-             a subdetector/region without a file is disabled. Current files: the x2 working
-             point of the barrel/endcap 3-gaussian fits (see the files for the derivation).
-             HCAL flagging is available but disabled: add BIBCutsFileHCalBarrel /
-             BIBCutsFileHCalEndcap to enable it. -->
-        <BIBCutsFileECalBarrel>PandoraSettings/BIBCutsECalBarrel.txt</BIBCutsFileECalBarrel>
-        <BIBCutsFileECalEndcap>PandoraSettings/BIBCutsECalEndcap.txt</BIBCutsFileECalEndcap>
+        <!-- Per-pseudolayer BIB energy density cut tables, one file for all subdetectors and
+             regions (lines: hitType region pseudoLayer cut). Current tables: the x2 working
+             point of the ECAL barrel/endcap 3-gaussian fits (see the file for the derivation).
+             The file has no HCAL tables, so HCAL hits are never flagged; add ECAL/HCAL
+             BARREL/ENDCAP lines to enable them. The optional BIBCutsHitTypes list restricts
+             which of the file's tables are used, e.g. ECAL only (default: all tables).
+             The loaded tables are printed at initialisation. -->
+        <BIBCutsFile>PandoraSettings/BIBCuts.txt</BIBCutsFile>
+        <!-- <BIBCutsHitTypes>ECAL</BIBCutsHitTypes> -->
         <!-- Optional timing window (disabled): when enabled, hits with time outside
              [BIBTimingWindowLow, BIBTimingWindowHigh] ns are also flagged as possible BIB.
         <BIBTimingCutEnabled>true</BIBTimingCutEnabled>
