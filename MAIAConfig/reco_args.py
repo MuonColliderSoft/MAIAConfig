@@ -21,7 +21,7 @@ def get_reco_args():
         "--materialMapFile",
         help="Material map file",
         type=str,
-        default=os.environ.get("ACTSTRACKING_DATA") + "/k4ActsTracking/data/MAIA_v0_gen3_material_map.json",
+        default=os.environ.get("ACTSTRACKING_DATA") + "/k4ActsTracking/data/MAIA_v0_gen3_material_map.json.zst",
     )
 
     parser.add_argument(
