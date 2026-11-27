@@ -32,6 +32,13 @@ def get_reco_args():
     )
 
     parser.add_argument(
+        "--doCaloTruthLinks",
+        help="Link calorimeter hits and Pandora clusters to MCParticles "
+             "(CalohitMCTruthLink, ClusterMCTruthLink)",
+        action="store_true",
+    )
+
+    parser.add_argument(
         "--use_dd4hep_field",
         help="Use DD4hep field",
         action="store_true",

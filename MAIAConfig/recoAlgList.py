@@ -61,4 +61,9 @@ def makeRecoAlgList(the_args):
     algList.append(pandoraPFA_cfg(the_args))
     algList.append(fastJet_cfg())
 
+    # Calorimeter truth links (needs PandoraClusters)
+    if the_args.doCaloTruthLinks:
+        from Diagnostics.calo_truth_links import calo_truth_links_cfg
+        algList.append(calo_truth_links_cfg())
+
     return algList

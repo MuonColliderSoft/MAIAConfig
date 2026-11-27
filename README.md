@@ -113,6 +113,7 @@ The full set is:
 | `--caloConeWidth` | digi | `0.6` | Half-opening angle [rad] of the calorimeter cones, the same for every ECal/HCal region (used with `--doCaloConing`). |
 | `--RandSeed` | digi | `42` | Random seed for the digitisation smearing. |
 | `--doTrackPerf` | reco | `False` | Run the tracking performance monitoring. |
+| `--doCaloTruthLinks` | reco | `False` | Link calorimeter hits and Pandora clusters to MCParticles (`CalohitMCTruthLink`, `ClusterMCTruthLink`). |
 | `--keepEverything` | reco | `False` | Write every collection to the reconstruction output, overriding the hit dropping that `--doOverlayFull`/`--doOverlayIP` would otherwise trigger (see below). |
 | `--TrackingThreads` | reco | `1` | Internal thread count of the CKF tracking and truth-matching algorithms (independent of `--numThreads`). |
 | `--findGNNTracks` | reco | `False` | Additionally run the GNN track finder and seed a second CKF pass with its candidates. Runs alongside the standard CKF chain, which is unaffected; the results go to the separate `GNN…` collections (see below). |
